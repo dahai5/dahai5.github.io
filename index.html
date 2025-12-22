@@ -3,159 +3,557 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>大海的个人网站</title>
+    <title>大海影视 - 免费观看电影电视剧</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background: #0f0f0f;
+            color: #fff;
             line-height: 1.6;
-            background-color: #f8f9fa;
         }
-        header {
-            text-align: center;
-            padding: 40px 20px;
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-            color: white;
-            border-radius: 10px;
-            margin-bottom: 30px;
+        
+        /* 导航栏 */
+        .navbar {
+            background: linear-gradient(90deg, #1a1a1a 0%, #0a0a0a 100%);
+            padding: 15px 30px;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        h1 {
-            margin: 0 0 10px 0;
-            font-size: 2.5em;
-        }
-        .container {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        .success {
-            background: #d4edda;
-            color: #155724;
-            padding: 15px;
-            border-radius: 5px;
-            margin: 20px 0;
-            border-left: 4px solid #28a745;
-        }
-        .url-box {
-            background: #e9ecef;
-            padding: 15px;
-            border-radius: 5px;
-            font-family: monospace;
-            font-size: 1.2em;
-            word-break: break-all;
-            margin: 20px 0;
-        }
-        .step {
-            background: #f8f9fa;
-            padding: 15px;
-            border-left: 4px solid #007bff;
-            margin: 15px 0;
-        }
-        footer {
-            text-align: center;
-            margin-top: 40px;
-            color: #6c757d;
-            font-size: 0.9em;
-        }
-        .btn {
-            display: inline-block;
-            background: #28a745;
-            color: white;
-            padding: 10px 20px;
+        
+        .logo {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #e50914;
             text-decoration: none;
-            border-radius: 5px;
-            margin: 10px 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #e50914;
+        }
+        
+        .search-box {
+            background: #333;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            color: #fff;
+            width: 300px;
+        }
+        
+        /* 英雄区域 */
+        .hero {
+            margin-top: 80px;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 100px 30px;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #e50914, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero p {
+            font-size: 1.2em;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            color: #ccc;
+        }
+        
+        .play-btn {
+            background: #e50914;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: transform 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .play-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        /* 内容区域 */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .section-title {
+            font-size: 1.8em;
+            margin: 40px 0 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .movie-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+        
+        .movie-card {
+            background: #1a1a1a;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s;
+            position: relative;
+        }
+        
+        .movie-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .movie-card img {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+        }
+        
+        .movie-info {
+            padding: 20px;
+        }
+        
+        .movie-title {
+            font-size: 1.2em;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+        
+        .movie-meta {
+            color: #888;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .watch-btn {
+            background: #333;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 4px;
+            width: 100%;
+            cursor: pointer;
             transition: background 0.3s;
         }
-        .btn:hover {
-            background: #218838;
+        
+        .watch-btn:hover {
+            background: #e50914;
+        }
+        
+        /* 分类标签 */
+        .category-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .category-tag {
+            background: #333;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .category-tag:hover {
+            background: #e50914;
+        }
+        
+        /* 底部 */
+        footer {
+            background: #0a0a0a;
+            padding: 60px 20px;
+            text-align: center;
+            border-top: 1px solid #333;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 30px 0;
+        }
+        
+        .footer-links a {
+            color: #888;
+            text-decoration: none;
+        }
+        
+        .copyright {
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .search-box {
+                width: 100%;
+            }
+            
+            .hero h1 {
+                font-size: 2em;
+            }
+            
+            .movie-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 15px;
+            }
         }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <header>
-        <h1>🎉 网站创建成功！</h1>
-        <p>这是我的GitHub Pages个人网站</p>
-    </header>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <a href="#" class="logo">
+            <i class="fas fa-film"></i>
+            大海影视
+        </a>
+        
+        <div class="nav-links">
+            <a href="#"><i class="fas fa-home"></i> 首页</a>
+            <a href="#movies"><i class="fas fa-play-circle"></i> 电影</a>
+            <a href="#tv"><i class="fas fa-tv"></i> 电视剧</a>
+            <a href="#anime"><i class="fas fa-gamepad"></i> 动漫</a>
+            <a href="#collections"><i class="fas fa-star"></i> 收藏</a>
+        </div>
+        
+        <input type="text" class="search-box" placeholder="搜索电影、电视剧...">
+    </nav>
     
+    <!-- 英雄区域 -->
+    <section class="hero">
+        <h1>畅享海量影视资源</h1>
+        <p>最新电影、热门电视剧、经典动漫，尽在大海影视。完全免费，无需注册！</p>
+        <button class="play-btn">
+            <i class="fas fa-play"></i>
+            立即观看推荐影片
+        </button>
+    </section>
+    
+    <!-- 主要内容 -->
     <div class="container">
-        <div class="success">
-            ✅ <strong>恭喜！</strong> 您的网站已成功创建并上线。
+        <!-- 热门分类 -->
+        <div class="category-tags">
+            <span class="category-tag">热门推荐</span>
+            <span class="category-tag">最新上映</span>
+            <span class="category-tag">高分经典</span>
+            <span class="category-tag">动作冒险</span>
+            <span class="category-tag">科幻奇幻</span>
+            <span class="category-tag">爱情喜剧</span>
+            <span class="category-tag">恐怖悬疑</span>
+            <span class="category-tag">国产剧集</span>
+            <span class="category-tag">美剧韩剧</span>
+            <span class="category-tag">日漫国漫</span>
         </div>
         
-        <h2>您的网站地址</h2>
-        <div class="url-box" id="siteUrl">
-            正在加载...
+        <!-- 热门电影 -->
+        <h2 class="section-title" id="movies">
+            <i class="fas fa-fire"></i>
+            热门电影
+        </h2>
+        
+        <div class="movie-grid">
+            <!-- 电影1 -->
+            <div class="movie-card">
+                <img src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="电影封面">
+                <div class="movie-info">
+                    <div class="movie-title">盗梦空间</div>
+                    <div class="movie-meta">
+                        <span>2010</span>
+                        <span>9.3分</span>
+                    </div>
+                    <button class="watch-btn" data-video="bilibili_video_id_1">
+                        <i class="fas fa-play"></i> 立即观看
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 电影2 -->
+            <div class="movie-card">
+                <img src="https://images.unsplash.com/photo-1531259683007-016a7b628fc3?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="电影封面">
+                <div class="movie-info">
+                    <div class="movie-title">星际穿越</div>
+                    <div class="movie-meta">
+                        <span>2014</span>
+                        <span>9.4分</span>
+                    </div>
+                    <button class="watch-btn" data-video="bilibili_video_id_2">
+                        <i class="fas fa-play"></i> 立即观看
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 电影3 -->
+            <div class="movie-card">
+                <img src="https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="电影封面">
+                <div class="movie-info">
+                    <div class="movie-title">复仇者联盟4</div>
+                    <div class="movie-meta">
+                        <span>2019</span>
+                        <span>8.5分</span>
+                    </div>
+                    <button class="watch-btn" data-video="bilibili_video_id_3">
+                        <i class="fas fa-play"></i> 立即观看
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 电影4 -->
+            <div class="movie-card">
+                <img src="https://images.unsplash.com/photo-1542204165-65bf26472b9b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="电影封面">
+                <div class="movie-info">
+                    <div class="movie-title">肖申克的救赎</div>
+                    <div class="movie-meta">
+                        <span>1994</span>
+                        <span>9.7分</span>
+                    </div>
+                    <button class="watch-btn" data-video="bilibili_video_id_4">
+                        <i class="fas fa-play"></i> 立即观看
+                    </button>
+                </div>
+            </div>
         </div>
         
-        <p>请将此地址保存或分享给朋友：</p>
-        <a href="#" class="btn" onclick="copyUrl()">📋 复制网址</a>
-        <a href="https://github.com/dahai5/dahai5.github.io" target="_blank" class="btn">✏️ 编辑网站</a>
+        <!-- 热门电视剧 -->
+        <h2 class="section-title" id="tv">
+            <i class="fas fa-tv"></i>
+            热门电视剧
+        </h2>
         
-        <h2>下一步操作指南</h2>
-        
-        <div class="step">
-            <strong>步骤1：修改内容</strong>
-            <p>在GitHub仓库中编辑 index.html 文件，替换这里的文字。</p>
+        <div class="movie-grid">
+            <!-- 电视剧1 -->
+            <div class="movie-card">
+                <img src="https://images.unsplash.com/photo-1585776245865-b92ae54c5c96?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="剧集封面">
+                <div class="movie-info">
+                    <div class="movie-title">权力的游戏</div>
+                    <div class="movie-meta">
+                        <span>8季</span>
+                        <span>9.2分</span>
+                    </div>
+                    <button class="watch-btn" data-video="bilibili_video_id_5">
+                        <i class="fas fa-play"></i> 立即观看
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 电视剧2 -->
+            <div class="movie-card">
+                <img src="https://images.unsplash.com/photo-1511988617509-a57c8a288659?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="剧集封面">
+                <div class="movie-info">
+                    <div class="movie-title">绝命毒师</div>
+                    <div class="movie-meta">
+                        <span>5季</span>
+                        <span>9.5分</span>
+                    </div>
+                    <button class="watch-btn" data-video="bilibili_video_id_6">
+                        <i class="fas fa-play"></i> 立即观看
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 电视剧3 -->
+            <div class="movie-card">
+                <img src="https://images.unsplash.com/photo-1533616688419-b7a585564f70?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="剧集封面">
+                <div class="movie-info">
+                    <div class="movie-title">纸牌屋</div>
+                    <div class="movie-meta">
+                        <span>6季</span>
+                        <span>8.7分</span>
+                    </div>
+                    <button class="watch-btn" data-video="bilibili_video_id_7">
+                        <i class="fas fa-play"></i> 立即观看
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 电视剧4 -->
+            <div class="movie-card">
+                <img src="https://images.unsplash.com/photo-1542744095-fcf48d80b0fd?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="剧集封面">
+                <div class="movie-info">
+                    <div class="movie-title">黑镜</div>
+                    <div class="movie-meta">
+                        <span>5季</span>
+                        <span>8.8分</span>
+                    </div>
+                    <button class="watch-btn" data-video="bilibili_video_id_8">
+                        <i class="fas fa-play"></i> 立即观看
+                    </button>
+                </div>
+            </div>
         </div>
-        
-        <div class="step">
-            <strong>步骤2：添加更多页面</strong>
-            <p>创建 about.html、blog.html 等文件，然后链接到它们。</p>
-        </div>
-        
-        <div class="step">
-            <strong>步骤3：添加样式</strong>
-            <p>学习CSS，让网站更漂亮。可以从修改 &lt;style&gt; 标签内的代码开始。</p>
-        </div>
-        
-        <h2>网站特点</h2>
-        <ul>
-            <li><strong>完全免费</strong>：无任何费用</li>
-            <li><strong>自动HTTPS</strong>：安全加密</li>
-            <li><strong>全球访问</strong>：GitHub全球CDN加速</li>
-            <li><strong>无限流量</strong>：无流量限制</li>
-            <li><strong>支持自定义域名</strong>：未来可以绑定自己的域名</li>
-        </ul>
     </div>
     
+    <!-- 底部 -->
     <footer>
-        <p>创建时间：<span id="currentDate"></span></p>
-        <p>© 2023 大海的个人网站 | 由GitHub Pages提供技术支持</p>
+        <div class="logo">
+            <i class="fas fa-film"></i>
+            大海影视
+        </div>
+        
+        <div class="footer-links">
+            <a href="#">关于我们</a>
+            <a href="#">联系方式</a>
+            <a href="#">用户协议</a>
+            <a href="#">隐私政策</a>
+            <a href="#">免责声明</a>
+        </div>
+        
+        <p class="copyright">
+            © 2023 大海影视. 本网站所有视频资源均来自互联网公开内容，仅供学习交流使用。
+            <br>
+            技术支持：GitHub Pages | 托管于GitHub
+        </p>
     </footer>
-
+    
+    <!-- 视频播放器弹窗 -->
+    <div id="videoModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:2000; justify-content:center; align-items:center;">
+        <div style="width:90%; max-width:1000px; background:#111; border-radius:10px; overflow:hidden;">
+            <div style="padding:20px; display:flex; justify-content:space-between; align-items:center; background:#222;">
+                <h3 style="margin:0;">正在播放</h3>
+                <button id="closeModal" style="background:#e50914; color:white; border:none; padding:8px 20px; border-radius:4px; cursor:pointer;">关闭</button>
+            </div>
+            <div id="videoPlayer" style="padding:20px;">
+                <!-- 这里会动态插入视频嵌入代码 -->
+                <p style="text-align:center; color:#888;">请选择要播放的视频</p>
+            </div>
+        </div>
+    </div>
+    
     <script>
-        // 显示当前日期
-        const now = new Date();
-        const options = { 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric',
-            weekday: 'long',
-            hour: '2-digit',
-            minute: '2-digit'
+        // 模拟视频数据
+        const videos = {
+            'bilibili_video_id_1': {
+                title: '盗梦空间',
+                embedCode: '<iframe src="//player.bilibili.com/player.html?aid=84271171&bvid=BV1q7411v7Vd&cid=144216456&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" style="width:100%; height:500px;"></iframe>'
+            },
+            'bilibili_video_id_2': {
+                title: '星际穿越',
+                embedCode: '<iframe src="//player.bilibili.com/player.html?aid=84271172&bvid=BV1q7411v7Ve&cid=144216457&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" style="width:100%; height:500px;"></iframe>'
+            }
         };
-        document.getElementById('currentDate').textContent = now.toLocaleDateString('zh-CN', options);
         
-        // 显示网站地址
-        document.getElementById('siteUrl').innerHTML = 
-            `<a href="${window.location.href}" target="_blank">${window.location.href}</a>`;
-        
-        // 复制网址功能
-        function copyUrl() {
-            navigator.clipboard.writeText(window.location.href).then(() => {
-                alert('✅ 网站地址已复制到剪贴板！\n\n' + window.location.href);
+        // 播放按钮点击事件
+        document.querySelectorAll('.watch-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const videoId = this.getAttribute('data-video');
+                const video = videos[videoId];
+                
+                if (video) {
+                    document.getElementById('videoPlayer').innerHTML = video.embedCode;
+                    document.getElementById('videoModal').style.display = 'flex';
+                } else {
+                    // 如果视频ID不存在，显示提示
+                    document.getElementById('videoPlayer').innerHTML = 
+                        '<div style="text-align:center; padding:50px;"><h3>视频加载中...</h3><p>请稍后，或尝试其他视频</p></div>';
+                    document.getElementById('videoModal').style.display = 'flex';
+                }
             });
-        }
+        });
         
-        // 页面加载完成提示
-        window.onload = function() {
-            console.log('🎉 网站加载成功！');
-            console.log('📁 仓库地址：https://github.com/dahai5/dahai5.github.io');
-        }
+        // 关闭弹窗
+        document.getElementById('closeModal').addEventListener('click', function() {
+            document.getElementById('videoModal').style.display = 'none';
+            // 停止视频播放
+            const iframe = document.querySelector('#videoPlayer iframe');
+            if (iframe) {
+                iframe.src = iframe.src; // 重新加载以停止播放
+            }
+        });
+        
+        // 点击弹窗背景关闭
+        document.getElementById('videoModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                document.getElementById('videoModal').style.display = 'none';
+                const iframe = document.querySelector('#videoPlayer iframe');
+                if (iframe) {
+                    iframe.src = iframe.src;
+                }
+            }
+        });
+        
+        // 搜索功能
+        document.querySelector('.search-box').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const query = this.value.trim();
+                if (query) {
+                    alert('搜索: ' + query + '\n\n提示：这是演示功能，实际需要后端支持。');
+                    this.value = '';
+                }
+            }
+        });
+        
+        // 分类标签点击
+        document.querySelectorAll('.category-tag').forEach(tag => {
+            tag.addEventListener('click', function() {
+                const category = this.textContent;
+                alert('切换到分类: ' + category);
+            });
+        });
+        
+        // 立即观看推荐影片按钮
+        document.querySelector('.play-btn').addEventListener('click', function() {
+            document.getElementById('videoPlayer').innerHTML = 
+                '<div style="text-align:center; padding:50px;"><h3>🎬 推荐影片加载中</h3><p>请从上方列表中选择您想观看的影片</p></div>';
+            document.getElementById('videoModal').style.display = 'flex';
+        });
     </script>
 </body>
 </html>
