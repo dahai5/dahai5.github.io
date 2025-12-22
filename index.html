@@ -313,7 +313,7 @@
             gap: 0.8rem;
         }
 
-        .watch-btn, .info-btn {
+        .watch-btn, .info-btn, .load-more-btn {
             flex: 1;
             padding: 0.8rem;
             border: none;
@@ -338,7 +338,7 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        .watch-btn:hover, .info-btn:hover {
+        .watch-btn:hover, .info-btn:hover, .load-more-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
@@ -574,6 +574,86 @@
         ::-webkit-scrollbar-thumb:hover {
             background: linear-gradient(180deg, var(--secondary), var(--primary));
         }
+
+        /* ===== 仅新增的小组件样式：保持原科幻风格，不改整体布局 ===== */
+        .center-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 2rem 4rem;
+        }
+
+        .load-more-btn {
+            max-width: 260px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--light);
+            border: 1px solid rgba(0, 212, 255, 0.25);
+            backdrop-filter: blur(10px);
+        }
+
+        .load-more-btn i {
+            color: var(--primary);
+        }
+
+        .empty-hint {
+            padding: 0 2rem 4rem;
+            text-align: center;
+            color: rgba(224, 224, 224, 0.7);
+        }
+
+        .toast {
+            position: fixed;
+            right: 18px;
+            bottom: 18px;
+            z-index: 5000;
+            background: rgba(20, 20, 30, 0.92);
+            border: 1px solid rgba(0, 212, 255, 0.25);
+            box-shadow: 0 0 25px rgba(0, 212, 255, 0.18);
+            border-radius: 14px;
+            padding: 12px 14px;
+            max-width: 360px;
+            display: none;
+            backdrop-filter: blur(12px);
+        }
+
+        .toast-title {
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 6px;
+        }
+
+        .toast-text {
+            font-size: 0.95rem;
+            color: rgba(224, 224, 224, 0.85);
+            line-height: 1.5;
+        }
+
+        .toast-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .toast-actions button {
+            border: 1px solid rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.06);
+            color: var(--light);
+            padding: 8px 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all .2s ease;
+        }
+
+        .toast-actions button:hover {
+            transform: translateY(-2px);
+            border-color: rgba(0, 212, 255, 0.45);
+            box-shadow: 0 0 18px rgba(0, 212, 255, 0.12);
+        }
+
+        .mono {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -610,7 +690,7 @@
             <div class="search-container">
                 <input type="text" 
                        class="search-box" 
-                       placeholder="搜索电影、剧集、动漫..." 
+                       placeholder="搜索电影、剧集、动漫（支持输入 BV 号或 B站链接）..." 
                        id="searchInput">
                 <button class="search-btn" id="searchBtn">
                     <i class="fas fa-search"></i> 搜索
@@ -637,6 +717,17 @@
             </div>
         </section>
 
+        <!-- 搜索结果（默认隐藏） -->
+        <h2 class="section-title" id="searchTitle" style="display:none;">
+            <i class="fas fa-search"></i> 搜索结果
+        </h2>
+        <div class="movies-grid" id="searchMovies" style="display:none;"></div>
+        <div class="center-row" id="searchMoreRow" style="display:none;">
+            <button class="load-more-btn" id="searchMoreBtn">
+                <i class="fas fa-plus"></i> 加载更多
+            </button>
+        </div>
+
         <!-- 热门推荐 -->
         <h2 class="section-title" id="movies">
             <i class="fas fa-fire"></i> 今日热门推荐
@@ -653,8 +744,21 @@
             <!-- 动态生成 -->
         </div>
 
+        <!-- 更多推荐（自动拉取B站热门/搜索结果，视频数量显著提升） -->
+        <h2 class="section-title" id="discoverTitle" style="display:none;">
+            <i class="fas fa-compass"></i> 更多推荐
+        </h2>
+        <div class="movies-grid" id="discoverMovies" style="display:none;"></div>
+        <div class="center-row" id="discoverMoreRow" style="display:none;">
+            <button class="load-more-btn" id="discoverMoreBtn">
+                <i class="fas fa-rotate"></i> 换一批
+            </button>
+        </div>
+
         <!-- 加载动画 -->
         <div class="loader" id="loader"></div>
+
+        <div class="empty-hint" id="emptyHint" style="display:none;"></div>
     </main>
 
     <!-- 视频播放器模态框 -->
@@ -668,6 +772,13 @@
                 <!-- 视频将在这里加载 -->
             </div>
         </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <div class="toast-title" id="toastTitle">提示</div>
+        <div class="toast-text" id="toastText"></div>
+        <div class="toast-actions" id="toastActions"></div>
     </div>
 
     <!-- 页脚 -->
@@ -712,7 +823,31 @@
     <!-- 脚本 -->
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script>
-        // 初始化粒子背景
+        // =========================
+        // 0) 配置区（可选）
+        // =========================
+        const CONFIG = {
+            // 如果你的网站部署环境请求 B站 API 会遇到 CORS：
+            // 1) 先把下面 apiProxy 留空运行看看（有些环境可直接请求成功）
+            // 2) 如果不行，再配置代理（例如 Cloudflare Worker），格式： "https://your-worker.workers.dev/?url="
+            apiProxy: "",
+
+            // 是否在页面加载时尝试“自动校准”封面/标题（根据 bvid 拉取真实信息）
+            syncMetaOnLoad: true,
+
+            // “更多推荐”每次拉取数量
+            discoverPageSize: 24,
+
+            // 搜索每页数量
+            searchPageSize: 24,
+
+            // 本地缓存（减少重复请求）时长：分钟
+            metaCacheMinutes: 60 * 24
+        };
+
+        // =========================
+        // 1) 粒子背景
+        // =========================
         particlesJS('particles-js', {
             particles: {
                 number: { value: 80, density: { enable: true, value_area: 800 } },
@@ -747,7 +882,10 @@
             retina_detect: true
         });
 
-        // 电影数据
+        // =========================
+        // 2) 你的原始数据（保留不动）
+        //    但：为了“封面/标题一致”，我会自动处理 picsum 封面为“可读封面”
+        // =========================
         const movies = {
             hot: [
                 {
@@ -843,23 +981,151 @@
             ]
         };
 
-        // 生成电影卡片
+        // =========================
+        // 3) 全局状态（统一管理，解决“标题/封面/播放不一致”的根因）
+        // =========================
+        const Store = {
+            byId: new Map(),   // id -> movie
+            byBvid: new Map(), // bvid -> movie
+            search: {
+                keyword: "",
+                page: 1,
+                hasMore: false,
+                remoteEnabled: true
+            },
+            discover: {
+                page: 1,
+                hasMore: true
+            }
+        };
+
+        function upsertMovie(movie) {
+            const id = String(movie.id ?? movie.bvid ?? cryptoRandomId());
+            movie.id = id;
+
+            // poster 统一兜底：保证“封面不会与标题完全无关”
+            movie.poster = normalizePoster(movie.poster, movie.title, movie.bvid || id);
+
+            Store.byId.set(id, movie);
+            if (movie.bvid) Store.byBvid.set(movie.bvid, movie);
+            return movie;
+        }
+
+        function cryptoRandomId() {
+            return "m_" + Math.random().toString(16).slice(2) + "_" + Date.now().toString(16);
+        }
+
+        function normalizePoster(posterUrl, title, seed) {
+            // 你原代码用 picsum 随机图，会造成“封面与标题不一致”
+            // 这里改成：默认用“可读封面(带标题)”作为兜底，保证一致性。
+            if (!posterUrl || String(posterUrl).includes("picsum.photos")) {
+                return makeTextPoster(title || "未命名影片", seed);
+            }
+            return posterUrl;
+        }
+
+        function makeTextPoster(title, seed) {
+            const safeTitle = String(title || "未命名影片").slice(0, 28);
+            const s = String(seed || "seed");
+            const hash = simpleHash(s);
+            const hue1 = 180 + (hash % 40); // 蓝青
+            const hue2 = 260 + (hash % 50); // 紫
+            const svg = `
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="600" viewBox="0 0 400 600">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="hsl(${hue1}, 90%, 55%)" stop-opacity="0.85"/>
+      <stop offset="1" stop-color="hsl(${hue2}, 80%, 55%)" stop-opacity="0.85"/>
+    </linearGradient>
+    <filter id="n">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/>
+      <feColorMatrix type="matrix"
+        values="0 0 0 0 0
+                0 0 0 0 0.8
+                0 0 0 0 1
+                0 0 0 .18 0"/>
+    </filter>
+  </defs>
+
+  <rect width="400" height="600" fill="#06070b"/>
+  <rect width="400" height="600" fill="url(#g)"/>
+  <rect width="400" height="600" filter="url(#n)" opacity="0.25"/>
+  <rect x="24" y="24" width="352" height="552" rx="18" fill="rgba(0,0,0,0.35)" stroke="rgba(255,255,255,0.12)"/>
+
+  <text x="40" y="120" fill="rgba(255,255,255,0.92)" font-size="18" font-family="Inter, system-ui, sans-serif" letter-spacing="2">DAHAI CINEMA</text>
+
+  <text x="40" y="220" fill="rgba(255,255,255,0.95)" font-size="34" font-family="Inter, system-ui, sans-serif" font-weight="800">
+    ${escapeXml(multilineTitle(safeTitle, 10)).join("")}
+  </text>
+
+  <text x="40" y="520" fill="rgba(255,255,255,0.7)" font-size="14" font-family="Inter, system-ui, sans-serif">
+    沉浸式私人观影体验
+  </text>
+</svg>`;
+            return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+        }
+
+        function multilineTitle(t, maxLen) {
+            const str = String(t);
+            const lines = [];
+            let cur = "";
+            for (const ch of str) {
+                cur += ch;
+                if (cur.length >= maxLen) {
+                    lines.push(cur);
+                    cur = "";
+                }
+            }
+            if (cur) lines.push(cur);
+            // 每行用 <tspan> 换行
+            return lines.slice(0, 3).map((line, idx) => {
+                const dy = idx === 0 ? 0 : 44;
+                const y = idx === 0 ? 0 : dy;
+                return `<tspan x="40" dy="${idx === 0 ? 0 : 44}">${line}</tspan>`;
+            });
+        }
+
+        function escapeXml(s) {
+            return String(s)
+                .replaceAll("&", "&amp;")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
+                .replaceAll("\"", "&quot;")
+                .replaceAll("'", "&apos;");
+        }
+
+        function simpleHash(str) {
+            let h = 2166136261;
+            for (let i = 0; i < str.length; i++) {
+                h ^= str.charCodeAt(i);
+                h = Math.imul(h, 16777619);
+            }
+            return Math.abs(h);
+        }
+
+        // =========================
+        // 4) 渲染（事件委托：避免重复绑定，减少“错绑导致标题不一致”）
+        // =========================
         function generateMovieCard(movie) {
+            const poster = movie.poster || makeTextPoster(movie.title, movie.bvid || movie.id);
+            const year = movie.year || "";
+            const rating = movie.rating || "";
+            const duration = movie.duration || "";
             return `
-                <div class="movie-card" data-id="${movie.id}">
-                    <img src="${movie.poster}" alt="${movie.title}" class="card-img">
+                <div class="movie-card" data-id="${escapeHtmlAttr(movie.id)}">
+                    <img src="${escapeHtmlAttr(poster)}" alt="${escapeHtmlAttr(movie.title || '未命名')}" class="card-img">
                     <div class="card-overlay">
-                        <h3 class="card-title">${movie.title}</h3>
+                        <h3 class="card-title">${escapeHtml(movie.title || '未命名')}</h3>
                         <div class="card-meta">
-                            <span>${movie.year}</span>
-                            <span>⭐ ${movie.rating}</span>
-                            <span>${movie.duration}</span>
+                            <span>${escapeHtml(year)}</span>
+                            <span>${rating ? '⭐ ' + escapeHtml(rating) : ''}</span>
+                            <span>${escapeHtml(duration)}</span>
                         </div>
                         <div class="card-actions">
-                            <button class="watch-btn" data-bvid="${movie.bvid}">
+                            <button class="watch-btn" data-id="${escapeHtmlAttr(movie.id)}">
                                 <i class="fas fa-play"></i> 立即观看
                             </button>
-                            <button class="info-btn" data-info="${movie.id}">
+                            <button class="info-btn" data-id="${escapeHtmlAttr(movie.id)}">
                                 <i class="fas fa-info-circle"></i> 详情
                             </button>
                         </div>
@@ -868,121 +1134,560 @@
             `;
         }
 
-        // 初始化电影网格
-        function initMovies() {
-            const hotGrid = document.getElementById('hotMovies');
-            const newGrid = document.getElementById('newMovies');
-            
-            movies.hot.forEach(movie => {
-                hotGrid.innerHTML += generateMovieCard(movie);
-            });
-            
-            movies.new.forEach(movie => {
-                newGrid.innerHTML += generateMovieCard(movie);
-            });
-            
-            // 绑定点击事件
-            document.querySelectorAll('.watch-btn').forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    const bvid = this.getAttribute('data-bvid');
-                    const movieCard = this.closest('.movie-card');
-                    const title = movieCard.querySelector('.card-title').textContent;
-                    playVideo(bvid, title);
-                });
-            });
-            
-            document.querySelectorAll('.movie-card').forEach(card => {
-                card.addEventListener('click', function() {
-                    const movieId = this.getAttribute('data-id');
-                    const movie = [...movies.hot, ...movies.new].find(m => m.id == movieId);
-                    if (movie) {
-                        showMovieInfo(movie);
-                    }
-                });
-            });
+        function escapeHtml(s) {
+            return String(s ?? "")
+                .replaceAll("&", "&amp;")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
+                .replaceAll("\"", "&quot;")
+                .replaceAll("'", "&#39;");
         }
 
-        // 播放视频
-        function playVideo(bvid, title) {
+        function escapeHtmlAttr(s) {
+            return escapeHtml(s).replaceAll("\n", " ");
+        }
+
+        function renderGrid(el, items) {
+            el.innerHTML = items.map(generateMovieCard).join("");
+        }
+
+        // =========================
+        // 5) 播放与详情（统一从 Store 取数据，保证一致）
+        // =========================
+        async function openPlayer(movie) {
             const modal = document.getElementById('videoModal');
             const titleEl = document.getElementById('modalTitle');
             const container = document.getElementById('videoContainer');
-            
-            titleEl.textContent = `正在播放：${title}`;
-            
-            // 嵌入B站播放器
+
+            titleEl.textContent = `正在播放：${movie.title || '未命名'}`;
+            container.innerHTML = `
+                <div style="width:100%; text-align:center;">
+                    <div class="loader" style="display:block;"></div>
+                    <div style="margin-top:12px; color: rgba(224,224,224,0.75);">
+                        正在加载播放器...
+                    </div>
+                </div>
+            `;
+
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+
+            if (!movie.bvid) {
+                container.innerHTML = `
+                    <div style="text-align:center; padding: 2rem;">
+                        <div style="font-size:1.2rem; color: rgba(255,255,255,0.85); margin-bottom: 8px;">该条目缺少 BV 号</div>
+                        <div style="color: rgba(224,224,224,0.7);">请在搜索框输入 BV 号或 B站链接，即可加入并播放。</div>
+                    </div>
+                `;
+                return;
+            }
+
+            // 先把 iframe 放出来（播放最快），再后台校准封面/标题
             container.innerHTML = `
                 <iframe 
-                    src="https://player.bilibili.com/player.html?bvid=${bvid}&autoplay=1&page=1"
+                    src="https://player.bilibili.com/player.html?bvid=${encodeURIComponent(movie.bvid)}&autoplay=1&page=1"
                     width="100%" 
                     height="600" 
                     scrolling="no" 
-                    border="0" 
-                    frameborder="no" 
-                    framespacing="0" 
+                    frameborder="0" 
                     allowfullscreen="true"
+                    referrerpolicy="no-referrer"
                     style="border-radius: 10px;"
-                >
-                </iframe>
+                ></iframe>
             `;
-            
-            modal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
+
+            // 后台拉取真实标题/封面，修复“播放和标题不一致”
+            const updated = await syncMovieMeta(movie, { silent: true });
+            if (updated && updated.title) {
+                titleEl.textContent = `正在播放：${updated.title}`;
+            }
         }
 
-        // 显示电影信息
-        function showMovieInfo(movie) {
+        async function openInfo(movie) {
             const modal = document.getElementById('videoModal');
             const titleEl = document.getElementById('modalTitle');
             const container = document.getElementById('videoContainer');
-            
-            titleEl.textContent = movie.title;
+
+            // 尽量先同步一次元信息（让“标题/封面/播放”一致）
+            await syncMovieMeta(movie, { silent: true });
+
+            titleEl.textContent = movie.title || '影片详情';
+            const cats = Array.isArray(movie.category) ? movie.category : (movie.category ? [movie.category] : []);
+            const poster = movie.poster || makeTextPoster(movie.title, movie.bvid || movie.id);
+
             container.innerHTML = `
-                <div style="padding: 2rem; max-width: 800px;">
-                    <div style="display: flex; gap: 2rem; margin-bottom: 2rem;">
-                        <img src="${movie.poster}" alt="${movie.title}" 
-                             style="width: 200px; height: 300px; object-fit: cover; border-radius: 10px;">
-                        <div>
-                            <h2 style="color: var(--primary); margin-bottom: 1rem;">${movie.title}</h2>
-                            <div style="display: flex; gap: 1rem; margin-bottom: 1rem; color: rgba(255,255,255,0.7);">
-                                <span>${movie.year}</span>
-                                <span>⭐ ${movie.rating}</span>
-                                <span>${movie.duration}</span>
+                <div style="padding: 2rem; max-width: 900px; width: 100%;">
+                    <div style="display: flex; gap: 2rem; margin-bottom: 2rem; flex-wrap: wrap;">
+                        <img src="${escapeHtmlAttr(poster)}" alt="${escapeHtmlAttr(movie.title || '未命名')}" 
+                             style="width: 200px; height: 300px; object-fit: cover; border-radius: 10px; border: 1px solid rgba(255,255,255,0.08);">
+                        <div style="flex: 1; min-width: 240px;">
+                            <h2 style="color: var(--primary); margin-bottom: 1rem; font-weight: 800;">${escapeHtml(movie.title || '未命名')}</h2>
+                            <div style="display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; color: rgba(255,255,255,0.7);">
+                                ${movie.year ? `<span>${escapeHtml(movie.year)}</span>` : ""}
+                                ${movie.rating ? `<span>⭐ ${escapeHtml(movie.rating)}</span>` : ""}
+                                ${movie.duration ? `<span>${escapeHtml(movie.duration)}</span>` : ""}
+                                ${movie.bvid ? `<span class="mono">${escapeHtml(movie.bvid)}</span>` : ""}
                             </div>
-                            <div style="margin-bottom: 1.5rem;">
-                                ${movie.category.map(cat => 
+                            <div style="margin-bottom: 1.2rem;">
+                                ${cats.map(cat => 
                                     `<span style="background: rgba(0,212,255,0.1); color: var(--primary); 
                                         padding: 0.3rem 0.8rem; border-radius: 15px; margin-right: 0.5rem; 
-                                        font-size: 0.9rem;">${cat}</span>`
+                                        font-size: 0.9rem;">${escapeHtml(cat)}</span>`
                                 ).join('')}
                             </div>
-                            <p style="line-height: 1.6; color: rgba(255,255,255,0.8);">
-                                ${movie.description}
+                            <p style="line-height: 1.7; color: rgba(255,255,255,0.85);">
+                                ${escapeHtml(movie.description || "暂无简介")}
                             </p>
+
+                            <div style="display:flex; gap: 12px; margin-top: 18px; flex-wrap: wrap;">
+                                <button class="watch-btn" style="flex: 1; min-width: 200px; padding: 1rem; font-size: 1.05rem;"
+                                        data-id="${escapeHtmlAttr(movie.id)}">
+                                    <i class="fas fa-play"></i> 立即观看
+                                </button>
+                                ${movie.bvid ? `
+                                    <a href="https://www.bilibili.com/video/${encodeURIComponent(movie.bvid)}" target="_blank"
+                                       style="flex: 1; min-width: 200px; text-decoration:none;">
+                                        <button class="info-btn" style="width: 100%; padding: 1rem; font-size: 1.05rem;">
+                                            <i class="fas fa-arrow-up-right-from-square"></i> 打开B站页面
+                                        </button>
+                                    </a>
+                                ` : ""}
+                            </div>
                         </div>
                     </div>
-                    <button class="watch-btn" style="width: 100%; padding: 1rem; font-size: 1.1rem;"
-                            onclick="playVideo('${movie.bvid}', '${movie.title}')">
-                        <i class="fas fa-play"></i> 立即观看
-                    </button>
                 </div>
             `;
-            
+
             modal.style.display = 'flex';
             document.body.style.overflow = 'hidden';
         }
 
-        // 搜索功能
+        // =========================
+        // 6) B站元信息同步：封面/标题/时长
+        // =========================
+        function cacheKeyForBvid(bvid) {
+            return "bili_meta_" + bvid;
+        }
+
+        function readMetaCache(bvid) {
+            try {
+                const raw = localStorage.getItem(cacheKeyForBvid(bvid));
+                if (!raw) return null;
+                const obj = JSON.parse(raw);
+                const ageMin = (Date.now() - obj.ts) / 60000;
+                if (ageMin > CONFIG.metaCacheMinutes) return null;
+                return obj.data || null;
+            } catch {
+                return null;
+            }
+        }
+
+        function writeMetaCache(bvid, data) {
+            try {
+                localStorage.setItem(cacheKeyForBvid(bvid), JSON.stringify({ ts: Date.now(), data }));
+            } catch {}
+        }
+
+        async function syncMovieMeta(movie, { silent } = { silent: false }) {
+            if (!movie || !movie.bvid) return null;
+
+            // 先读缓存
+            const cached = readMetaCache(movie.bvid);
+            if (cached) {
+                applyMeta(movie, cached);
+                rerenderIfVisible(movie);
+                return movie;
+            }
+
+            // 再拉远程
+            const view = await fetchBiliView(movie.bvid, { silent });
+            if (!view) return null;
+
+            writeMetaCache(movie.bvid, view);
+            applyMeta(movie, view);
+            rerenderIfVisible(movie);
+            return movie;
+        }
+
+        function applyMeta(movie, view) {
+            // view: { title, pic, duration, desc, pubdate, owner, stat, ... }
+            if (!view) return;
+
+            const oldTitle = movie.title;
+            if (view.title) movie.title = view.title;
+            if (view.pic) movie.poster = normalizePoster(ensureHttps(view.pic), movie.title, movie.bvid || movie.id);
+
+            // duration 秒 -> xx分钟 或 hh:mm:ss
+            if (typeof view.duration === "number") {
+                movie.duration = formatDuration(view.duration);
+            }
+            // desc
+            if (view.desc && (!movie.description || movie.description.length < 10)) {
+                movie.description = view.desc;
+            }
+
+            // 尝试把 year 设一下（不强依赖）
+            if (!movie.year && typeof view.pubdate === "number") {
+                const d = new Date(view.pubdate * 1000);
+                movie.year = String(d.getFullYear());
+            }
+
+            // 标记来源
+            movie._source = "bili_view";
+            movie._synced = true;
+
+            // 如果标题变化非常大，说明你原来的“标题<->bvid”映射不正确
+            // 这里自动以真实标题为准，从根源修复“播放标题不一致”
+            if (oldTitle && view.title && oldTitle !== view.title) {
+                // no-op: 仅说明原因，已以真实标题覆盖
+            }
+        }
+
+        function ensureHttps(url) {
+            if (!url) return url;
+            if (url.startsWith("//")) return "https:" + url;
+            return url;
+        }
+
+        function formatDuration(seconds) {
+            const s = Math.max(0, Number(seconds) || 0);
+            const h = Math.floor(s / 3600);
+            const m = Math.floor((s % 3600) / 60);
+            const sec = Math.floor(s % 60);
+            if (h > 0) return `${h}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+            return `${m}:${String(sec).padStart(2,'0')}`;
+        }
+
+        function rerenderIfVisible(movie) {
+            // 简单做法：如果在当前页面网格里，下一次渲染会更新；
+            // 为了直观：直接局部更新 img/标题
+            const cards = document.querySelectorAll(`.movie-card[data-id="${CSS.escape(String(movie.id))}"]`);
+            cards.forEach(card => {
+                const img = card.querySelector(".card-img");
+                const titleEl = card.querySelector(".card-title");
+                if (img && movie.poster) img.src = movie.poster;
+                if (titleEl && movie.title) titleEl.textContent = movie.title;
+                if (img && movie.title) img.alt = movie.title;
+            });
+        }
+
+        async function fetchBiliView(bvid, { silent } = { silent: false }) {
+            const url = `https://api.bilibili.com/x/web-interface/view?bvid=${encodeURIComponent(bvid)}`;
+            const json = await apiFetchJson(url, { silent });
+            if (!json || json.code !== 0 || !json.data) return null;
+            return json.data;
+        }
+
+        async function fetchBiliPopular(pn, ps, { silent } = { silent: false }) {
+            const url = `https://api.bilibili.com/x/web-interface/popular?pn=${encodeURIComponent(pn)}&ps=${encodeURIComponent(ps)}`;
+            const json = await apiFetchJson(url, { silent });
+            if (!json || json.code !== 0 || !json.data || !Array.isArray(json.data.list)) return null;
+            return json.data.list;
+        }
+
+        async function fetchBiliSearch(keyword, page, pageSize, { silent } = { silent: false }) {
+            const url = `https://api.bilibili.com/x/web-interface/search/type?search_type=video&keyword=${encodeURIComponent(keyword)}&page=${encodeURIComponent(page)}&page_size=${encodeURIComponent(pageSize)}`;
+            const json = await apiFetchJson(url, { silent });
+            if (!json || json.code !== 0 || !json.data) return null;
+            const res = json.data.result || [];
+            return Array.isArray(res) ? res : [];
+        }
+
+        async function apiFetchJson(url, { silent } = { silent: false }) {
+            const target = CONFIG.apiProxy ? (CONFIG.apiProxy + encodeURIComponent(url)) : url;
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), 8000);
+
+            try {
+                const resp = await fetch(target, {
+                    method: "GET",
+                    signal: controller.signal,
+                    headers: {
+                        // 一些环境需要带 referer/user-agent 才稳，这里尽量兼容
+                        "Accept": "application/json"
+                    }
+                });
+                clearTimeout(timeout);
+                if (!resp.ok) {
+                    if (!silent) toast(`请求失败：${resp.status}`, `无法拉取更多视频数据。你可以稍后重试，或配置 API 代理。`);
+                    return null;
+                }
+                const json = await resp.json();
+                return json;
+            } catch (e) {
+                clearTimeout(timeout);
+
+                // 常见：TypeError: Failed to fetch（CORS 或网络）
+                if (!silent) {
+                    toast("无法访问视频数据接口", "你的部署环境可能限制跨域（CORS），导致无法拉取“更多推荐/在线搜索/自动校准封面标题”。\n\n✅ 解决：配置 CONFIG.apiProxy（Cloudflare Worker 等）即可。", [
+                        { text: "知道了", action: () => hideToast() }
+                    ]);
+                }
+                return null;
+            }
+        }
+
+        // =========================
+        // 7) 搜索：本地筛选 + 在线补全（关键词/分类）
+        // =========================
+        function parseBvid(input) {
+            const str = String(input || "");
+            const m = str.match(/BV[0-9A-Za-z]{10}/i);
+            return m ? m[0].toUpperCase() : null;
+        }
+
+        function localSearch(keyword) {
+            const q = String(keyword || "").trim().toLowerCase();
+            if (!q) return [];
+            const items = Array.from(Store.byId.values());
+            return items.filter(m => {
+                const hay = [
+                    m.title, m.year, m.duration, m.description,
+                    Array.isArray(m.category) ? m.category.join(" ") : m.category
+                ].filter(Boolean).join(" ").toLowerCase();
+                return hay.includes(q);
+            });
+        }
+
+        async function performSearch({ append } = { append: false }) {
+            const input = document.getElementById('searchInput');
+            const query = (input.value || "").trim();
+            if (!query) return;
+
+            const loader = document.getElementById('loader');
+            loader.style.display = 'block';
+
+            // 如果输入 BV 号 / B站链接：直接加入并播放
+            const bvid = parseBvid(query);
+            if (bvid) {
+                loader.style.display = 'none';
+                const existing = Store.byBvid.get(bvid);
+                const movie = existing || upsertMovie({
+                    id: bvid,
+                    title: bvid,
+                    year: "",
+                    rating: "",
+                    duration: "",
+                    category: ["来自搜索"],
+                    poster: "",
+                    bvid,
+                    description: "从 B站 BV 号/链接添加的资源。"
+                });
+
+                // 先同步标题封面，再播放（更一致）
+                await syncMovieMeta(movie, { silent: true });
+                await openPlayer(movie);
+                return;
+            }
+
+            // 本地结果
+            const local = localSearch(query);
+
+            // 显示结果容器
+            showSearchSection(true);
+            document.getElementById('emptyHint').style.display = 'none';
+
+            // 在线搜索补全
+            if (!append) {
+                Store.search.keyword = query;
+                Store.search.page = 1;
+                Store.search.hasMore = false;
+                // 先用本地结果渲染
+                renderGrid(document.getElementById('searchMovies'), local.slice(0, CONFIG.searchPageSize));
+            }
+
+            // 如果本地够多且不追加，就不用远程
+            if (!append && local.length >= 12) {
+                loader.style.display = 'none';
+                document.getElementById('searchMoreRow').style.display = 'none';
+                return;
+            }
+
+            // 远程搜索（需要 API 可访问）
+            const page = append ? (Store.search.page + 1) : 1;
+            const remote = await fetchBiliSearch(query, page, CONFIG.searchPageSize, { silent: true });
+
+            loader.style.display = 'none';
+
+            if (!remote || remote.length === 0) {
+                // 远程不可用 / 没结果
+                if (!append && local.length === 0) {
+                    showEmpty(`没有找到与 “${escapeHtml(query)}” 相关的影片。你可以尝试：\n1) 输入 BV 号 / B站链接\n2) 或配置 apiProxy 启用在线搜索`);
+                }
+                document.getElementById('searchMoreRow').style.display = 'none';
+                return;
+            }
+
+            // 转换远程结果为 movie
+            const remoteMovies = remote.map(r => {
+                const title = stripHtml(r.title || "");
+                const m = upsertMovie({
+                    id: r.bvid || cryptoRandomId(),
+                    title: title || (r.bvid || "未命名"),
+                    year: "",
+                    rating: "",
+                    duration: r.duration || "",
+                    category: ["来自搜索"],
+                    poster: ensureHttps(r.pic || ""),
+                    bvid: r.bvid || "",
+                    description: stripHtml(r.description || "")
+                });
+                m._source = "bili_search";
+                return m;
+            });
+
+            // 合并展示
+            const grid = document.getElementById('searchMovies');
+            const currentHtml = grid.innerHTML;
+            if (append && currentHtml) {
+                grid.innerHTML += remoteMovies.map(generateMovieCard).join("");
+            } else {
+                // 合并本地 + 远程去重（以 bvid/id 为主）
+                const merged = [];
+                const seen = new Set();
+                local.forEach(m => {
+                    const k = m.bvid || m.id;
+                    if (!seen.has(k)) { merged.push(m); seen.add(k); }
+                });
+                remoteMovies.forEach(m => {
+                    const k = m.bvid || m.id;
+                    if (!seen.has(k)) { merged.push(m); seen.add(k); }
+                });
+                renderGrid(grid, merged);
+            }
+
+            // 分页
+            Store.search.page = page;
+            // B站搜索一般可以更多页，这里直接给“加载更多”按钮
+            Store.search.hasMore = true;
+            document.getElementById('searchMoreRow').style.display = 'flex';
+        }
+
+        function stripHtml(html) {
+            return String(html || "").replace(/<[^>]+>/g, "");
+        }
+
+        function showSearchSection(show) {
+            const title = document.getElementById('searchTitle');
+            const grid = document.getElementById('searchMovies');
+            title.style.display = show ? "flex" : "none";
+            grid.style.display = show ? "grid" : "none";
+        }
+
+        function showEmpty(text) {
+            const el = document.getElementById('emptyHint');
+            el.innerHTML = `<div style="white-space: pre-line;">${escapeHtml(text)}</div>`;
+            el.style.display = 'block';
+        }
+
+        function hideEmpty() {
+            const el = document.getElementById('emptyHint');
+            el.style.display = 'none';
+            el.textContent = '';
+        }
+
+        function searchByCategory(category) {
+            const categoryKeywords = {
+                'action': '动作',
+                'sci-fi': '科幻',
+                'drama': '剧情',
+                'comedy': '喜剧',
+                'anime': '动漫'
+            };
+            const kw = categoryKeywords[category] || category;
+            document.getElementById('searchInput').value = kw;
+            performSearch({ append: false });
+        }
+
+        // =========================
+        // 8) 更多推荐（热门榜单）：显著增加视频数量
+        // =========================
+        async function loadDiscover({ refresh } = { refresh: false }) {
+            const titleEl = document.getElementById('discoverTitle');
+            const gridEl = document.getElementById('discoverMovies');
+            const rowEl = document.getElementById('discoverMoreRow');
+            const loader = document.getElementById('loader');
+
+            if (refresh) Store.discover.page += 1;
+            const page = Store.discover.page;
+
+            loader.style.display = 'block';
+            const list = await fetchBiliPopular(page, CONFIG.discoverPageSize, { silent: true });
+            loader.style.display = 'none';
+
+            if (!list || list.length === 0) {
+                // 如果接口不可用，则不显示“更多推荐”避免干扰
+                titleEl.style.display = 'none';
+                gridEl.style.display = 'none';
+                rowEl.style.display = 'none';
+                return;
+            }
+
+            const discoverMovies = list.map(v => {
+                const m = upsertMovie({
+                    id: v.bvid || cryptoRandomId(),
+                    title: v.title || (v.bvid || "未命名"),
+                    year: "",
+                    rating: "",
+                    duration: typeof v.duration === "number" ? formatDuration(v.duration) : "",
+                    category: ["热门推荐"],
+                    poster: ensureHttps(v.pic || ""),
+                    bvid: v.bvid || "",
+                    description: v.desc || ""
+                });
+                m._source = "bili_popular";
+                return m;
+            });
+
+            titleEl.style.display = 'flex';
+            gridEl.style.display = 'grid';
+            rowEl.style.display = 'flex';
+
+            renderGrid(gridEl, discoverMovies);
+        }
+
+        // =========================
+        // 9) 初始化：渲染本地列表 + 可选校准元信息
+        // =========================
+        function initMovies() {
+            // 把本地数据放入 Store
+            const hot = movies.hot.map(m => upsertMovie({ ...m }));
+            const nw = movies.new.map(m => upsertMovie({ ...m }));
+
+            renderGrid(document.getElementById('hotMovies'), hot);
+            renderGrid(document.getElementById('newMovies'), nw);
+
+            // 可选：页面加载自动校准（能访问 API 时会把标题/封面改为真实）
+            if (CONFIG.syncMetaOnLoad) {
+                // 小批量并发，避免卡顿
+                const seed = [...hot, ...nw].filter(m => m.bvid);
+                batchSync(seed, 3);
+            }
+        }
+
+        async function batchSync(list, concurrency) {
+            const queue = [...list];
+            const workers = new Array(concurrency).fill(0).map(async () => {
+                while (queue.length) {
+                    const movie = queue.shift();
+                    if (!movie) break;
+                    await syncMovieMeta(movie, { silent: true });
+                }
+            });
+            await Promise.all(workers);
+        }
+
         function initSearch() {
             const searchBtn = document.getElementById('searchBtn');
             const searchInput = document.getElementById('searchInput');
-            
-            searchBtn.addEventListener('click', performSearch);
+            const moreBtn = document.getElementById('searchMoreBtn');
+
+            searchBtn.addEventListener('click', () => performSearch({ append: false }));
             searchInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') performSearch();
+                if (e.key === 'Enter') performSearch({ append: false });
             });
-            
+            moreBtn.addEventListener('click', () => performSearch({ append: true }));
+
             // 快速链接
             document.querySelectorAll('.quick-link').forEach(link => {
                 link.addEventListener('click', function(e) {
@@ -992,73 +1697,124 @@
                 });
             });
         }
-        
-        function performSearch() {
-            const query = document.getElementById('searchInput').value.trim();
-            if (!query) return;
-            
-            // 显示加载动画
-            const loader = document.getElementById('loader');
-            loader.style.display = 'block';
-            
-            // 模拟搜索
-            setTimeout(() => {
-                loader.style.display = 'none';
-                alert(`搜索关键词: "${query}"\n\n提示：实际功能需要接入视频数据库API。\n当前为演示版本，您可以点击电影卡片查看详情。`);
-            }, 1000);
-        }
-        
-        function searchByCategory(category) {
-            const categoryNames = {
-                'action': '动作大片',
-                'sci-fi': '科幻未来',
-                'drama': '剧情佳作',
-                'comedy': '喜剧轻松',
-                'anime': '热血动漫'
-            };
-            
-            alert(`切换到分类: ${categoryNames[category] || category}\n\n正在为您筛选相关影片...`);
-        }
+
+        // 统一点击处理（事件委托）
+        document.addEventListener("click", async (e) => {
+            const watchBtn = e.target.closest(".watch-btn");
+            const infoBtn = e.target.closest(".info-btn");
+            const card = e.target.closest(".movie-card");
+
+            if (watchBtn) {
+                e.preventDefault();
+                e.stopPropagation();
+                const id = watchBtn.getAttribute("data-id");
+                const movie = Store.byId.get(String(id));
+                if (movie) await openPlayer(movie);
+                return;
+            }
+
+            if (infoBtn) {
+                e.preventDefault();
+                e.stopPropagation();
+                const id = infoBtn.getAttribute("data-id");
+                const movie = Store.byId.get(String(id));
+                if (movie) await openInfo(movie);
+                return;
+            }
+
+            if (card) {
+                const id = card.getAttribute("data-id");
+                const movie = Store.byId.get(String(id));
+                if (movie) await openInfo(movie);
+                return;
+            }
+        });
 
         // 关闭模态框
-        document.getElementById('closeModal').addEventListener('click', function() {
-            const modal = document.getElementById('videoModal');
-            const container = document.getElementById('videoContainer');
-            
-            modal.style.display = 'none';
-            container.innerHTML = '';
-            document.body.style.overflow = 'auto';
-        });
+        document.getElementById('closeModal').addEventListener('click', closeModal);
 
         // 点击模态框背景关闭
         document.getElementById('videoModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                this.style.display = 'none';
-                document.getElementById('videoContainer').innerHTML = '';
-                document.body.style.overflow = 'auto';
-            }
+            if (e.target === this) closeModal();
         });
+
+        function closeModal() {
+            const modal = document.getElementById('videoModal');
+            const container = document.getElementById('videoContainer');
+            modal.style.display = 'none';
+            container.innerHTML = '';
+            document.body.style.overflow = 'auto';
+        }
 
         // 用户按钮
         document.getElementById('userBtn').addEventListener('click', function() {
             alert(`👤 用户：大海\n📧 邮箱：dahai@example.com\n⭐ 收藏：32 部影片\n\n欢迎来到您的私人影院！`);
         });
 
-        // 页面加载完成后初始化
+        // 更多推荐按钮
+        document.getElementById('discoverMoreBtn').addEventListener('click', function() {
+            loadDiscover({ refresh: true });
+        });
+
+        // =========================
+        // 10) Toast
+        // =========================
+        function toast(title, text, actions) {
+            const t = document.getElementById("toast");
+            const tt = document.getElementById("toastTitle");
+            const tx = document.getElementById("toastText");
+            const ta = document.getElementById("toastActions");
+
+            tt.textContent = title || "提示";
+            tx.textContent = text || "";
+            ta.innerHTML = "";
+
+            (actions || []).forEach(a => {
+                const btn = document.createElement("button");
+                btn.textContent = a.text;
+                btn.addEventListener("click", () => {
+                    try { a.action && a.action(); } catch {}
+                });
+                ta.appendChild(btn);
+            });
+
+            t.style.display = "block";
+            clearTimeout(t._hideTimer);
+            t._hideTimer = setTimeout(() => {
+                hideToast();
+            }, 9000);
+        }
+
+        function hideToast() {
+            const t = document.getElementById("toast");
+            t.style.display = "none";
+        }
+
+        // =========================
+        // 11) 页面加载
+        // =========================
         document.addEventListener('DOMContentLoaded', function() {
             initMovies();
             initSearch();
-            
-            // 添加一些动画效果
-            setTimeout(() => {
-                document.querySelectorAll('.movie-card').forEach((card, index) => {
-                    card.style.animationDelay = `${index * 0.1}s`;
-                });
-            }, 500);
+            hideEmpty();
+
+            // 尝试加载“更多推荐”（成功则视频数量显著增加）
+            loadDiscover({ refresh: false });
         });
 
-        // 添加到全局作用域
-        window.playVideo = playVideo;
+        // 兼容旧调用（如果你未来还有其他脚本引用）
+        window.playVideo = async function(bvid, title) {
+            const movie = upsertMovie({
+                id: bvid || cryptoRandomId(),
+                title: title || bvid || "未命名",
+                bvid: bvid || "",
+                poster: "",
+                category: ["外部调用"],
+                description: ""
+            });
+            await syncMovieMeta(movie, { silent: true });
+            await openPlayer(movie);
+        };
     </script>
 </body>
 </html>
