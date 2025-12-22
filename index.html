@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DAHAI·智能影院 | 全网资源一键播放</title>
+    <title>DAHAI·私人影院 | 沉浸式观影体验</title>
     <style>
-        /* 保留原有所有样式，只添加新样式 */
+        /* 全局重置与基础样式 */
         * {
             margin: 0;
             padding: 0;
@@ -13,12 +13,12 @@
         }
 
         :root {
-            --primary: #00d4ff;
-            --secondary: #9d4edd;
-            --accent: #ff6b6b;
-            --dark: #0a0a0f;
-            --darker: #050508;
-            --light: #e0e0e0;
+            --primary: #00d4ff;      /* 科技蓝 */
+            --secondary: #9d4edd;    /* 紫罗兰 */
+            --accent: #ff6b6b;       /* 珊瑚红 */
+            --dark: #0a0a0f;         /* 深空黑 */
+            --darker: #050508;       /* 更深的黑 */
+            --light: #e0e0e0;        /* 浅灰 */
             --glass: rgba(255, 255, 255, 0.05);
             --glow: 0 0 20px rgba(0, 212, 255, 0.3);
         }
@@ -33,94 +33,306 @@
             position: relative;
         }
 
-        /* 新增：搜索结果样式 */
-        .search-results {
-            display: none;
-            max-width: 1400px;
-            margin: 2rem auto;
-            padding: 0 2rem;
+        /* 背景粒子效果 */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
         }
 
-        .results-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
-
-        .result-item {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .result-item:hover {
-            transform: translateY(-5px);
+        /* 导航栏 */
+        .navbar {
+            background: rgba(10, 10, 15, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+            padding: 1.2rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             box-shadow: var(--glow);
         }
 
-        .result-item img {
-            width: 100%;
-            height: 300px;
-            object-fit: cover;
-        }
-
-        .result-info {
-            padding: 1rem;
-        }
-
-        .result-title {
-            font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .result-year {
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 0.9rem;
-        }
-
-        /* 新增：播放源选择 */
-        .source-selector {
+        .logo {
             display: flex;
-            gap: 1rem;
-            margin: 1rem 0;
-            flex-wrap: wrap;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .source-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+        .nav-center {
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+        }
+
+        .nav-item {
+            position: relative;
             color: var(--light);
-            padding: 0.5rem 1.5rem;
-            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 0;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-item:hover {
+            color: var(--primary);
+        }
+
+        /* 主搜索区域 */
+        .hero {
+            margin-top: 120px;
+            padding: 4rem 2rem;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, var(--primary), var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+            line-height: 1.1;
+        }
+
+        .search-container {
+            max-width: 800px;
+            margin: 0 auto 3rem;
+            position: relative;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 1.5rem 2rem;
+            font-size: 1.1rem;
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(0, 212, 255, 0.2);
+            border-radius: 15px;
+            color: var(--light);
+            outline: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .search-box:focus {
+            border-color: var(--primary);
+            box-shadow: var(--glow);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-size: 0.9rem;
         }
 
-        .source-btn.active {
-            background: var(--primary);
-            color: white;
+        /* 内容区域 */
+        .section-title {
+            font-size: 2.2rem;
+            margin: 4rem 0 2rem;
+            padding-left: 2rem;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 5px;
+            height: 40px;
+            background: linear-gradient(180deg, var(--primary), var(--secondary));
+            border-radius: 3px;
+        }
+
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            padding: 0 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .movie-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            height: 500px;
+        }
+
+        .movie-card:hover {
+            transform: translateY(-10px) scale(1.02);
             border-color: var(--primary);
+            box-shadow: var(--glow);
         }
 
-        .source-btn:hover:not(.active) {
-            background: rgba(255, 255, 255, 0.2);
+        .card-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
         }
 
-        /* 新增：加载动画 */
-        .spinner {
+        .card-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.95));
+            padding: 2rem 1.5rem 1.5rem;
+            transform: translateY(0);
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: white;
+        }
+
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .watch-btn, .info-btn {
+            flex: 1;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .watch-btn {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        /* 视频播放器 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-content {
+            width: 90%;
+            max-width: 1200px;
+            background: rgba(20, 20, 30, 0.95);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            box-shadow: 0 0 50px rgba(0, 212, 255, 0.2);
+        }
+
+        .modal-header {
+            padding: 1.5rem 2rem;
+            background: rgba(0, 0, 0, 0.5);
+            border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: var(--light);
+            font-size: 2rem;
+            cursor: pointer;
             width: 40px;
             height: 40px;
-            border: 4px solid rgba(0, 212, 255, 0.1);
-            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .video-container {
+            padding: 2rem;
+            min-height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 页脚 */
+        .footer {
+            background: rgba(5, 5, 8, 0.95);
+            padding: 4rem 2rem 2rem;
+            border-top: 1px solid rgba(0, 212, 255, 0.1);
+            margin-top: 4rem;
+        }
+
+        /* 加载动画 */
+        .loader {
+            display: none;
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(0, 212, 255, 0.1);
+            border-top: 3px solid var(--primary);
             border-radius: 50%;
             animation: spin 1s linear infinite;
             margin: 2rem auto;
@@ -131,16 +343,30 @@
             100% { transform: rotate(360deg); }
         }
 
-        .loading-text {
-            text-align: center;
-            color: var(--primary);
-            margin-top: 1rem;
-            font-size: 1.1rem;
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+            
+            .nav-center {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 1rem;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .movies-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 1rem;
+                padding: 0 1rem;
+            }
         }
-
-        /* 保留原有所有其他样式... */
-        /* 由于样式代码很长，这里只显示新增部分，原样式保持不变 */
-        /* ... 原有的导航栏、卡片、模态框等所有样式 ... */
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -153,10 +379,10 @@
     <nav class="navbar">
         <div class="logo">DAHAI CINEMA</div>
         <div class="nav-center">
-            <a href="#" class="nav-item" id="homeBtn"><i class="fas fa-home"></i> 首页</a>
-            <a href="#" class="nav-item" id="moviesBtn"><i class="fas fa-film"></i> 电影</a>
-            <a href="#" class="nav-item" id="tvBtn"><i class="fas fa-tv"></i> 剧集</a>
-            <a href="#" class="nav-item" id="animeBtn"><i class="fas fa-gamepad"></i> 动漫</a>
+            <a href="#" class="nav-item"><i class="fas fa-home"></i> 首页</a>
+            <a href="#movies" class="nav-item"><i class="fas fa-film"></i> 电影</a>
+            <a href="#tv" class="nav-item"><i class="fas fa-tv"></i> 剧集</a>
+            <a href="#anime" class="nav-item"><i class="fas fa-gamepad"></i> 动漫</a>
         </div>
         <div class="user-menu">
             <button class="nav-item" id="userBtn"><i class="fas fa-user"></i> 大海</button>
@@ -167,121 +393,52 @@
     <main>
         <!-- 英雄区域 -->
         <section class="hero">
-            <h1 class="hero-title floating">智能影视搜索引擎</h1>
+            <h1 class="hero-title">沉浸式私人观影体验</h1>
             <p class="hero-subtitle">
-                输入电影/剧集名称，自动匹配封面，多源播放，一站式观影体验
+                一个完全属于你的影视空间 · 精选全球优质内容 · 无广告干扰 · 个性推荐
             </p>
             
-            <!-- 智能搜索框 -->
+            <!-- 搜索框 -->
             <div class="search-container">
                 <input type="text" 
                        class="search-box" 
-                       placeholder="输入电影、电视剧、动漫名称，如：流浪地球、权力的游戏..." 
-                       id="searchInput"
-                       autocomplete="off">
+                       placeholder="搜索电影、剧集、动漫..." 
+                       id="searchInput">
                 <button class="search-btn" id="searchBtn">
-                    <i class="fas fa-search"></i> 智能搜索
+                    <i class="fas fa-search"></i> 搜索
                 </button>
-            </div>
-            
-            <!-- 热门搜索提示 -->
-            <div class="quick-links">
-                <a href="#" class="quick-link" data-search="流浪地球2">
-                    <i class="fas fa-rocket"></i> 流浪地球2
-                </a>
-                <a href="#" class="quick-link" data-search="满江红">
-                    <i class="fas fa-dragon"></i> 满江红
-                </a>
-                <a href="#" class="quick-link" data-search="狂飙">
-                    <i class="fas fa-bolt"></i> 狂飙
-                </a>
-                <a href="#" class="quick-link" data-search="三体">
-                    <i class="fas fa-globe"></i> 三体
-                </a>
-                <a href="#" class="quick-link" data-search="鬼灭之刃">
-                    <i class="fas fa-fire"></i> 鬼灭之刃
-                </a>
             </div>
         </section>
 
         <!-- 搜索结果区域 -->
-        <div class="search-results" id="searchResults">
-            <h2 class="section-title">
-                <i class="fas fa-search"></i> 搜索结果
-                <span id="resultCount" style="font-size: 1rem; color: var(--primary); margin-left: 1rem;"></span>
-            </h2>
-            
-            <!-- 播放源选择 -->
-            <div class="source-selector" id="sourceSelector">
-                <button class="source-btn active" data-source="all">全部来源</button>
-                <button class="source-btn" data-source="bilibili">B站资源</button>
-                <button class="source-btn" data-source="iqiyi">爱奇艺</button>
-                <button class="source-btn" data-source="tencent">腾讯视频</button>
-                <button class="source-btn" data-source="youku">优酷</button>
-            </div>
-            
-            <div class="results-grid" id="resultsGrid">
-                <!-- 搜索结果将在这里动态生成 -->
-            </div>
-            
-            <!-- 加载动画 -->
-            <div class="loading" id="loading" style="display: none;">
-                <div class="spinner"></div>
-                <p class="loading-text">正在搜索全网资源...</p>
-            </div>
+        <h2 class="section-title" id="searchResultsTitle" style="display: none;">
+            <i class="fas fa-search"></i> 搜索结果
+        </h2>
+        <div class="movies-grid" id="searchResults">
+            <!-- 搜索结果将在这里动态生成 -->
         </div>
 
-        <!-- 推荐区域（默认显示） -->
-        <div class="recommendations" id="recommendations">
-            <!-- 热门推荐 -->
-            <h2 class="section-title">
-                <i class="fas fa-fire"></i> 热门推荐
-            </h2>
-            <div class="movies-grid" id="hotMovies">
-                <!-- 动态生成热门推荐 -->
-            </div>
-
-            <!-- 最新上映 -->
-            <h2 class="section-title">
-                <i class="fas fa-bolt"></i> 最新上线
-            </h2>
-            <div class="movies-grid" id="newMovies">
-                <!-- 动态生成最新上线 -->
-            </div>
+        <!-- 热门推荐 -->
+        <h2 class="section-title" id="hotMoviesTitle">
+            <i class="fas fa-fire"></i> 热门推荐
+        </h2>
+        <div class="movies-grid" id="hotMovies">
+            <!-- 热门电影将在这里动态生成 -->
         </div>
 
         <!-- 加载动画 -->
         <div class="loader" id="loader"></div>
     </main>
 
-    <!-- 智能播放器模态框 -->
+    <!-- 视频播放器模态框 -->
     <div class="modal" id="videoModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title" id="modalTitle">智能播放器</h3>
-                <div style="display: flex; gap: 1rem;">
-                    <button class="source-btn active" data-player="bilibili">B站播放</button>
-                    <button class="source-btn" data-player="iframe">网页嵌入</button>
-                    <button class="source-btn" data-player="direct">直接播放</button>
-                    <button class="close-modal" id="closeModal">&times;</button>
-                </div>
+                <h3 class="modal-title" id="modalTitle">正在播放</h3>
+                <button class="close-modal" id="closeModal">&times;</button>
             </div>
             <div class="video-container" id="videoContainer">
-                <div style="text-align: center; padding: 3rem;">
-                    <div class="spinner"></div>
-                    <p style="color: var(--primary); margin-top: 1rem;">正在解析最佳播放源...</p>
-                </div>
-            </div>
-            <div style="padding: 1rem 2rem; background: rgba(0,0,0,0.3);">
-                <h4 style="margin-bottom: 0.5rem; color: var(--primary);">
-                    <i class="fas fa-info-circle"></i> 播放提示
-                </h4>
-                <p style="font-size: 0.9rem; color: rgba(255,255,255,0.7);">
-                    1. 如遇无法播放，请尝试切换播放源<br>
-                    2. B站资源可能受地域限制<br>
-                    3. 部分资源需要VIP权限<br>
-                    4. 推荐使用Chrome浏览器获得最佳体验
-                </p>
+                <!-- 视频将在这里加载 -->
             </div>
         </div>
     </div>
@@ -290,68 +447,28 @@
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-section">
-                <h3>智能影视引擎</h3>
-                <p>自动匹配封面 + 多源播放 + 智能搜索</p>
-                <div class="social-links">
-                    <a href="#" class="social-link"><i class="fab fa-github"></i></a>
-                    <a href="#" class="social-link"><i class="fab fa-weibo"></i></a>
+                <h3>DAHAI CINEMA</h3>
+                <p>一个完全个性化的私人观影空间，为您提供沉浸式的观影体验。</p>
+                <div class="copyright">
+                    &copy; 2023 DAHAI私人影院. 本网站仅供个人学习交流使用。
+                    <br>
+                    视频资源来源于B站公开内容，版权归原作者所有。
                 </div>
             </div>
-            <div class="footer-section">
-                <h3>数据来源</h3>
-                <ul class="footer-links">
-                    <li><a href="https://www.bilibili.com" target="_blank"><i class="fas fa-external-link-alt"></i> 哔哩哔哩</a></li>
-                    <li><a href="https://www.iqiyi.com" target="_blank"><i class="fas fa-external-link-alt"></i> 爱奇艺</a></li>
-                    <li><a href="https://v.qq.com" target="_blank"><i class="fas fa-external-link-alt"></i> 腾讯视频</a></li>
-                    <li><a href="https://www.youku.com" target="_blank"><i class="fas fa-external-link-alt"></i> 优酷视频</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="copyright">
-            本网站仅为技术演示，不存储任何视频资源。<br>
-            所有内容均来自第三方平台，版权归原作者所有。
         </div>
     </footer>
 
     <!-- 脚本 -->
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script>
-        // ==================== 1. 配置部分 ====================
-        const CONFIG = {
-            // 电影数据库API（获取封面和电影信息）
-            TMDB_API_KEY: '9b36b4e6e4f94f4a6b4e6e4f94f4a6b4', // 免费API密钥
-            TMDB_BASE_URL: 'https://api.themoviedb.org/3',
-            TMDB_IMAGE_URL: 'https://image.tmdb.org/t/p/w500',
-            
-            // 默认推荐电影（作为备选）
-            DEFAULT_MOVIES: {
-                hot: [
-                    { title: "流浪地球2", year: "2023", tmdbId: "843794" },
-                    { title: "满江红", year: "2023", tmdbId: "813477" },
-                    { title: "深海", year: "2023", tmdbId: "813478" },
-                    { title: "无名", year: "2023", tmdbId: "813479" }
-                ],
-                new: [
-                    { title: "奥本海默", year: "2023", tmdbId: "872585" },
-                    { title: "芭比", year: "2023", tmdbId: "346698" },
-                    { title: "银河护卫队3", year: "2023", tmdbId: "447365" },
-                    { title: "速度与激情10", year: "2023", tmdbId: "385687" }
-                ]
-            }
-        };
-
-        // ==================== 2. 全局状态 ====================
-        let currentSearchResults = [];
-        let currentVideoSources = [];
-
-        // ==================== 3. 粒子背景初始化 ====================
+        // ==================== 初始化 ====================
         particlesJS('particles-js', {
             particles: {
-                number: { value: 80 },
+                number: { value: 80, density: { enable: true, value_area: 800 } },
                 color: { value: "#00d4ff" },
                 shape: { type: "circle" },
-                opacity: { value: 0.5 },
-                size: { value: 3 },
+                opacity: { value: 0.5, random: true },
+                size: { value: 3, random: true },
                 line_linked: {
                     enable: true,
                     distance: 150,
@@ -359,259 +476,241 @@
                     opacity: 0.2,
                     width: 1
                 },
-                move: { enable: true, speed: 2 }
-            },
-            interactivity: {
-                events: {
-                    onhover: { enable: true, mode: "repulse" },
-                    onclick: { enable: true, mode: "push" }
+                move: {
+                    enable: true,
+                    speed: 2,
+                    direction: "none",
+                    random: true,
+                    straight: false,
+                    out_mode: "out",
+                    bounce: false
                 }
-            },
-            retina_detect: true
+            }
         });
 
-        // ==================== 4. 核心功能：智能搜索 ====================
-        async function smartSearch(query) {
-            showLoading(true);
+        // ==================== 全局变量 ====================
+        let currentSearchResults = [];
+        let currentPage = 1;
+        let isLoading = false;
+
+        // ==================== 豆瓣电影API代理 ====================
+        // 由于豆瓣API有跨域限制，我们使用公共代理
+        const DOUBAN_API = 'https://api.wmdb.tv/api/v1/movie/search';
+        
+        // ==================== B站搜索API ====================
+        // 使用B站搜索接口获取视频信息
+        const BILIBILI_SEARCH_API = 'https://api.bilibili.com/x/web-interface/search/type';
+        
+        // ==================== 初始化热门电影 ====================
+        const defaultMovies = [
+            { title: "流浪地球2", year: "2023", rating: "8.8", bvid: "BV1fX4y1V7Vc" },
+            { title: "阿凡达：水之道", year: "2022", rating: "8.2", bvid: "BV1cT411R7tY" },
+            { title: "奥本海默", year: "2023", rating: "8.7", bvid: "BV1Gu4y1U7YJ" },
+            { title: "蜘蛛侠：纵横宇宙", year: "2023", rating: "9.0", bvid: "BV1No4y1Z7K8" },
+            { title: "碟中谍7", year: "2023", rating: "8.5", bvid: "BV1Nj411D7V4" },
+            { title: "闪电侠", year: "2023", rating: "8.3", bvid: "BV1No4y1Z7K9" }
+        ];
+
+        // ==================== 工具函数 ====================
+        
+        // 生成电影卡片HTML
+        function generateMovieCard(movie) {
+            // 使用豆瓣API获取的电影海报，如果没有则使用默认图片
+            const poster = movie.poster || `https://picsum.photos/seed/${movie.title}/400/600`;
             
+            return `
+                <div class="movie-card" data-id="${movie.bvid || movie.id}">
+                    <img src="${poster}" alt="${movie.title}" class="card-img">
+                    <div class="card-overlay">
+                        <h3 class="card-title">${movie.title}</h3>
+                        <div class="card-meta">
+                            <span>${movie.year || '年份未知'}</span>
+                            <span>⭐ ${movie.rating || movie.rate || '评分未知'}</span>
+                            <span>${movie.duration || '时长未知'}</span>
+                        </div>
+                        <div class="card-actions">
+                            <button class="watch-btn" data-bvid="${movie.bvid}" data-title="${movie.title}">
+                                <i class="fas fa-play"></i> 立即观看
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 显示加载动画
+        function showLoader() {
+            document.getElementById('loader').style.display = 'block';
+            isLoading = true;
+        }
+
+        // 隐藏加载动画
+        function hideLoader() {
+            document.getElementById('loader').style.display = 'none';
+            isLoading = false;
+        }
+
+        // ==================== 电影搜索功能 ====================
+        
+        // 从豆瓣API搜索电影信息
+        async function searchMoviesFromDouban(query) {
             try {
-                // 1. 先尝试从TMDB获取电影信息
-                const tmdbResults = await searchTMDB(query);
+                showLoader();
                 
-                if (tmdbResults.length > 0) {
-                    // 2. 为每个结果搜索播放源
-                    const enhancedResults = await Promise.all(
-                        tmdbResults.map(async (movie) => {
-                            const sources = await searchVideoSources(movie.title, movie.year);
-                            return {
-                                ...movie,
-                                sources,
-                                poster: movie.poster || `https://picsum.photos/seed/${encodeURIComponent(movie.title)}/300/450`
-                            };
-                        })
-                    );
-                    
-                    displaySearchResults(enhancedResults);
-                } else {
-                    // 3. 如果TMDB没有结果，使用默认搜索
-                    const defaultResults = await searchDefaultSources(query);
-                    displaySearchResults(defaultResults);
-                }
+                const response = await fetch(`${DOUBAN_API}?q=${encodeURIComponent(query)}`);
+                const movies = await response.json();
+                
+                // 限制结果数量
+                return movies.slice(0, 12).map(movie => ({
+                    title: movie.originalName || movie.name || '未知标题',
+                    year: movie.year || '年份未知',
+                    rating: movie.rate || '评分未知',
+                    duration: movie.mins || '时长未知',
+                    poster: movie.poster || null,
+                    // 获取B站视频ID（需要二次搜索）
+                    bvid: null
+                }));
             } catch (error) {
-                console.error('搜索失败:', error);
-                // 4. 降级方案：使用模拟数据
-                displayFallbackResults(query);
+                console.error('豆瓣搜索失败:', error);
+                return [];
             } finally {
-                showLoading(false);
+                hideLoader();
             }
         }
 
-        // ==================== 5. TMDB搜索函数 ====================
-        async function searchTMDB(query) {
+        // 从B站搜索视频
+        async function searchVideosFromBilibili(query) {
             try {
-                const response = await fetch(
-                    `${CONFIG.TMDB_BASE_URL}/search/multi?api_key=${CONFIG.TMDB_API_KEY}&query=${encodeURIComponent(query)}&language=zh-CN&page=1`
-                );
+                // B站搜索API参数
+                const params = new URLSearchParams({
+                    search_type: 'video',
+                    keyword: query,
+                    page: currentPage,
+                    tids: 1, // 动画
+                    order: 'totalrank'
+                });
+
+                // 使用CORS代理绕过跨域限制
+                const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+                const apiUrl = `${BILIBILI_SEARCH_API}?${params}`;
                 
-                if (!response.ok) throw new Error('TMDB API请求失败');
+                const response = await fetch(proxyUrl + apiUrl, {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                    }
+                });
                 
                 const data = await response.json();
                 
-                return data.results.slice(0, 10).map(item => ({
-                    id: item.id,
-                    title: item.title || item.name,
-                    year: item.release_date ? item.release_date.split('-')[0] : '未知',
-                    type: item.media_type,
-                    rating: item.vote_average ? item.vote_average.toFixed(1) : '无',
-                    overview: item.overview || '暂无简介',
-                    poster: item.poster_path ? CONFIG.TMDB_IMAGE_URL + item.poster_path : null
-                }));
+                if (data.code === 0 && data.data.result) {
+                    return data.data.result.map(item => ({
+                        title: item.title.replace(/<[^>]+>/g, ''), // 移除HTML标签
+                        bvid: item.bvid,
+                        duration: formatDuration(item.duration),
+                        poster: item.pic,
+                        rating: item.play ? formatNumber(item.play) + '播放' : '热度未知'
+                    }));
+                }
+                return [];
             } catch (error) {
-                console.warn('TMDB搜索失败，使用备选方案:', error);
+                console.error('B站搜索失败:', error);
                 return [];
             }
         }
 
-        // ==================== 6. 视频源搜索函数 ====================
-        async function searchVideoSources(title, year) {
-            // 这里可以接入实际的视频源API
-            // 目前使用模拟数据
-            const mockSources = [
-                { name: 'B站', type: 'bilibili', url: generateBilibiliSearch(title) },
-                { name: '爱奇艺', type: 'iqiyi', url: `https://www.iqiyi.com/search.html?source=input&key=${encodeURIComponent(title)}` },
-                { name: '腾讯视频', type: 'tencent', url: `https://v.qq.com/x/search/?q=${encodeURIComponent(title)}` },
-                { name: '优酷', type: 'youku', url: `https://so.youku.com/search_video/q_${encodeURIComponent(title)}` }
-            ];
+        // ==================== 主搜索函数 ====================
+        async function performSearch() {
+            const query = document.getElementById('searchInput').value.trim();
+            if (!query) return;
             
-            return mockSources;
-        }
-
-        // ==================== 7. 生成B站搜索链接 ====================
-        function generateBilibiliSearch(title) {
-            // 使用B站搜索页面
-            return `https://search.bilibili.com/all?keyword=${encodeURIComponent(title)}&from_source=webtop_search`;
-        }
-
-        // ==================== 8. 默认搜索函数 ====================
-        async function searchDefaultSources(query) {
-            // 模拟延迟
-            await new Promise(resolve => setTimeout(resolve, 500));
+            showLoader();
             
-            // 模拟搜索结果
-            return [
-                {
-                    id: 1,
-                    title: query + " (电影)",
-                    year: "2023",
-                    type: "movie",
-                    rating: "8.5",
-                    overview: `关于"${query}"的电影作品`,
-                    poster: `https://picsum.photos/seed/${encodeURIComponent(query + '1')}/300/450`,
-                    sources: [
-                        { name: 'B站', type: 'bilibili', url: generateBilibiliSearch(query) }
-                    ]
-                },
-                {
-                    id: 2,
-                    title: query + " (剧集)",
-                    year: "2023",
-                    type: "tv",
-                    rating: "8.2",
-                    overview: `关于"${query}"的电视剧作品`,
-                    poster: `https://picsum.photos/seed/${encodeURIComponent(query + '2')}/300/450`,
-                    sources: [
-                        { name: '腾讯视频', type: 'tencent', url: `https://v.qq.com/x/search/?q=${encodeURIComponent(query)}` }
-                    ]
+            try {
+                // 1. 先搜索B站视频
+                const bilibiliResults = await searchVideosFromBilibili(query);
+                
+                // 2. 如果B站没有结果，搜索豆瓣获取电影信息
+                if (bilibiliResults.length === 0) {
+                    const doubanResults = await searchMoviesFromDouban(query);
+                    
+                    // 合并结果
+                    currentSearchResults = doubanResults;
+                } else {
+                    currentSearchResults = bilibiliResults;
                 }
-            ];
+                
+                // 显示搜索结果
+                displaySearchResults();
+                
+            } catch (error) {
+                console.error('搜索失败:', error);
+                alert('搜索失败，请稍后重试或使用其他关键词。');
+            } finally {
+                hideLoader();
+            }
         }
 
-        // ==================== 9. 显示搜索结果 ====================
-        function displaySearchResults(results) {
-            currentSearchResults = results;
+        // 显示搜索结果
+        function displaySearchResults() {
+            const searchResultsContainer = document.getElementById('searchResults');
+            const searchResultsTitle = document.getElementById('searchResultsTitle');
             
-            const resultsGrid = document.getElementById('resultsGrid');
-            const resultCount = document.getElementById('resultCount');
-            const searchResults = document.getElementById('searchResults');
-            const recommendations = document.getElementById('recommendations');
+            // 清空之前的结果
+            searchResultsContainer.innerHTML = '';
             
-            // 更新计数
-            resultCount.textContent = `找到 ${results.length} 个结果`;
-            
-            // 生成结果卡片
-            resultsGrid.innerHTML = results.map(movie => `
-                <div class="result-item" data-id="${movie.id}" data-title="${movie.title}">
-                    <img src="${movie.poster}" alt="${movie.title}" 
-                         onerror="this.src='https://picsum.photos/300/450'">
-                    <div class="result-info">
-                        <div class="result-title">${movie.title}</div>
-                        <div class="result-year">${movie.year} · ${movie.type === 'movie' ? '电影' : '剧集'} · ⭐ ${movie.rating}</div>
-                        <div style="margin-top: 0.5rem;">
-                            ${movie.sources.slice(0, 2).map(source => 
-                                `<span style="background: rgba(0,212,255,0.1); color: var(--primary); 
-                                    padding: 2px 8px; border-radius: 10px; margin-right: 5px; 
-                                    font-size: 0.8rem;">${source.name}</span>`
-                            ).join('')}
-                        </div>
+            if (currentSearchResults.length === 0) {
+                searchResultsContainer.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: rgba(255,255,255,0.5);">
+                        <i class="fas fa-film" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                        <h3>未找到相关影片</h3>
+                        <p>尝试搜索其他关键词，或直接输入B站视频BV号</p>
                     </div>
-                </div>
-            `).join('');
-            
-            // 显示搜索结果，隐藏推荐
-            searchResults.style.display = 'block';
-            recommendations.style.display = 'none';
-            
-            // 绑定点击事件
-            document.querySelectorAll('.result-item').forEach(item => {
-                item.addEventListener('click', function() {
-                    const movieId = this.getAttribute('data-id');
-                    const movieTitle = this.getAttribute('data-title');
-                    const movie = results.find(m => m.id == movieId);
-                    if (movie) {
-                        showVideoPlayer(movie);
-                    }
+                `;
+            } else {
+                // 生成电影卡片
+                currentSearchResults.forEach(movie => {
+                    searchResultsContainer.innerHTML += generateMovieCard(movie);
                 });
-            });
-        }
-
-        // ==================== 10. 备用结果显示 ====================
-        function displayFallbackResults(query) {
-            const fallbackResults = [
-                {
-                    id: 'fallback1',
-                    title: `搜索"${query}"的影片`,
-                    year: "2023",
-                    type: "movie",
-                    rating: "8.0",
-                    overview: "请尝试使用更具体的关键词搜索",
-                    poster: "https://picsum.photos/seed/movie/300/450",
-                    sources: [
-                        { name: 'B站搜索', type: 'bilibili', url: generateBilibiliSearch(query) }
-                    ]
-                }
-            ];
+                
+                // 绑定播放事件
+                bindWatchEvents();
+            }
             
-            displaySearchResults(fallbackResults);
+            // 显示搜索结果标题
+            searchResultsTitle.style.display = 'block';
+            
+            // 隐藏热门推荐
+            document.getElementById('hotMoviesTitle').style.display = 'none';
+            document.getElementById('hotMovies').style.display = 'none';
+            
+            // 滚动到搜索结果
+            searchResultsContainer.scrollIntoView({ behavior: 'smooth' });
         }
 
-        // ==================== 11. 显示视频播放器 ====================
-        function showVideoPlayer(movie) {
+        // ==================== 热门电影初始化 ====================
+        function initHotMovies() {
+            const hotMoviesContainer = document.getElementById('hotMovies');
+            
+            defaultMovies.forEach(movie => {
+                hotMoviesContainer.innerHTML += generateMovieCard(movie);
+            });
+            
+            bindWatchEvents();
+        }
+
+        // ==================== 视频播放功能 ====================
+        function playVideo(bvid, title) {
             const modal = document.getElementById('videoModal');
             const titleEl = document.getElementById('modalTitle');
             const container = document.getElementById('videoContainer');
             
-            titleEl.textContent = `正在播放：${movie.title}`;
+            titleEl.textContent = `正在播放：${title}`;
             
-            // 默认使用第一个源
-            const primarySource = movie.sources[0];
-            let embedCode = '';
-            
-            if (primarySource.type === 'bilibili') {
-                // 尝试获取B站视频ID（这里需要真实逻辑）
-                const bvid = guessBilibiliVideoId(movie.title);
-                embedCode = generateBilibiliEmbed(bvid);
-            } else {
-                // 其他视频源使用iframe嵌入
-                embedCode = `
-                    <iframe src="${primarySource.url}" 
-                            width="100%" 
-                            height="600" 
-                            frameborder="0" 
-                            allowfullscreen
-                            style="border-radius: 10px;">
-                    </iframe>
-                `;
-            }
-            
-            container.innerHTML = embedCode;
-            modal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-            
-            // 保存当前视频信息
-            currentVideoSources = movie.sources;
-            
-            // 绑定播放源切换
-            document.querySelectorAll('[data-player]').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const playerType = this.getAttribute('data-player');
-                    switchVideoPlayer(movie, playerType);
-                    
-                    // 更新按钮状态
-                    document.querySelectorAll('[data-player]').forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                });
-            });
-        }
-
-        // ==================== 12. 生成B站嵌入代码 ====================
-        function generateBilibiliEmbed(bvid) {
-            // 使用一个通用的示例视频ID，实际中应该根据搜索获取真实ID
-            const defaultBvid = 'BV1MJ41157D3';
-            const videoId = bvid || defaultBvid;
-            
-            return `
+            // 嵌入B站播放器
+            container.innerHTML = `
                 <iframe 
-                    src="https://player.bilibili.com/player.html?bvid=${videoId}&autoplay=1&page=1"
+                    src="https://player.bilibili.com/player.html?bvid=${bvid}&autoplay=1&page=1"
                     width="100%" 
                     height="600" 
                     scrolling="no" 
@@ -619,289 +718,132 @@
                     frameborder="no" 
                     framespacing="0" 
                     allowfullscreen="true"
-                    style="border-radius: 10px;">
+                    style="border-radius: 10px;"
+                >
                 </iframe>
             `;
+            
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            
+            // 记录播放历史
+            saveToHistory({ bvid, title, time: new Date().toLocaleString() });
         }
 
-        // ==================== 13. 猜测B站视频ID ====================
-        function guessBilibiliVideoId(title) {
-            // 这里应该有一个映射表或API调用
-            // 目前返回一个示例ID
-            const videoMap = {
-                '流浪地球': 'BV1fX4y1V7Vc',
-                '满江红': 'BV1cT411R7tY',
-                '三体': 'BV1Gu4y1U7YJ',
-                '狂飙': 'BV1No4y1Z7K8'
-            };
-            
-            for (const [key, value] of Object.entries(videoMap)) {
-                if (title.includes(key)) {
-                    return value;
-                }
+        // ==================== 辅助函数 ====================
+        function formatDuration(seconds) {
+            if (!seconds) return '时长未知';
+            const minutes = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${minutes}分${secs}秒`;
+        }
+
+        function formatNumber(num) {
+            if (num >= 10000) {
+                return (num / 10000).toFixed(1) + '万';
             }
-            
-            return 'BV1MJ41157D3'; // 默认视频ID
+            return num;
         }
 
-        // ==================== 14. 切换播放器类型 ====================
-        function switchVideoPlayer(movie, playerType) {
-            const container = document.getElementById('videoContainer');
-            
-            switch(playerType) {
-                case 'bilibili':
-                    const bvid = guessBilibiliVideoId(movie.title);
-                    container.innerHTML = generateBilibiliEmbed(bvid);
-                    break;
+        function saveToHistory(video) {
+            let history = JSON.parse(localStorage.getItem('videoHistory') || '[]');
+            history.unshift(video);
+            history = history.slice(0, 20); // 只保留最近20条
+            localStorage.setItem('videoHistory', JSON.stringify(history));
+        }
+
+        // ==================== 事件绑定 ====================
+        function bindWatchEvents() {
+            document.querySelectorAll('.watch-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const bvid = this.getAttribute('data-bvid');
+                    const title = this.getAttribute('data-title');
                     
-                case 'iframe':
-                    // 使用网页嵌入
-                    const source = movie.sources.find(s => s.type !== 'bilibili') || movie.sources[0];
-                    container.innerHTML = `
-                        <iframe src="${source.url}" 
-                                width="100%" 
-                                height="600" 
-                                frameborder="0" 
-                                allowfullscreen
-                                style="border-radius: 10px;">
-                        </iframe>
-                    `;
-                    break;
-                    
-                case 'direct':
-                    // 直接跳转
-                    const bilibiliSource = movie.sources.find(s => s.type === 'bilibili');
-                    if (bilibiliSource) {
-                        window.open(bilibiliSource.url, '_blank');
+                    if (bvid && bvid.startsWith('BV')) {
+                        playVideo(bvid, title);
                     } else {
-                        window.open(movie.sources[0].url, '_blank');
+                        // 如果没有BVID，尝试搜索
+                        const movieTitle = this.closest('.movie-card').querySelector('.card-title').textContent;
+                        searchAndPlay(movieTitle);
                     }
-                    container.innerHTML = `
-                        <div style="text-align: center; padding: 3rem;">
-                            <i class="fas fa-external-link-alt" style="font-size: 4rem; color: var(--primary);"></i>
-                            <h3 style="margin-top: 1rem; color: var(--primary);">已在新标签页打开</h3>
-                            <p style="color: rgba(255,255,255,0.7);">如果没有自动跳转，请手动点击链接</p>
-                        </div>
-                    `;
-                    break;
-            }
-        }
-
-        // ==================== 15. 加载状态控制 ====================
-        function showLoading(show) {
-            const loading = document.getElementById('loading');
-            const searchBtn = document.getElementById('searchBtn');
-            
-            if (show) {
-                loading.style.display = 'block';
-                searchBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 搜索中...';
-                searchBtn.disabled = true;
-            } else {
-                loading.style.display = 'none';
-                searchBtn.innerHTML = '<i class="fas fa-search"></i> 智能搜索';
-                searchBtn.disabled = false;
-            }
-        }
-
-        // ==================== 16. 初始化推荐内容 ====================
-        async function initRecommendations() {
-            const hotGrid = document.getElementById('hotMovies');
-            const newGrid = document.getElementById('newMovies');
-            
-            // 加载热门推荐
-            const hotMovies = await Promise.all(
-                CONFIG.DEFAULT_MOVIES.hot.map(async movie => {
-                    const sources = await searchVideoSources(movie.title, movie.year);
-                    return {
-                        ...movie,
-                        poster: `${CONFIG.TMDB_IMAGE_URL}/p/original`,
-                        sources,
-                        poster: `https://picsum.photos/seed/${encodeURIComponent(movie.title + 'hot')}/300/450`
-                    };
-                })
-            );
-            
-            // 加载最新上线
-            const newMovies = await Promise.all(
-                CONFIG.DEFAULT_MOVIES.new.map(async movie => {
-                    const sources = await searchVideoSources(movie.title, movie.year);
-                    return {
-                        ...movie,
-                        sources,
-                        poster: `https://picsum.photos/seed/${encodeURIComponent(movie.title + 'new')}/300/450`
-                    };
-                })
-            );
-            
-            // 渲染热门推荐
-            hotGrid.innerHTML = hotMovies.map(movie => `
-                <div class="movie-card" data-title="${movie.title}">
-                    <img src="${movie.poster}" alt="${movie.title}" class="card-img">
-                    <div class="card-overlay">
-                        <h3 class="card-title">${movie.title}</h3>
-                        <div class="card-meta">
-                            <span>${movie.year}</span>
-                            <span>⭐ 8.0+</span>
-                        </div>
-                        <div class="card-actions">
-                            <button class="watch-btn" onclick="playRecommendedMovie('${movie.title}')">
-                                <i class="fas fa-play"></i> 立即观看
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-            
-            // 渲染最新上线
-            newGrid.innerHTML = newMovies.map(movie => `
-                <div class="movie-card" data-title="${movie.title}">
-                    <img src="${movie.poster}" alt="${movie.title}" class="card-img">
-                    <div class="card-overlay">
-                        <h3 class="card-title">${movie.title}</h3>
-                        <div class="card-meta">
-                            <span>${movie.year}</span>
-                            <span>⭐ 8.0+</span>
-                        </div>
-                        <div class="card-actions">
-                            <button class="watch-btn" onclick="playRecommendedMovie('${movie.title}')">
-                                <i class="fas fa-play"></i> 立即观看
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // ==================== 17. 播放推荐电影 ====================
-        async function playRecommendedMovie(title) {
-            showLoading(true);
-            
-            try {
-                const results = await searchTMDB(title);
-                if (results.length > 0) {
-                    const movie = results[0];
-                    const sources = await searchVideoSources(movie.title, movie.year);
-                    movie.sources = sources;
-                    
-                    showVideoPlayer(movie);
-                } else {
-                    // 如果TMDB没有找到，使用默认播放
-                    const movie = {
-                        title: title,
-                        year: "2023",
-                        type: "movie",
-                        rating: "8.5",
-                        poster: `https://picsum.photos/seed/${encodeURIComponent(title)}/300/450`,
-                        sources: [
-                            { name: 'B站', type: 'bilibili', url: generateBilibiliSearch(title) }
-                        ]
-                    };
-                    
-                    showVideoPlayer(movie);
-                }
-            } catch (error) {
-                console.error('播放失败:', error);
-                alert('播放失败，请手动搜索该影片');
-            } finally {
-                showLoading(false);
-            }
-        }
-
-        // ==================== 18. 事件绑定 ====================
-        function bindEvents() {
-            // 搜索按钮
-            document.getElementById('searchBtn').addEventListener('click', () => {
-                const query = document.getElementById('searchInput').value.trim();
-                if (query) {
-                    smartSearch(query);
-                } else {
-                    alert('请输入搜索内容');
-                }
-            });
-            
-            // 搜索框回车
-            document.getElementById('searchInput').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    const query = document.getElementById('searchInput').value.trim();
-                    if (query) {
-                        smartSearch(query);
-                    }
-                }
-            });
-            
-            // 快速搜索链接
-            document.querySelectorAll('.quick-link').forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const query = this.getAttribute('data-search');
-                    document.getElementById('searchInput').value = query;
-                    smartSearch(query);
                 });
             });
+        }
+
+        async function searchAndPlay(title) {
+            showLoader();
+            try {
+                const videos = await searchVideosFromBilibili(title);
+                if (videos.length > 0) {
+                    playVideo(videos[0].bvid, videos[0].title);
+                } else {
+                    alert(`未找到"${title}"的在线视频资源`);
+                }
+            } catch (error) {
+                console.error('搜索播放失败:', error);
+                alert('播放失败，请稍后重试');
+            } finally {
+                hideLoader();
+            }
+        }
+
+        // ==================== 页面初始化 ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化热门电影
+            initHotMovies();
             
-            // 导航按钮
-            document.getElementById('homeBtn').addEventListener('click', (e) => {
-                e.preventDefault();
-                document.getElementById('recommendations').style.display = 'block';
-                document.getElementById('searchResults').style.display = 'none';
-                document.getElementById('searchInput').value = '';
+            // 搜索按钮事件
+            document.getElementById('searchBtn').addEventListener('click', performSearch);
+            
+            // 搜索框回车事件
+            document.getElementById('searchInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') performSearch();
             });
             
             // 关闭模态框
-            document.getElementById('closeModal').addEventListener('click', () => {
+            document.getElementById('closeModal').addEventListener('click', function() {
                 const modal = document.getElementById('videoModal');
-                modal.style.display = 'none';
-                document.body.style.overflow = 'auto';
+                const container = document.getElementById('videoContainer');
                 
-                // 停止视频播放
-                const iframe = document.querySelector('#videoContainer iframe');
-                if (iframe) {
-                    iframe.src = iframe.src; // 重新加载以停止播放
-                }
+                modal.style.display = 'none';
+                container.innerHTML = '';
+                document.body.style.overflow = 'auto';
             });
             
             // 点击模态框背景关闭
             document.getElementById('videoModal').addEventListener('click', function(e) {
                 if (e.target === this) {
                     this.style.display = 'none';
+                    document.getElementById('videoContainer').innerHTML = '';
                     document.body.style.overflow = 'auto';
-                    
-                    const iframe = document.querySelector('#videoContainer iframe');
-                    if (iframe) {
-                        iframe.src = iframe.src;
-                    }
                 }
             });
             
             // 用户按钮
-            document.getElementById('userBtn').addEventListener('click', () => {
-                alert(`👤 欢迎回来，大海！\n\n📊 今日推荐：\n• 流浪地球2 - 科幻巨制\n• 满江红 - 古装悬疑\n• 三体 - 科幻神作\n\n🎯 功能提示：\n输入电影名称即可智能搜索播放`);
-            });
-        }
-
-        // ==================== 19. 页面初始化 ====================
-        document.addEventListener('DOMContentLoaded', function() {
-            initRecommendations();
-            bindEvents();
-            
-            // 添加搜索建议
-            const searchInput = document.getElementById('searchInput');
-            searchInput.addEventListener('focus', function() {
-                if (!this.value) {
-                    this.placeholder = '试试输入：流浪地球、三体、狂飙、鬼灭之刃...';
-                }
+            document.getElementById('userBtn').addEventListener('click', function() {
+                alert(`👤 欢迎回来，大海！\n\n📺 您的私人影院已就绪\n🎬 输入关键词开始搜索\n▶️ 点击电影卡片即可播放`);
             });
             
-            searchInput.addEventListener('blur', function() {
-                this.placeholder = '输入电影、电视剧、动漫名称，如：流浪地球、权力的游戏...';
+            // 首页按钮
+            document.querySelector('a[href="#"]').addEventListener('click', function(e) {
+                e.preventDefault();
+                location.reload();
             });
-            
-            console.log('🎬 智能影视网站已加载完成！');
-            console.log('🔍 功能：智能搜索 + 封面匹配 + 多源播放');
         });
 
-        // ==================== 20. 全局导出函数 ====================
-        window.playRecommendedMovie = playRecommendedMovie;
+        // ==================== 窗口事件 ====================
+        window.addEventListener('scroll', function() {
+            // 无限滚动加载（如果需要）
+            if (isLoading) return;
+            
+            const scrollPosition = window.innerHeight + window.scrollY;
+            const pageHeight = document.documentElement.offsetHeight;
+            
+            if (scrollPosition >= pageHeight - 500) {
+                // 可以在这里实现分页加载
+            }
+        });
     </script>
 </body>
 </html>
