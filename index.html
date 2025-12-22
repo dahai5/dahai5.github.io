@@ -5,171 +5,574 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DAHAI·私人影院 | 沉浸式观影体验</title>
     <style>
-        /* 保持原有的所有样式不变，只添加必要的加载状态样式 */
-        
-        /* 搜索下拉建议框 */
-        .suggestions-box {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: rgba(20, 20, 30, 0.95);
-            border: 1px solid rgba(0, 212, 255, 0.2);
-            border-radius: 0 0 15px 15px;
-            max-height: 300px;
-            overflow-y: auto;
-            display: none;
-            z-index: 100;
-            backdrop-filter: blur(20px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        /* 全局重置与基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        
-        .suggestion-item {
-            padding: 1rem 1.5rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
+
+        :root {
+            --primary: #00d4ff;      /* 科技蓝 */
+            --secondary: #9d4edd;    /* 紫罗兰 */
+            --accent: #ff6b6b;       /* 珊瑚红 */
+            --dark: #0a0a0f;         /* 深空黑 */
+            --darker: #050508;       /* 更深的黑 */
+            --light: #e0e0e0;        /* 浅灰 */
+            --glass: rgba(255, 255, 255, 0.05);
+            --glow: 0 0 20px rgba(0, 212, 255, 0.3);
         }
-        
-        .suggestion-item:hover {
-            background: rgba(0, 212, 255, 0.1);
-        }
-        
-        .suggestion-img {
-            width: 60px;
-            height: 40px;
-            object-fit: cover;
-            border-radius: 4px;
-        }
-        
-        .suggestion-title {
-            font-weight: 500;
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--darker) 0%, #0f172a 100%);
             color: var(--light);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
         }
-        
-        .suggestion-type {
-            font-size: 0.8rem;
-            color: var(--primary);
-            background: rgba(0, 212, 255, 0.1);
-            padding: 0.2rem 0.5rem;
-            border-radius: 4px;
+
+        /* 背景粒子效果 */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
         }
-        
-        /* 视频加载状态 */
-        .video-loading {
+
+        /* 导航栏 - 科幻风格 */
+        .navbar {
+            background: rgba(10, 10, 15, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+            padding: 1.2rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            min-height: 400px;
-            gap: 2rem;
+            box-shadow: var(--glow);
         }
-        
-        .loading-text {
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .logo::before {
+            content: "▶";
             color: var(--primary);
-            font-size: 1.2rem;
+            font-size: 1.5rem;
             animation: pulse 2s infinite;
         }
-        
-        /* 分类筛选器 */
-        .category-filters {
+
+        .nav-center {
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+        }
+
+        .nav-item {
+            position: relative;
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 0;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-item:hover {
+            color: var(--primary);
+        }
+
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), transparent);
+            transition: width 0.3s ease;
+        }
+
+        .nav-item:hover::after {
+            width: 100%;
+        }
+
+        /* 主搜索区域 - 居中大气 */
+        .hero {
+            margin-top: 120px;
+            padding: 4rem 2rem;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, var(--primary), var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+            line-height: 1.1;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: rgba(224, 224, 224, 0.8);
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            line-height: 1.6;
+        }
+
+        /* 主搜索框 */
+        .search-container {
+            max-width: 800px;
+            margin: 0 auto 3rem;
+            position: relative;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 1.5rem 2rem;
+            font-size: 1.1rem;
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(0, 212, 255, 0.2);
+            border-radius: 15px;
+            color: var(--light);
+            outline: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .search-box:focus {
+            border-color: var(--primary);
+            box-shadow: var(--glow);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .search-box::placeholder {
+            color: rgba(224, 224, 224, 0.5);
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-50%) scale(1.05);
+            box-shadow: var(--glow);
+        }
+
+        /* 快速分类按钮 */
+        .quick-links {
             display: flex;
             justify-content: center;
             gap: 1rem;
-            margin: 2rem 0;
             flex-wrap: wrap;
-            padding: 0 2rem;
+            margin-top: 2rem;
         }
-        
-        .filter-btn {
-            background: rgba(255, 255, 255, 0.05);
+
+        .quick-link {
+            background: var(--glass);
             border: 1px solid rgba(0, 212, 255, 0.1);
-            color: var(--light);
-            padding: 0.8rem 1.5rem;
+            padding: 0.8rem 1.8rem;
             border-radius: 25px;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            color: var(--light);
+            text-decoration: none;
             font-weight: 500;
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
-        
-        .filter-btn.active {
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            border-color: transparent;
+
+        .quick-link:hover {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: var(--primary);
+            transform: translateY(-2px);
         }
-        
-        .filter-btn:hover {
+
+        /* 视频网格 - 卡片式设计 */
+        .section-title {
+            font-size: 2.2rem;
+            margin: 4rem 0 2rem;
+            padding-left: 2rem;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 5px;
+            height: 40px;
+            background: linear-gradient(180deg, var(--primary), var(--secondary));
+            border-radius: 3px;
+        }
+
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            padding: 0 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .movie-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+        }
+
+        .movie-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: var(--primary);
+            box-shadow: var(--glow);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .card-img {
+            width: 100%;
+            height: 380px;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .movie-card:hover .card-img {
+            transform: scale(1.1);
+        }
+
+        .card-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+            padding: 2rem 1.5rem 1.5rem;
+            transform: translateY(100%);
+            transition: transform 0.4s ease;
+        }
+
+        .movie-card:hover .card-overlay {
+            transform: translateY(0);
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: white;
+        }
+
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .watch-btn, .info-btn {
+            flex: 1;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .watch-btn {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .info-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--light);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .watch-btn:hover, .info-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
-        
-        /* 分页控件 */
-        .pagination {
-            display: flex;
+
+        /* 视频播放器模态框 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 2000;
+            align-items: center;
             justify-content: center;
-            gap: 0.5rem;
-            margin: 3rem 0;
-            padding: 0 2rem;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
         }
-        
-        .page-btn {
+
+        .modal-content {
+            width: 90%;
+            max-width: 1200px;
+            background: rgba(20, 20, 30, 0.95);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            box-shadow: 0 0 50px rgba(0, 212, 255, 0.2);
+        }
+
+        .modal-header {
+            padding: 1.5rem 2rem;
+            background: rgba(0, 0, 0, 0.5);
+            border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: var(--light);
+            font-size: 2rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .close-modal:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--accent);
+        }
+
+        .video-container {
+            padding: 2rem;
+            min-height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 页脚 */
+        .footer {
+            background: rgba(5, 5, 8, 0.95);
+            padding: 4rem 2rem 2rem;
+            border-top: 1px solid rgba(0, 212, 255, 0.1);
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+        }
+
+        .footer-section h3 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: rgba(224, 224, 224, 0.7);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+            transform: translateX(5px);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-link {
             width: 40px;
             height: 40px;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(0, 212, 255, 0.1);
-            color: var(--light);
-            cursor: pointer;
-            transition: all 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
+            color: var(--light);
+            text-decoration: none;
+            transition: all 0.3s ease;
         }
-        
-        .page-btn.active {
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            border-color: transparent;
+
+        .social-link:hover {
+            background: var(--primary);
+            transform: translateY(-5px);
         }
-        
-        .page-btn:hover:not(.active) {
-            background: rgba(0, 212, 255, 0.1);
-        }
-        
-        /* 视频信息标签 */
-        .video-tags {
-            display: flex;
-            gap: 0.5rem;
-            margin: 1rem 0;
-            flex-wrap: wrap;
-        }
-        
-        .video-tag {
-            background: rgba(0, 212, 255, 0.1);
-            color: var(--primary);
-            padding: 0.3rem 0.8rem;
-            border-radius: 15px;
-            font-size: 0.8rem;
-            border: 1px solid rgba(0, 212, 255, 0.2);
-        }
-        
-        /* 视频统计信息 */
-        .video-stats {
-            display: flex;
-            gap: 1rem;
-            margin: 0.5rem 0;
-            color: rgba(255, 255, 255, 0.7);
+
+        .copyright {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: rgba(224, 224, 224, 0.5);
             font-size: 0.9rem;
         }
-        
-        .stat-item {
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
+
+        /* 动画效果 */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+            
+            .nav-center {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 1rem;
+            }
+            
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .movies-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 1rem;
+                padding: 0 1rem;
+            }
+            
+            .modal-content {
+                width: 95%;
+            }
+            
+            .video-container {
+                padding: 1rem;
+                min-height: 400px;
+            }
+        }
+
+        /* 加载动画 */
+        .loader {
+            display: none;
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(0, 212, 255, 0.1);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 2rem auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 滚动条美化 */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--darker);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--primary), var(--secondary));
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, var(--secondary), var(--primary));
         }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -183,11 +586,11 @@
     <nav class="navbar">
         <div class="logo">DAHAI CINEMA</div>
         <div class="nav-center">
-            <a href="#" class="nav-item active" data-category="all"><i class="fas fa-home"></i> 首页</a>
-            <a href="#" class="nav-item" data-category="movie"><i class="fas fa-film"></i> 电影</a>
-            <a href="#" class="nav-item" data-category="tv"><i class="fas fa-tv"></i> 剧集</a>
-            <a href="#" class="nav-item" data-category="anime"><i class="fas fa-gamepad"></i> 动漫</a>
-            <a href="#" class="nav-item" data-category="variety"><i class="fas fa-star"></i> 综艺</a>
+            <a href="#" class="nav-item"><i class="fas fa-home"></i> 首页</a>
+            <a href="#movies" class="nav-item"><i class="fas fa-film"></i> 电影</a>
+            <a href="#tv" class="nav-item"><i class="fas fa-tv"></i> 剧集</a>
+            <a href="#anime" class="nav-item"><i class="fas fa-gamepad"></i> 动漫</a>
+            <a href="#collections" class="nav-item"><i class="fas fa-star"></i> 收藏</a>
         </div>
         <div class="user-menu">
             <button class="nav-item" id="userBtn"><i class="fas fa-user"></i> 大海</button>
@@ -200,59 +603,58 @@
         <section class="hero">
             <h1 class="hero-title floating">沉浸式私人观影体验</h1>
             <p class="hero-subtitle">
-                直接接入海量影视资源 · 实时搜索播放 · 个性化推荐
+                一个完全属于你的影视空间 · 精选全球优质内容 · 无广告干扰 · 个性推荐
             </p>
             
             <!-- 搜索框 -->
             <div class="search-container">
                 <input type="text" 
                        class="search-box" 
-                       placeholder="搜索电影、剧集、动漫、演员..." 
-                       id="searchInput"
-                       autocomplete="off">
+                       placeholder="搜索电影、剧集、动漫..." 
+                       id="searchInput">
                 <button class="search-btn" id="searchBtn">
                     <i class="fas fa-search"></i> 搜索
                 </button>
-                <div class="suggestions-box" id="suggestionsBox"></div>
             </div>
             
-            <!-- 快速分类 -->
-            <div class="category-filters">
-                <button class="filter-btn active" data-category="all">
-                    <i class="fas fa-fire"></i> 热门推荐
-                </button>
-                <button class="filter-btn" data-category="movie">
-                    <i class="fas fa-film"></i> 最新电影
-                </button>
-                <button class="filter-btn" data-category="tv">
-                    <i class="fas fa-tv"></i> 热播剧集
-                </button>
-                <button class="filter-btn" data-category="anime">
-                    <i class="fas fa-gamepad"></i> 热门动漫
-                </button>
-                <button class="filter-btn" data-category="variety">
-                    <i class="fas fa-star"></i> 热门综艺
-                </button>
+            <!-- 快速链接 -->
+            <div class="quick-links">
+                <a href="#" class="quick-link" data-category="action">
+                    <i class="fas fa-explosion"></i> 动作大片
+                </a>
+                <a href="#" class="quick-link" data-category="sci-fi">
+                    <i class="fas fa-robot"></i> 科幻未来
+                </a>
+                <a href="#" class="quick-link" data-category="drama">
+                    <i class="fas fa-theater-masks"></i> 剧情佳作
+                </a>
+                <a href="#" class="quick-link" data-category="comedy">
+                    <i class="fas fa-laugh"></i> 喜剧轻松
+                </a>
+                <a href="#" class="quick-link" data-category="anime">
+                    <i class="fas fa-dragon"></i> 热血动漫
+                </a>
             </div>
         </section>
 
-        <!-- 视频网格 -->
-        <div id="videoContent">
-            <h2 class="section-title">
-                <i class="fas fa-fire"></i> 今日热门推荐
-            </h2>
-            <div class="movies-grid" id="moviesGrid">
-                <!-- 动态生成 -->
-            </div>
-            
-            <!-- 加载动画 -->
-            <div class="loader" id="loader"></div>
-            
-            <!-- 分页控件 -->
-            <div class="pagination" id="pagination">
-                <!-- 动态生成 -->
-            </div>
+        <!-- 热门推荐 -->
+        <h2 class="section-title" id="movies">
+            <i class="fas fa-fire"></i> 今日热门推荐
+        </h2>
+        <div class="movies-grid" id="hotMovies">
+            <!-- 动态生成 -->
         </div>
+
+        <!-- 最新上映 -->
+        <h2 class="section-title" id="tv">
+            <i class="fas fa-bolt"></i> 最新上映
+        </h2>
+        <div class="movies-grid" id="newMovies">
+            <!-- 动态生成 -->
+        </div>
+
+        <!-- 加载动画 -->
+        <div class="loader" id="loader"></div>
     </main>
 
     <!-- 视频播放器模态框 -->
@@ -273,375 +675,191 @@
         <div class="footer-content">
             <div class="footer-section">
                 <h3>DAHAI CINEMA</h3>
-                <p>基于GitHub Pages的影视聚合平台，接入海量影视资源。</p>
+                <p>一个完全个性化的私人观影空间，为您提供沉浸式的观影体验。</p>
                 <div class="social-links">
-                    <a href="https://github.com" class="social-link"><i class="fab fa-github"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-github"></i></a>
                     <a href="#" class="social-link"><i class="fab fa-weibo"></i></a>
                     <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
                     <a href="#" class="social-link"><i class="fab fa-discord"></i></a>
                 </div>
             </div>
             <div class="footer-section">
-                <h3>数据来源</h3>
+                <h3>快速链接</h3>
                 <ul class="footer-links">
-                    <li><a href="#"><i class="fas fa-database"></i> 视频资源API</a></li>
-                    <li><a href="#"><i class="fas fa-server"></i> 实时数据同步</a></li>
-                    <li><a href="#"><i class="fas fa-cloud"></i> 云端资源库</a></li>
-                    <li><a href="#"><i class="fas fa-sync-alt"></i> 每日更新</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> 电影库</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> 剧集列表</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> 动漫专区</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> 我的收藏</a></li>
                 </ul>
             </div>
             <div class="footer-section">
                 <h3>技术支持</h3>
                 <ul class="footer-links">
                     <li><a href="#"><i class="fas fa-code"></i> GitHub Pages</a></li>
-                    <li><a href="#"><i class="fas fa-wifi"></i> API代理服务</a></li>
+                    <li><a href="#"><i class="fas fa-database"></i> 视频资源API</a></li>
                     <li><a href="#"><i class="fas fa-shield-alt"></i> 安全加密</a></li>
-                    <li><a href="#"><i class="fas fa-bolt"></i> CDN加速</a></li>
+                    <li><a href="#"><i class="fas fa-bolt"></i> 全球CDN加速</a></li>
                 </ul>
             </div>
         </div>
         <div class="copyright">
-            &copy; 2023 DAHAI私人影院. 视频资源来源于互联网公开内容，仅供学习交流使用。
+            &copy; 2023 DAHAI私人影院. 本网站仅供个人学习交流使用。
             <br>
-            本网站不存储任何视频资源，所有内容均通过API实时获取。
+            视频资源来源于互联网公开内容，版权归原作者所有。
         </div>
     </footer>
 
     <!-- 脚本 -->
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script>
-        // ==================== 配置部分 ====================
-        const CONFIG = {
-            // API配置 - 使用代理API解决跨域问题
-            API_BASE: 'https://api.allorigins.win/raw?url=',
-            
-            // 视频源API（这里使用示例API，实际使用时需要替换）
-            VIDEO_SOURCES: {
-                // 电影API（示例）
-                MOVIE_API: 'https://api.themoviedb.org/3/movie/popular?api_key=YOUR_API_KEY&language=zh-CN',
-                
-                // 剧集API（示例）
-                TV_API: 'https://api.themoviedb.org/3/tv/popular?api_key=YOUR_API_KEY&language=zh-CN',
-                
-                // 动漫API（示例 - 使用AniList API）
-                ANIME_API: 'https://graphql.anilist.co',
-                
-                // B站视频搜索（通过代理）
-                BILIBILI_SEARCH: 'https://api.bilibili.com/x/web-interface/search/all/v2?keyword=',
-                
-                // 综合搜索API（实际使用时可以接入自己的后端）
-                SEARCH_API: 'https://your-backend.com/api/search?q='
+        // 初始化粒子背景
+        particlesJS('particles-js', {
+            particles: {
+                number: { value: 80, density: { enable: true, value_area: 800 } },
+                color: { value: "#00d4ff" },
+                shape: { type: "circle" },
+                opacity: { value: 0.5, random: true },
+                size: { value: 3, random: true },
+                line_linked: {
+                    enable: true,
+                    distance: 150,
+                    color: "#00d4ff",
+                    opacity: 0.2,
+                    width: 1
+                },
+                move: {
+                    enable: true,
+                    speed: 2,
+                    direction: "none",
+                    random: true,
+                    straight: false,
+                    out_mode: "out",
+                    bounce: false
+                }
             },
-            
-            // 默认视频数据（备用）
-            DEFAULT_VIDEOS: [
+            interactivity: {
+                detect_on: "canvas",
+                events: {
+                    onhover: { enable: true, mode: "repulse" },
+                    onclick: { enable: true, mode: "push" }
+                }
+            },
+            retina_detect: true
+        });
+
+        // 电影数据
+        const movies = {
+            hot: [
                 {
                     id: 1,
                     title: "流浪地球2",
                     year: "2023",
-                    rating: 8.8,
+                    rating: "8.8",
                     duration: "173分钟",
-                    type: "movie",
                     category: ["科幻", "灾难"],
-                    cover: "https://image.tmdb.org/t/p/w500/5AG9QWKpQ3kQdI5L3fKkYk5q4z0.jpg",
-                    poster: "https://image.tmdb.org/t/p/w500/5AG9QWKpQ3kQdI5L3fKkYk5q4z0.jpg",
-                    description: "太阳即将毁灭，人类在地球表面建造出巨大的推进器，寻找新的家园。",
-                    // B站视频ID（示例）
+                    poster: "https://picsum.photos/seed/movie1/400/600",
                     bvid: "BV1fX4y1V7Vc",
-                    // 播放量、弹幕数等统计信息
-                    stats: {
-                        views: "1.2亿",
-                        danmaku: "45万",
-                        likes: "120万"
-                    }
+                    description: "太阳即将毁灭，人类在地球表面建造出巨大的推进器，寻找新的家园。"
                 },
                 {
                     id: 2,
-                    title: "三体",
-                    year: "2023",
-                    rating: 9.0,
-                    duration: "45分钟×30集",
-                    type: "tv",
-                    category: ["科幻", "小说改编"],
-                    cover: "https://image.tmdb.org/t/p/w500/r2VhqZqXrqB8wq2C5q5Q5v5t5Z5.jpg",
-                    poster: "https://image.tmdb.org/t/p/w500/r2VhqZqXrqB8wq2C5q5Q5v5t5Z5.jpg",
-                    description: "叶文洁在红岸基地向宇宙发送信号，三体文明接收并开始入侵地球。",
+                    title: "阿凡达：水之道",
+                    year: "2022",
+                    rating: "8.2",
+                    duration: "192分钟",
+                    category: ["科幻", "冒险"],
+                    poster: "https://picsum.photos/seed/movie2/400/600",
                     bvid: "BV1cT411R7tY",
-                    stats: {
-                        views: "2.3亿",
-                        danmaku: "85万",
-                        likes: "230万"
-                    }
+                    description: "萨利一家搬到潘多拉星球的海域，开启全新冒险。"
                 },
                 {
                     id: 3,
-                    title: "咒术回战 第二季",
+                    title: "奥本海默",
                     year: "2023",
-                    rating: 9.2,
-                    duration: "24分钟×23集",
-                    type: "anime",
-                    category: ["热血", "战斗", "奇幻"],
-                    cover: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx145064-Ub2aHlF5HdDA.jpg",
-                    poster: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx145064-Ub2aHlF5HdDA.jpg",
-                    description: "涩谷事变后，虎杖悠仁与伙伴们面对更强大的诅咒。",
+                    rating: "8.7",
+                    duration: "180分钟",
+                    category: ["传记", "历史"],
+                    poster: "https://picsum.photos/seed/movie3/400/600",
                     bvid: "BV1Gu4y1U7YJ",
-                    stats: {
-                        views: "3.1亿",
-                        danmaku: "210万",
-                        likes: "310万"
-                    }
+                    description: "原子弹之父罗伯特·奥本海默的传奇一生。"
                 },
                 {
                     id: 4,
-                    title: "漫长的季节",
+                    title: "蜘蛛侠：纵横宇宙",
                     year: "2023",
-                    rating: 9.4,
-                    duration: "50分钟×12集",
-                    type: "tv",
-                    category: ["悬疑", "犯罪", "剧情"],
-                    cover: "https://image.tmdb.org/t/p/w500/8Q6Z5Q5v5t5Z5q5Q5r5q5Q5v5t5Z5.jpg",
-                    poster: "https://image.tmdb.org/t/p/w500/8Q6Z5Q5v5t5Z5q5Q5r5q5Q5v5t5Z5.jpg",
-                    description: "一桩跨越20年的悬案，改变了三个人的命运。",
+                    rating: "9.0",
+                    duration: "140分钟",
+                    category: ["动画", "动作"],
+                    poster: "https://picsum.photos/seed/movie4/400/600",
                     bvid: "BV1No4y1Z7K8",
-                    stats: {
-                        views: "1.8亿",
-                        danmaku: "65万",
-                        likes: "180万"
-                    }
-                },
+                    description: "迈尔斯·莫拉莱斯穿梭多元宇宙，开启全新冒险。"
+                }
+            ],
+            new: [
                 {
                     id: 5,
-                    title: "封神第一部",
+                    title: "碟中谍7",
                     year: "2023",
-                    rating: 8.7,
-                    duration: "148分钟",
-                    type: "movie",
-                    category: ["神话", "动作", "奇幻"],
-                    cover: "https://image.tmdb.org/t/p/w500/9Q6Z5Q5v5t5Z5q5Q5r5q5Q5v5t5Z5.jpg",
-                    poster: "https://image.tmdb.org/t/p/w500/9Q6Z5Q5v5t5Z5q5Q5r5q5Q5v5t5Z5.jpg",
-                    description: "商王殷寿与狐妖妲己勾结，昆仑仙人姜子牙携"封神榜"下山。",
+                    rating: "8.5",
+                    duration: "164分钟",
+                    category: ["动作", "冒险"],
+                    poster: "https://picsum.photos/seed/movie5/400/600",
                     bvid: "BV1Nj411D7V4",
-                    stats: {
-                        views: "2.5亿",
-                        danmaku: "95万",
-                        likes: "250万"
-                    }
+                    description: "伊森·亨特与IMF小组迎接全新致命任务。"
                 },
                 {
                     id: 6,
-                    title: "鬼灭之刃 锻刀村篇",
+                    title: "闪电侠",
                     year: "2023",
-                    rating: 9.3,
-                    duration: "24分钟×11集",
-                    type: "anime",
-                    category: ["热血", "战斗", "奇幻"],
-                    cover: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx145001-5Z5Q5v5t5Z5.jpg",
-                    poster: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/medium/bx145001-5Z5Q5v5t5Z5.jpg",
-                    description: "炭治郎前往锻刀村，与上弦之四和上弦之五展开激战。",
+                    rating: "8.3",
+                    duration: "144分钟",
+                    category: ["动作", "科幻"],
+                    poster: "https://picsum.photos/seed/movie6/400/600",
                     bvid: "BV1No4y1Z7K9",
-                    stats: {
-                        views: "2.9亿",
-                        danmaku: "185万",
-                        likes: "290万"
-                    }
+                    description: "巴里·艾伦利用超能力穿越时空改变过去。"
                 },
                 {
                     id: 7,
-                    title: "狂飙",
+                    title: "银河护卫队3",
                     year: "2023",
-                    rating: 9.1,
-                    duration: "45分钟×39集",
-                    type: "tv",
-                    category: ["犯罪", "剧情", "悬疑"],
-                    cover: "https://image.tmdb.org/t/p/w500/1Q6Z5Q5v5t5Z5q5Q5r5q5Q5v5t5Z5.jpg",
-                    poster: "https://image.tmdb.org/t/p/w500/1Q6Z5Q5v5t5Z5q5Q5r5q5Q5v5t5Z5.jpg",
-                    description: "刑警安欣与鱼贩高启强长达20年的正邪较量。",
+                    rating: "8.7",
+                    duration: "150分钟",
+                    category: ["科幻", "喜剧"],
+                    poster: "https://picsum.photos/seed/movie7/400/600",
                     bvid: "BV1Nj411D7V5",
-                    stats: {
-                        views: "3.8亿",
-                        danmaku: "120万",
-                        likes: "380万"
-                    }
+                    description: "银河护卫队成员踏上最终冒险之旅。"
                 },
                 {
                     id: 8,
-                    title: "蜘蛛侠：纵横宇宙",
+                    title: "长安三万里",
                     year: "2023",
-                    rating: 9.0,
-                    duration: "140分钟",
-                    type: "movie",
-                    category: ["动画", "动作", "科幻"],
-                    cover: "https://image.tmdb.org/t/p/w500/2Q6Z5Q5v5t5Z5q5Q5r5q5Q5v5t5Z5.jpg",
-                    poster: "https://image.tmdb.org/t/p/w500/2Q6Z5Q5v5t5Z5q5Q5r5q5Q5v5t5Z5.jpg",
-                    description: "迈尔斯·莫拉莱斯穿梭多元宇宙，与蜘蛛侠2099展开对决。",
+                    rating: "9.1",
+                    duration: "168分钟",
+                    category: ["动画", "历史"],
+                    poster: "https://picsum.photos/seed/movie8/400/600",
                     bvid: "BV1Nj411D7V6",
-                    stats: {
-                        views: "1.5亿",
-                        danmaku: "55万",
-                        likes: "150万"
-                    }
+                    description: "大唐盛世的诗歌与梦想，李白与高适的友谊。"
                 }
-            ],
-            
-            // 每页显示数量
-            ITEMS_PER_PAGE: 8,
-            
-            // 当前状态
-            currentPage: 1,
-            currentCategory: 'all',
-            currentSearch: '',
-            allVideos: []
+            ]
         };
 
-        // ==================== 初始化函数 ====================
-        async function initApp() {
-            // 1. 初始化粒子背景
-            initParticles();
-            
-            // 2. 加载视频数据
-            await loadVideos();
-            
-            // 3. 渲染初始视频
-            renderVideos();
-            
-            // 4. 初始化事件监听
-            initEvents();
-            
-            // 5. 初始化搜索建议
-            initSearchSuggestions();
-        }
-
-        // ==================== 数据加载函数 ====================
-        async function loadVideos() {
-            const loader = document.getElementById('loader');
-            loader.style.display = 'block';
-            
-            try {
-                // 尝试从API加载数据
-                const videos = await fetchVideosFromAPI();
-                CONFIG.allVideos = videos;
-            } catch (error) {
-                console.warn('API加载失败，使用默认数据:', error);
-                // 使用默认数据
-                CONFIG.allVideos = CONFIG.DEFAULT_VIDEOS;
-            }
-            
-            loader.style.display = 'none';
-        }
-
-        async function fetchVideosFromAPI() {
-            // 这里可以接入真实的API
-            // 示例：使用TMDB API（需要申请API key）
-            
-            // 暂时返回默认数据
-            return CONFIG.DEFAULT_VIDEOS;
-            
-            // 实际API调用示例：
-            /*
-            const response = await fetch(
-                `${CONFIG.API_BASE}${encodeURIComponent(CONFIG.VIDEO_SOURCES.MOVIE_API)}`
-            );
-            const data = await response.json();
-            return data.results.map(item => ({
-                id: item.id,
-                title: item.title,
-                year: item.release_date?.split('-')[0] || 'N/A',
-                rating: item.vote_average,
-                type: 'movie',
-                category: item.genre_ids || [],
-                cover: `https://image.tmdb.org/t/p/w500${item.poster_path}`,
-                description: item.overview
-            }));
-            */
-        }
-
-        // ==================== 渲染函数 ====================
-        function renderVideos() {
-            const grid = document.getElementById('moviesGrid');
-            const pagination = document.getElementById('pagination');
-            
-            // 筛选视频
-            let filteredVideos = CONFIG.allVideos;
-            
-            if (CONFIG.currentCategory !== 'all') {
-                filteredVideos = filteredVideos.filter(video => 
-                    video.type === CONFIG.currentCategory
-                );
-            }
-            
-            if (CONFIG.currentSearch) {
-                filteredVideos = filteredVideos.filter(video =>
-                    video.title.toLowerCase().includes(CONFIG.currentSearch.toLowerCase()) ||
-                    (video.description && video.description.toLowerCase().includes(CONFIG.currentSearch.toLowerCase()))
-                );
-            }
-            
-            // 计算分页
-            const totalPages = Math.ceil(filteredVideos.length / CONFIG.ITEMS_PER_PAGE);
-            const startIdx = (CONFIG.currentPage - 1) * CONFIG.ITEMS_PER_PAGE;
-            const endIdx = startIdx + CONFIG.ITEMS_PER_PAGE;
-            const pageVideos = filteredVideos.slice(startIdx, endIdx);
-            
-            // 渲染视频网格
-            grid.innerHTML = pageVideos.map(video => generateMovieCard(video)).join('');
-            
-            // 渲染分页控件
-            renderPagination(totalPages);
-            
-            // 更新标题
-            updateSectionTitle(filteredVideos.length);
-            
-            // 绑定事件
-            bindVideoEvents();
-        }
-
-        function generateMovieCard(video) {
+        // 生成电影卡片
+        function generateMovieCard(movie) {
             return `
-                <div class="movie-card" data-id="${video.id}">
-                    <img src="${video.cover || video.poster}" 
-                         alt="${video.title}" 
-                         class="card-img"
-                         onerror="this.src='https://via.placeholder.com/400x600/0a0a0f/00d4ff?text=No+Image'">
+                <div class="movie-card" data-id="${movie.id}">
+                    <img src="${movie.poster}" alt="${movie.title}" class="card-img">
                     <div class="card-overlay">
-                        <h3 class="card-title">${video.title}</h3>
-                        
-                        <div class="video-tags">
-                            ${video.category.map(cat => 
-                                `<span class="video-tag">${cat}</span>`
-                            ).join('')}
+                        <h3 class="card-title">${movie.title}</h3>
+                        <div class="card-meta">
+                            <span>${movie.year}</span>
+                            <span>⭐ ${movie.rating}</span>
+                            <span>${movie.duration}</span>
                         </div>
-                        
-                        <div class="video-stats">
-                            <span class="stat-item">
-                                <i class="far fa-calendar"></i> ${video.year}
-                            </span>
-                            <span class="stat-item">
-                                <i class="fas fa-star"></i> ${video.rating}
-                            </span>
-                            <span class="stat-item">
-                                <i class="fas fa-clock"></i> ${video.duration}
-                            </span>
-                        </div>
-                        
-                        ${video.stats ? `
-                        <div class="video-stats">
-                            <span class="stat-item">
-                                <i class="fas fa-eye"></i> ${video.stats.views}
-                            </span>
-                            <span class="stat-item">
-                                <i class="fas fa-comment"></i> ${video.stats.danmaku}
-                            </span>
-                            <span class="stat-item">
-                                <i class="fas fa-thumbs-up"></i> ${video.stats.likes}
-                            </span>
-                        </div>
-                        ` : ''}
-                        
                         <div class="card-actions">
-                            <button class="watch-btn" data-id="${video.id}">
+                            <button class="watch-btn" data-bvid="${movie.bvid}">
                                 <i class="fas fa-play"></i> 立即观看
                             </button>
-                            <button class="info-btn" data-id="${video.id}">
+                            <button class="info-btn" data-info="${movie.id}">
                                 <i class="fas fa-info-circle"></i> 详情
                             </button>
                         </div>
@@ -650,491 +868,197 @@
             `;
         }
 
-        function renderPagination(totalPages) {
-            const pagination = document.getElementById('pagination');
+        // 初始化电影网格
+        function initMovies() {
+            const hotGrid = document.getElementById('hotMovies');
+            const newGrid = document.getElementById('newMovies');
             
-            if (totalPages <= 1) {
-                pagination.innerHTML = '';
-                return;
-            }
+            movies.hot.forEach(movie => {
+                hotGrid.innerHTML += generateMovieCard(movie);
+            });
             
-            let pagesHTML = '';
-            const current = CONFIG.currentPage;
+            movies.new.forEach(movie => {
+                newGrid.innerHTML += generateMovieCard(movie);
+            });
             
-            // 上一页按钮
-            pagesHTML += `
-                <button class="page-btn" data-page="${current - 1}" 
-                        ${current === 1 ? 'disabled style="opacity:0.5"' : ''}>
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-            `;
+            // 绑定点击事件
+            document.querySelectorAll('.watch-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const bvid = this.getAttribute('data-bvid');
+                    const movieCard = this.closest('.movie-card');
+                    const title = movieCard.querySelector('.card-title').textContent;
+                    playVideo(bvid, title);
+                });
+            });
             
-            // 页码按钮
-            for (let i = 1; i <= totalPages; i++) {
-                if (
-                    i === 1 || 
-                    i === totalPages || 
-                    (i >= current - 2 && i <= current + 2)
-                ) {
-                    pagesHTML += `
-                        <button class="page-btn ${i === current ? 'active' : ''}" 
-                                data-page="${i}">
-                            ${i}
-                        </button>
-                    `;
-                } else if (i === current - 3 || i === current + 3) {
-                    pagesHTML += `<span class="page-btn" style="border:none;background:none">...</span>`;
-                }
-            }
-            
-            // 下一页按钮
-            pagesHTML += `
-                <button class="page-btn" data-page="${current + 1}" 
-                        ${current === totalPages ? 'disabled style="opacity:0.5"' : ''}>
-                    <i class="fas fa-chevron-right"></i>
-                </button>
-            `;
-            
-            pagination.innerHTML = pagesHTML;
-            
-            // 绑定分页事件
-            document.querySelectorAll('#pagination .page-btn:not(:disabled)').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const page = parseInt(btn.dataset.page);
-                    if (page && page !== CONFIG.currentPage) {
-                        CONFIG.currentPage = page;
-                        renderVideos();
-                        window.scrollTo({ top: 400, behavior: 'smooth' });
+            document.querySelectorAll('.movie-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const movieId = this.getAttribute('data-id');
+                    const movie = [...movies.hot, ...movies.new].find(m => m.id == movieId);
+                    if (movie) {
+                        showMovieInfo(movie);
                     }
                 });
             });
         }
 
-        function updateSectionTitle(count) {
-            const titleEl = document.querySelector('#videoContent .section-title');
-            if (!titleEl) return;
+        // 播放视频
+        function playVideo(bvid, title) {
+            const modal = document.getElementById('videoModal');
+            const titleEl = document.getElementById('modalTitle');
+            const container = document.getElementById('videoContainer');
             
-            const typeMap = {
-                'all': '推荐',
-                'movie': '电影',
-                'tv': '剧集',
-                'anime': '动漫',
-                'variety': '综艺'
-            };
+            titleEl.textContent = `正在播放：${title}`;
             
-            const typeText = typeMap[CONFIG.currentCategory] || '内容';
-            const searchText = CONFIG.currentSearch ? `"${CONFIG.currentSearch}" 的搜索结果` : '';
-            
-            titleEl.innerHTML = `
-                <i class="fas fa-${getCategoryIcon(CONFIG.currentCategory)}"></i>
-                ${searchText || `热门${typeText}推荐`}
-                <span style="font-size:0.8em; color:var(--primary); margin-left:1rem;">
-                    (共 ${count} 部)
-                </span>
+            // 嵌入B站播放器
+            container.innerHTML = `
+                <iframe 
+                    src="https://player.bilibili.com/player.html?bvid=${bvid}&autoplay=1&page=1"
+                    width="100%" 
+                    height="600" 
+                    scrolling="no" 
+                    border="0" 
+                    frameborder="no" 
+                    framespacing="0" 
+                    allowfullscreen="true"
+                    style="border-radius: 10px;"
+                >
+                </iframe>
             `;
-        }
-
-        function getCategoryIcon(category) {
-            const icons = {
-                'all': 'fire',
-                'movie': 'film',
-                'tv': 'tv',
-                'anime': 'gamepad',
-                'variety': 'star'
-            };
-            return icons[category] || 'film';
-        }
-
-        // ==================== 事件处理函数 ====================
-        function initEvents() {
-            // 搜索按钮
-            document.getElementById('searchBtn').addEventListener('click', performSearch);
             
-            // 搜索输入框回车
-            document.getElementById('searchInput').addEventListener('keypress', (e) => {
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        // 显示电影信息
+        function showMovieInfo(movie) {
+            const modal = document.getElementById('videoModal');
+            const titleEl = document.getElementById('modalTitle');
+            const container = document.getElementById('videoContainer');
+            
+            titleEl.textContent = movie.title;
+            container.innerHTML = `
+                <div style="padding: 2rem; max-width: 800px;">
+                    <div style="display: flex; gap: 2rem; margin-bottom: 2rem;">
+                        <img src="${movie.poster}" alt="${movie.title}" 
+                             style="width: 200px; height: 300px; object-fit: cover; border-radius: 10px;">
+                        <div>
+                            <h2 style="color: var(--primary); margin-bottom: 1rem;">${movie.title}</h2>
+                            <div style="display: flex; gap: 1rem; margin-bottom: 1rem; color: rgba(255,255,255,0.7);">
+                                <span>${movie.year}</span>
+                                <span>⭐ ${movie.rating}</span>
+                                <span>${movie.duration}</span>
+                            </div>
+                            <div style="margin-bottom: 1.5rem;">
+                                ${movie.category.map(cat => 
+                                    `<span style="background: rgba(0,212,255,0.1); color: var(--primary); 
+                                        padding: 0.3rem 0.8rem; border-radius: 15px; margin-right: 0.5rem; 
+                                        font-size: 0.9rem;">${cat}</span>`
+                                ).join('')}
+                            </div>
+                            <p style="line-height: 1.6; color: rgba(255,255,255,0.8);">
+                                ${movie.description}
+                            </p>
+                        </div>
+                    </div>
+                    <button class="watch-btn" style="width: 100%; padding: 1rem; font-size: 1.1rem;"
+                            onclick="playVideo('${movie.bvid}', '${movie.title}')">
+                        <i class="fas fa-play"></i> 立即观看
+                    </button>
+                </div>
+            `;
+            
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        // 搜索功能
+        function initSearch() {
+            const searchBtn = document.getElementById('searchBtn');
+            const searchInput = document.getElementById('searchInput');
+            
+            searchBtn.addEventListener('click', performSearch);
+            searchInput.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') performSearch();
             });
             
-            // 分类筛选按钮
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const category = btn.dataset.category;
-                    setActiveCategory(category);
-                });
-            });
-            
-            // 导航栏分类
-            document.querySelectorAll('.nav-item[data-category]').forEach(item => {
-                item.addEventListener('click', (e) => {
+            // 快速链接
+            document.querySelectorAll('.quick-link').forEach(link => {
+                link.addEventListener('click', function(e) {
                     e.preventDefault();
-                    const category = item.dataset.category;
-                    setActiveCategory(category);
-                    
-                    // 更新导航激活状态
-                    document.querySelectorAll('.nav-item').forEach(nav => {
-                        nav.classList.remove('active');
-                    });
-                    item.classList.add('active');
-                });
-            });
-            
-            // 关闭模态框
-            document.getElementById('closeModal').addEventListener('click', closeVideoModal);
-            
-            // 点击模态框背景关闭
-            document.getElementById('videoModal').addEventListener('click', (e) => {
-                if (e.target === e.currentTarget) {
-                    closeVideoModal();
-                }
-            });
-            
-            // 用户按钮
-            document.getElementById('userBtn').addEventListener('click', () => {
-                alert(`👤 用户：大海\n⭐ 已观看：${CONFIG.allVideos.length} 部影片\n\n欢迎来到您的私人影院！`);
-            });
-        }
-
-        function initSearchSuggestions() {
-            const searchInput = document.getElementById('searchInput');
-            const suggestionsBox = document.getElementById('suggestionsBox');
-            
-            // 防抖处理
-            let debounceTimer;
-            searchInput.addEventListener('input', (e) => {
-                clearTimeout(debounceTimer);
-                const query = e.target.value.trim();
-                
-                if (!query) {
-                    suggestionsBox.style.display = 'none';
-                    return;
-                }
-                
-                debounceTimer = setTimeout(() => {
-                    showSearchSuggestions(query);
-                }, 300);
-            });
-            
-            // 点击其他地方关闭建议框
-            document.addEventListener('click', (e) => {
-                if (!e.target.closest('.search-container')) {
-                    suggestionsBox.style.display = 'none';
-                }
-            });
-            
-            // 输入框聚焦时显示建议
-            searchInput.addEventListener('focus', () => {
-                if (searchInput.value.trim()) {
-                    showSearchSuggestions(searchInput.value.trim());
-                }
-            });
-        }
-
-        async function showSearchSuggestions(query) {
-            const suggestionsBox = document.getElementById('suggestionsBox');
-            
-            // 从当前数据中筛选建议
-            const suggestions = CONFIG.allVideos.filter(video =>
-                video.title.toLowerCase().includes(query.toLowerCase())
-            ).slice(0, 8);
-            
-            if (suggestions.length === 0) {
-                suggestionsBox.innerHTML = `
-                    <div class="suggestion-item">
-                        <div style="padding:1rem;text-align:center;color:rgba(255,255,255,0.5);width:100%;">
-                            没有找到相关视频
-                        </div>
-                    </div>
-                `;
-            } else {
-                suggestionsBox.innerHTML = suggestions.map(video => `
-                    <div class="suggestion-item" data-id="${video.id}">
-                        <img src="${video.cover}" alt="${video.title}" class="suggestion-img"
-                             onerror="this.src='https://via.placeholder.com/60x40/0a0a0f/00d4ff?text=Video'">
-                        <div style="flex:1;">
-                            <div class="suggestion-title">${video.title}</div>
-                            <div style="display:flex;gap:0.5rem;margin-top:0.3rem;">
-                                <span class="suggestion-type">${video.type === 'movie' ? '电影' : 
-                                    video.type === 'tv' ? '剧集' : 
-                                    video.type === 'anime' ? '动漫' : '综艺'}</span>
-                                <span style="color:rgba(255,255,255,0.5);font-size:0.8rem;">${video.year}</span>
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
-                
-                // 绑定建议项点击事件
-                document.querySelectorAll('#suggestionsBox .suggestion-item').forEach(item => {
-                    item.addEventListener('click', () => {
-                        const videoId = item.dataset.id;
-                        const video = CONFIG.allVideos.find(v => v.id == videoId);
-                        if (video) {
-                            playVideo(video);
-                            searchInput.value = '';
-                            suggestionsBox.style.display = 'none';
-                        }
-                    });
-                });
-            }
-            
-            suggestionsBox.style.display = 'block';
-        }
-
-        function bindVideoEvents() {
-            // 播放按钮
-            document.querySelectorAll('.watch-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const videoId = btn.dataset.id;
-                    const video = CONFIG.allVideos.find(v => v.id == videoId);
-                    if (video) playVideo(video);
-                });
-            });
-            
-            // 详情按钮
-            document.querySelectorAll('.info-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const videoId = btn.dataset.id;
-                    const video = CONFIG.allVideos.find(v => v.id == videoId);
-                    if (video) showVideoInfo(video);
-                });
-            });
-            
-            // 卡片点击
-            document.querySelectorAll('.movie-card').forEach(card => {
-                card.addEventListener('click', function() {
-                    const videoId = this.dataset.id;
-                    const video = CONFIG.allVideos.find(v => v.id == videoId);
-                    if (video) showVideoInfo(video);
+                    const category = this.getAttribute('data-category');
+                    searchByCategory(category);
                 });
             });
         }
-
-        // ==================== 核心功能函数 ====================
-        function setActiveCategory(category) {
-            CONFIG.currentCategory = category;
-            CONFIG.currentPage = 1;
-            CONFIG.currentSearch = '';
-            
-            // 更新按钮状态
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.classList.remove('active');
-                if (btn.dataset.category === category) {
-                    btn.classList.add('active');
-                }
-            });
-            
-            // 清空搜索框
-            document.getElementById('searchInput').value = '';
-            
-            // 隐藏搜索建议
-            document.getElementById('suggestionsBox').style.display = 'none';
-            
-            // 重新渲染
-            renderVideos();
-        }
-
+        
         function performSearch() {
             const query = document.getElementById('searchInput').value.trim();
-            CONFIG.currentSearch = query;
-            CONFIG.currentPage = 1;
-            CONFIG.currentCategory = 'all';
+            if (!query) return;
             
-            // 更新按钮状态
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.classList.remove('active');
-                if (btn.dataset.category === 'all') {
-                    btn.classList.add('active');
-                }
-            });
+            // 显示加载动画
+            const loader = document.getElementById('loader');
+            loader.style.display = 'block';
             
-            // 隐藏搜索建议
-            document.getElementById('suggestionsBox').style.display = 'none';
-            
-            // 重新渲染
-            renderVideos();
-        }
-
-        function playVideo(video) {
-            const modal = document.getElementById('videoModal');
-            const titleEl = document.getElementById('modalTitle');
-            const container = document.getElementById('videoContainer');
-            
-            titleEl.textContent = `正在播放：${video.title}`;
-            
-            // 显示加载状态
-            container.innerHTML = `
-                <div class="video-loading">
-                    <div class="loader" style="display:block;"></div>
-                    <div class="loading-text">正在加载视频...</div>
-                </div>
-            `;
-            
-            modal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-            
-            // 延迟加载播放器，模拟网络请求
+            // 模拟搜索
             setTimeout(() => {
-                // 使用B站播放器嵌入
-                // 实际开发中，这里应该使用video.bvid或video.videoId
-                const bvid = video.bvid || 'BV1fX4y1V7Vc'; // 默认视频ID
-                
-                container.innerHTML = `
-                    <iframe 
-                        src="https://player.bilibili.com/player.html?bvid=${bvid}&autoplay=1&page=1"
-                        width="100%" 
-                        height="600" 
-                        scrolling="no" 
-                        border="0" 
-                        frameborder="no" 
-                        framespacing="0" 
-                        allowfullscreen="true"
-                        style="border-radius: 10px;"
-                    >
-                    </iframe>
-                `;
+                loader.style.display = 'none';
+                alert(`搜索关键词: "${query}"\n\n提示：实际功能需要接入视频数据库API。\n当前为演示版本，您可以点击电影卡片查看详情。`);
             }, 1000);
         }
-
-        function showVideoInfo(video) {
-            const modal = document.getElementById('videoModal');
-            const titleEl = document.getElementById('modalTitle');
-            const container = document.getElementById('videoContainer');
+        
+        function searchByCategory(category) {
+            const categoryNames = {
+                'action': '动作大片',
+                'sci-fi': '科幻未来',
+                'drama': '剧情佳作',
+                'comedy': '喜剧轻松',
+                'anime': '热血动漫'
+            };
             
-            titleEl.textContent = video.title;
-            
-            container.innerHTML = `
-                <div style="padding: 2rem; max-width: 800px;">
-                    <div style="display: flex; gap: 2rem; margin-bottom: 2rem; flex-wrap: wrap;">
-                        <img src="${video.cover || video.poster}" 
-                             alt="${video.title}" 
-                             style="width: 200px; height: 300px; object-fit: cover; border-radius: 10px;"
-                             onerror="this.src='https://via.placeholder.com/200x300/0a0a0f/00d4ff?text=No+Image'">
-                        <div style="flex: 1; min-width: 300px;">
-                            <h2 style="color: var(--primary); margin-bottom: 1rem;">${video.title}</h2>
-                            
-                            <div style="display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap;">
-                                <span style="background: rgba(0,212,255,0.1); color: var(--primary); 
-                                       padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.9rem;">
-                                    ${video.type === 'movie' ? '电影' : 
-                                      video.type === 'tv' ? '剧集' : 
-                                      video.type === 'anime' ? '动漫' : '综艺'}
-                                </span>
-                                <span style="color: rgba(255,255,255,0.7);">
-                                    <i class="far fa-calendar"></i> ${video.year}
-                                </span>
-                                <span style="color: rgba(255,255,255,0.7);">
-                                    <i class="fas fa-star" style="color:#ffd700;"></i> ${video.rating}
-                                </span>
-                                <span style="color: rgba(255,255,255,0.7);">
-                                    <i class="fas fa-clock"></i> ${video.duration}
-                                </span>
-                            </div>
-                            
-                            <div style="margin-bottom: 1.5rem;">
-                                ${video.category.map(cat => 
-                                    `<span style="background: rgba(0,212,255,0.1); color: var(--primary); 
-                                        padding: 0.3rem 0.8rem; border-radius: 15px; margin-right: 0.5rem; 
-                                        margin-bottom: 0.5rem; display: inline-block; font-size: 0.9rem;">
-                                        ${cat}
-                                    </span>`
-                                ).join('')}
-                            </div>
-                            
-                            ${video.stats ? `
-                            <div style="display: flex; gap: 2rem; margin-bottom: 1.5rem; padding: 1rem; 
-                                        background: rgba(0,0,0,0.3); border-radius: 10px; flex-wrap: wrap;">
-                                <div style="text-align: center;">
-                                    <div style="color: var(--primary); font-size: 1.2rem; font-weight: bold;">${video.stats.views}</div>
-                                    <div style="color: rgba(255,255,255,0.7); font-size: 0.8rem;">播放</div>
-                                </div>
-                                <div style="text-align: center;">
-                                    <div style="color: var(--primary); font-size: 1.2rem; font-weight: bold;">${video.stats.danmaku}</div>
-                                    <div style="color: rgba(255,255,255,0.7); font-size: 0.8rem;">弹幕</div>
-                                </div>
-                                <div style="text-align: center;">
-                                    <div style="color: var(--primary); font-size: 1.2rem; font-weight: bold;">${video.stats.likes}</div>
-                                    <div style="color: rgba(255,255,255,0.7); font-size: 0.8rem;">点赞</div>
-                                </div>
-                            </div>
-                            ` : ''}
-                            
-                            <p style="line-height: 1.6; color: rgba(255,255,255,0.8); margin-bottom: 2rem;">
-                                ${video.description}
-                            </p>
-                            
-                            <button class="watch-btn" 
-                                    style="width: 100%; padding: 1rem; font-size: 1.1rem;"
-                                    onclick="playVideo(${JSON.stringify(video).replace(/"/g, '&quot;')})">
-                                <i class="fas fa-play"></i> 立即观看
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            modal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
+            alert(`切换到分类: ${categoryNames[category] || category}\n\n正在为您筛选相关影片...`);
         }
 
-        function closeVideoModal() {
+        // 关闭模态框
+        document.getElementById('closeModal').addEventListener('click', function() {
             const modal = document.getElementById('videoModal');
             const container = document.getElementById('videoContainer');
-            
-            // 停止视频播放
-            const iframe = container.querySelector('iframe');
-            if (iframe) {
-                iframe.src = iframe.src; // 重新加载以停止播放
-            }
             
             modal.style.display = 'none';
+            container.innerHTML = '';
             document.body.style.overflow = 'auto';
-        }
+        });
 
-        // ==================== 工具函数 ====================
-        function initParticles() {
-            particlesJS('particles-js', {
-                particles: {
-                    number: { value: 80, density: { enable: true, value_area: 800 } },
-                    color: { value: "#00d4ff" },
-                    shape: { type: "circle" },
-                    opacity: { value: 0.5, random: true },
-                    size: { value: 3, random: true },
-                    line_linked: {
-                        enable: true,
-                        distance: 150,
-                        color: "#00d4ff",
-                        opacity: 0.2,
-                        width: 1
-                    },
-                    move: {
-                        enable: true,
-                        speed: 2,
-                        direction: "none",
-                        random: true,
-                        straight: false,
-                        out_mode: "out",
-                        bounce: false
-                    }
-                },
-                interactivity: {
-                    detect_on: "canvas",
-                    events: {
-                        onhover: { enable: true, mode: "repulse" },
-                        onclick: { enable: true, mode: "push" }
-                    }
-                },
-                retina_detect: true
-            });
-        }
+        // 点击模态框背景关闭
+        document.getElementById('videoModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.style.display = 'none';
+                document.getElementById('videoContainer').innerHTML = '';
+                document.body.style.overflow = 'auto';
+            }
+        });
 
-        // ==================== 初始化应用 ====================
-        document.addEventListener('DOMContentLoaded', initApp);
+        // 用户按钮
+        document.getElementById('userBtn').addEventListener('click', function() {
+            alert(`👤 用户：大海\n📧 邮箱：dahai@example.com\n⭐ 收藏：32 部影片\n\n欢迎来到您的私人影院！`);
+        });
 
-        // ==================== 全局函数 ====================
-        // 供HTML调用的全局函数
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            initMovies();
+            initSearch();
+            
+            // 添加一些动画效果
+            setTimeout(() => {
+                document.querySelectorAll('.movie-card').forEach((card, index) => {
+                    card.style.animationDelay = `${index * 0.1}s`;
+                });
+            }, 500);
+        });
+
+        // 添加到全局作用域
         window.playVideo = playVideo;
-        window.closeVideoModal = closeVideoModal;
     </script>
 </body>
 </html>
