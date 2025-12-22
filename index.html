@@ -1,1998 +1,1405 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DAHAI·私人影院 | 沉浸式观影体验</title>
-    <style>
-        /* 全局重置与基础样式 */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --primary: #00d4ff;      /* 科技蓝 */
-            --secondary: #9d4edd;    /* 紫罗兰 */
-            --accent: #ff6b6b;       /* 珊瑚红 */
-            --dark: #0a0a0f;         /* 深空黑 */
-            --darker: #050508;       /* 更深的黑 */
-            --light: #e0e0e0;        /* 浅灰 */
-            --glass: rgba(255, 255, 255, 0.05);
-            --glow: 0 0 20px rgba(0, 212, 255, 0.3);
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, var(--darker) 0%, #0f172a 100%);
-            color: var(--light);
-            line-height: 1.6;
-            min-height: 100vh;
-            overflow-x: hidden;
-            position: relative;
-        }
-
-        /* 背景粒子效果 */
-        #particles-js {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            z-index: -1;
-        }
-
-        /* 导航栏 - 科幻风格 */
-        .navbar {
-            background: rgba(10, 10, 15, 0.85);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
-            padding: 1.2rem 2rem;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: var(--glow);
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 1.8rem;
-            font-weight: 800;
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .logo::before {
-            content: "▶";
-            color: var(--primary);
-            font-size: 1.5rem;
-            animation: pulse 2s infinite;
-        }
-
-        .nav-center {
-            display: flex;
-            gap: 2.5rem;
-            align-items: center;
-        }
-
-        .nav-item {
-            position: relative;
-            color: var(--light);
-            text-decoration: none;
-            font-weight: 500;
-            padding: 0.5rem 0;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            font-size: 0.9rem;
-            letter-spacing: 0.5px;
-        }
-
-        .nav-item:hover {
-            color: var(--primary);
-        }
-
-        .nav-item::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: linear-gradient(90deg, var(--primary), transparent);
-            transition: width 0.3s ease;
-        }
-
-        .nav-item:hover::after {
-            width: 100%;
-        }
-
-        /* 主搜索区域 - 居中大气 */
-        .hero {
-            margin-top: 120px;
-            padding: 4rem 2rem;
-            text-align: center;
-            position: relative;
-            z-index: 10;
-        }
-
-        .hero-title {
-            font-size: 3.5rem;
-            font-weight: 900;
-            background: linear-gradient(45deg, var(--primary), var(--secondary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 1.5rem;
-            text-transform: uppercase;
-            letter-spacing: -1px;
-            line-height: 1.1;
-        }
-
-        .hero-subtitle {
-            font-size: 1.2rem;
-            color: rgba(224, 224, 224, 0.8);
-            max-width: 700px;
-            margin: 0 auto 3rem;
-            line-height: 1.6;
-        }
-
-        /* 主搜索框 */
-        .search-container {
-            max-width: 800px;
-            margin: 0 auto 3rem;
-            position: relative;
-        }
-
-        .search-box {
-            width: 100%;
-            padding: 1.5rem 2rem;
-            font-size: 1.1rem;
-            background: rgba(255, 255, 255, 0.08);
-            border: 2px solid rgba(0, 212, 255, 0.2);
-            border-radius: 15px;
-            color: var(--light);
-            outline: none;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-        }
-
-        .search-box:focus {
-            border-color: var(--primary);
-            box-shadow: var(--glow);
-            background: rgba(255, 255, 255, 0.12);
-        }
-
-        .search-box::placeholder {
-            color: rgba(224, 224, 224, 0.5);
-        }
-
-        .search-btn {
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            border: none;
-            padding: 1rem 2rem;
-            border-radius: 10px;
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .search-btn:hover {
-            transform: translateY(-50%) scale(1.05);
-            box-shadow: var(--glow);
-        }
-
-        /* 快速分类按钮 */
-        .quick-links {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            flex-wrap: wrap;
-            margin-top: 2rem;
-        }
-
-        .quick-link {
-            background: var(--glass);
-            border: 1px solid rgba(0, 212, 255, 0.1);
-            padding: 0.8rem 1.8rem;
-            border-radius: 25px;
-            color: var(--light);
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .quick-link:hover {
-            background: rgba(0, 212, 255, 0.1);
-            border-color: var(--primary);
-            transform: translateY(-2px);
-        }
-
-        /* 视频网格 - 卡片式设计 */
-        .section-title {
-            font-size: 2.2rem;
-            margin: 4rem 0 2rem;
-            padding-left: 2rem;
-            position: relative;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .section-title::before {
-            content: '';
-            width: 5px;
-            height: 40px;
-            background: linear-gradient(180deg, var(--primary), var(--secondary));
-            border-radius: 3px;
-        }
-
-        .movies-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 2rem;
-            padding: 0 2rem;
-            margin-bottom: 4rem;
-        }
-
-        .movie-card {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            overflow: hidden;
-            transition: all 0.4s ease;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            position: relative;
-        }
-
-        .movie-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            border-color: var(--primary);
-            box-shadow: var(--glow);
-            background: rgba(255, 255, 255, 0.08);
-        }
-
-        .card-img {
-            width: 100%;
-            height: 380px;
-            object-fit: cover;
-            transition: transform 0.5s ease;
-        }
-
-        .movie-card:hover .card-img {
-            transform: scale(1.1);
-        }
-
-        .card-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
-            padding: 2rem 1.5rem 1.5rem;
-            transform: translateY(100%);
-            transition: transform 0.4s ease;
-        }
-
-        .movie-card:hover .card-overlay {
-            transform: translateY(0);
-        }
-
-        .card-title {
-            font-size: 1.3rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            color: white;
-        }
-
-        .card-meta {
-            display: flex;
-            justify-content: space-between;
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-        }
-
-        .card-actions {
-            display: flex;
-            gap: 0.8rem;
-        }
-
-        .watch-btn, .info-btn, .load-more-btn {
-            flex: 1;
-            padding: 0.8rem;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        .watch-btn {
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            color: white;
-        }
-
-        .info-btn {
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--light);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .watch-btn:hover, .info-btn:hover, .load-more-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        /* 视频播放器模态框 */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-            backdrop-filter: blur(10px);
-        }
-
-        .modal-content {
-            width: 90%;
-            max-width: 1200px;
-            background: rgba(20, 20, 30, 0.95);
-            border-radius: 20px;
-            overflow: hidden;
-            border: 1px solid rgba(0, 212, 255, 0.2);
-            box-shadow: 0 0 50px rgba(0, 212, 255, 0.2);
-        }
-
-        .modal-header {
-            padding: 1.5rem 2rem;
-            background: rgba(0, 0, 0, 0.5);
-            border-bottom: 1px solid rgba(0, 212, 255, 0.2);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .modal-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary);
-        }
-
-        .close-modal {
-            background: none;
-            border: none;
-            color: var(--light);
-            font-size: 2rem;
-            cursor: pointer;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
-
-        .close-modal:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--accent);
-        }
-
-        .video-container {
-            padding: 2rem;
-            min-height: 600px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* 页脚 */
-        .footer {
-            background: rgba(5, 5, 8, 0.95);
-            padding: 4rem 2rem 2rem;
-            border-top: 1px solid rgba(0, 212, 255, 0.1);
-            margin-top: 4rem;
-        }
-
-        .footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 3rem;
-        }
-
-        .footer-section h3 {
-            color: var(--primary);
-            margin-bottom: 1.5rem;
-            font-size: 1.2rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .footer-links {
-            list-style: none;
-        }
-
-        .footer-links li {
-            margin-bottom: 0.8rem;
-        }
-
-        .footer-links a {
-            color: rgba(224, 224, 224, 0.7);
-            text-decoration: none;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-        }
-
-        .footer-links a:hover {
-            color: var(--primary);
-            transform: translateX(5px);
-        }
-
-        .social-links {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-
-        .social-link {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.05);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--light);
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .social-link:hover {
-            background: var(--primary);
-            transform: translateY(-5px);
-        }
-
-        .copyright {
-            text-align: center;
-            margin-top: 3rem;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            color: rgba(224, 224, 224, 0.5);
-            font-size: 0.9rem;
-        }
-
-        /* 动画效果 */
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        .floating {
-            animation: float 3s ease-in-out infinite;
-        }
-
-        /* 响应式设计 */
-        @media (max-width: 768px) {
-            .navbar {
-                flex-direction: column;
-                gap: 1rem;
-                padding: 1rem;
-            }
-            
-            .nav-center {
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 1rem;
-            }
-            
-            .hero-title {
-                font-size: 2.5rem;
-            }
-            
-            .movies-grid {
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-                gap: 1rem;
-                padding: 0 1rem;
-            }
-            
-            .modal-content {
-                width: 95%;
-            }
-            
-            .video-container {
-                padding: 1rem;
-                min-height: 400px;
-            }
-        }
-
-        /* 加载动画 */
-        .loader {
-            display: none;
-            width: 50px;
-            height: 50px;
-            border: 3px solid rgba(0, 212, 255, 0.1);
-            border-top: 3px solid var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 2rem auto;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* 滚动条美化 */
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: var(--darker);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(180deg, var(--primary), var(--secondary));
-            border-radius: 5px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(180deg, var(--secondary), var(--primary));
-        }
-
-        /* ===== 仅新增的小组件样式：保持原科幻风格，不改整体布局 ===== */
-        .center-row {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 0 2rem 4rem;
-        }
-
-        .load-more-btn {
-            max-width: 260px;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.08);
-            color: var(--light);
-            border: 1px solid rgba(0, 212, 255, 0.25);
-            backdrop-filter: blur(10px);
-        }
-
-        .load-more-btn i {
-            color: var(--primary);
-        }
-
-        .empty-hint {
-            padding: 0 2rem 4rem;
-            text-align: center;
-            color: rgba(224, 224, 224, 0.7);
-        }
-
-        .toast {
-            position: fixed;
-            right: 18px;
-            bottom: 18px;
-            z-index: 5000;
-            background: rgba(20, 20, 30, 0.92);
-            border: 1px solid rgba(0, 212, 255, 0.25);
-            box-shadow: 0 0 25px rgba(0, 212, 255, 0.18);
-            border-radius: 14px;
-            padding: 12px 14px;
-            max-width: 360px;
-            display: none;
-            backdrop-filter: blur(12px);
-        }
-
-        .toast-title {
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 6px;
-        }
-
-        .toast-text {
-            font-size: 0.95rem;
-            color: rgba(224, 224, 224, 0.85);
-            line-height: 1.5;
-        }
-
-        .toast-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .toast-actions button {
-            border: 1px solid rgba(255,255,255,0.15);
-            background: rgba(255,255,255,0.06);
-            color: var(--light);
-            padding: 8px 10px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all .2s ease;
-        }
-
-        .toast-actions button:hover {
-            transform: translateY(-2px);
-            border-color: rgba(0, 212, 255, 0.45);
-            box-shadow: 0 0 18px rgba(0, 212, 255, 0.12);
-        }
-
-        .mono {
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-        }
-    </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DAHAI·私人影院 | 沉浸式观影体验</title>
+
+  <!-- ✅ 关键修复：不再依赖外部 particles.js（避免 CDN 失败导致整站 JS 不执行） -->
+  <style>
+    /* 全局重置与基础样式 */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --primary: #00d4ff;      /* 科技蓝 */
+      --secondary: #9d4edd;    /* 紫罗兰 */
+      --accent: #ff6b6b;       /* 珊瑚红 */
+      --dark: #0a0a0f;         /* 深空黑 */
+      --darker: #050508;       /* 更深的黑 */
+      --light: #e0e0e0;        /* 浅灰 */
+      --glass: rgba(255, 255, 255, 0.05);
+      --glow: 0 0 20px rgba(0, 212, 255, 0.3);
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, var(--darker) 0%, #0f172a 100%);
+      color: var(--light);
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* 背景粒子效果（改为本地 canvas，不依赖外部库） */
+    #particles-js {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      top: 0; left: 0;
+      z-index: -1;
+      pointer-events: none;
+    }
+    #particles-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* 导航栏 - 科幻风格 */
+    .navbar {
+      background: rgba(10, 10, 15, 0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+      padding: 1.2rem 2rem;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: var(--glow);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.8rem;
+      font-weight: 800;
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .logo::before {
+      content: "▶";
+      color: var(--primary);
+      font-size: 1.5rem;
+      animation: pulse 2s infinite;
+    }
+
+    .nav-center {
+      display: flex;
+      gap: 2.5rem;
+      align-items: center;
+    }
+
+    .nav-item {
+      position: relative;
+      color: var(--light);
+      text-decoration: none;
+      font-weight: 500;
+      padding: 0.5rem 0;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+      letter-spacing: 0.5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .nav-item:hover { color: var(--primary); }
+
+    .nav-item::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--primary), transparent);
+      transition: width 0.3s ease;
+    }
+    .nav-item:hover::after { width: 100%; }
+
+    /* 主搜索区域 - 居中大气 */
+    .hero {
+      margin-top: 120px;
+      padding: 4rem 2rem;
+      text-align: center;
+      position: relative;
+      z-index: 10;
+    }
+
+    .hero-title {
+      font-size: 3.5rem;
+      font-weight: 900;
+      background: linear-gradient(45deg, var(--primary), var(--secondary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 1.5rem;
+      text-transform: uppercase;
+      letter-spacing: -1px;
+      line-height: 1.1;
+    }
+
+    .hero-subtitle {
+      font-size: 1.2rem;
+      color: rgba(224, 224, 224, 0.8);
+      max-width: 700px;
+      margin: 0 auto 3rem;
+      line-height: 1.6;
+    }
+
+    /* 主搜索框 */
+    .search-container { max-width: 800px; margin: 0 auto 3rem; position: relative; }
+
+    .search-box {
+      width: 100%;
+      padding: 1.5rem 2rem;
+      font-size: 1.1rem;
+      background: rgba(255, 255, 255, 0.08);
+      border: 2px solid rgba(0, 212, 255, 0.2);
+      border-radius: 15px;
+      color: var(--light);
+      outline: none;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    .search-box:focus {
+      border-color: var(--primary);
+      box-shadow: var(--glow);
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .search-box::placeholder { color: rgba(224, 224, 224, 0.5); }
+
+    .search-btn {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 10px;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .search-btn:hover { transform: translateY(-50%) scale(1.05); box-shadow: var(--glow); }
+
+    /* 快速分类按钮 */
+    .quick-links {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+
+    .quick-link {
+      background: var(--glass);
+      border: 1px solid rgba(0, 212, 255, 0.1);
+      padding: 0.8rem 1.8rem;
+      border-radius: 25px;
+      color: var(--light);
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      user-select: none;
+    }
+
+    .quick-link:hover {
+      background: rgba(0, 212, 255, 0.1);
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    /* 视频网格 - 卡片式设计 */
+    .section-title {
+      font-size: 2.2rem;
+      margin: 4rem 0 2rem;
+      padding-left: 2rem;
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .section-title::before {
+      content: '';
+      width: 5px;
+      height: 40px;
+      background: linear-gradient(180deg, var(--primary), var(--secondary));
+      border-radius: 3px;
+    }
+
+    .movies-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 2rem;
+      padding: 0 2rem;
+      margin-bottom: 4rem;
+    }
+
+    .movie-card {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 15px;
+      overflow: hidden;
+      transition: all 0.4s ease;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      position: relative;
+    }
+
+    .movie-card:hover {
+      transform: translateY(-10px) scale(1.02);
+      border-color: var(--primary);
+      box-shadow: var(--glow);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .card-img {
+      width: 100%;
+      height: 380px;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+      display: block;
+      background: rgba(0,0,0,0.2);
+    }
+
+    .movie-card:hover .card-img { transform: scale(1.1); }
+
+    .card-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+      padding: 2rem 1.5rem 1.5rem;
+      transform: translateY(100%);
+      transition: transform 0.4s ease;
+    }
+
+    .movie-card:hover .card-overlay { transform: translateY(0); }
+
+    .card-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: white;
+    }
+
+    .card-meta {
+      display: flex;
+      justify-content: space-between;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .card-actions { display: flex; gap: 0.8rem; }
+
+    .watch-btn, .info-btn, .load-more-btn {
+      flex: 1;
+      padding: 0.8rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      user-select: none;
+    }
+
+    .watch-btn {
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      color: white;
+    }
+
+    .info-btn {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--light);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .watch-btn:hover, .info-btn:hover, .load-more-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    /* 视频播放器模态框 */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      backdrop-filter: blur(10px);
+    }
+
+    .modal-content {
+      width: 90%;
+      max-width: 1200px;
+      background: rgba(20, 20, 30, 0.95);
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid rgba(0, 212, 255, 0.2);
+      box-shadow: 0 0 50px rgba(0, 212, 255, 0.2);
+    }
+
+    .modal-header {
+      padding: 1.5rem 2rem;
+      background: rgba(0, 0, 0, 0.5);
+      border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-title { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
+
+    .close-modal {
+      background: none;
+      border: none;
+      color: var(--light);
+      font-size: 2rem;
+      cursor: pointer;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .close-modal:hover { background: rgba(255, 255, 255, 0.1); color: var(--accent); }
+
+    .video-container {
+      padding: 2rem;
+      min-height: 600px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* 页脚 */
+    .footer {
+      background: rgba(5, 5, 8, 0.95);
+      padding: 4rem 2rem 2rem;
+      border-top: 1px solid rgba(0, 212, 255, 0.1);
+      margin-top: 4rem;
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 3rem;
+    }
+
+    .footer-section h3 {
+      color: var(--primary);
+      margin-bottom: 1.5rem;
+      font-size: 1.2rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .footer-links { list-style: none; }
+    .footer-links li { margin-bottom: 0.8rem; }
+
+    .footer-links a {
+      color: rgba(224, 224, 224, 0.7);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .footer-links a:hover { color: var(--primary); transform: translateX(5px); }
+
+    .social-links { display: flex; gap: 1rem; margin-top: 1.5rem; }
+
+    .social-link {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--light);
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .social-link:hover { background: var(--primary); transform: translateY(-5px); }
+
+    .copyright {
+      text-align: center;
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      color: rgba(224, 224, 224, 0.5);
+      font-size: 0.9rem;
+    }
+
+    /* 动画效果 */
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+    .floating { animation: float 3s ease-in-out infinite; }
+
+    /* 响应式设计 */
+    @media (max-width: 768px) {
+      .navbar { flex-direction: column; gap: 1rem; padding: 1rem; }
+      .nav-center { flex-wrap: wrap; justify-content: center; gap: 1rem; }
+      .hero-title { font-size: 2.5rem; }
+      .movies-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; padding: 0 1rem; }
+      .modal-content { width: 95%; }
+      .video-container { padding: 1rem; min-height: 400px; }
+    }
+
+    /* 加载动画 */
+    .loader {
+      display: none;
+      width: 50px; height: 50px;
+      border: 3px solid rgba(0, 212, 255, 0.1);
+      border-top: 3px solid var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 2rem auto;
+    }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    /* 滚动条美化 */
+    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar-track { background: var(--darker); }
+    ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--primary), var(--secondary)); border-radius: 5px; }
+    ::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, var(--secondary), var(--primary)); }
+
+    /* 新增小组件 */
+    .center-row { display: flex; justify-content: center; align-items: center; padding: 0 2rem 4rem; }
+
+    .load-more-btn {
+      max-width: 260px; width: 100%;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--light);
+      border: 1px solid rgba(0, 212, 255, 0.25);
+      backdrop-filter: blur(10px);
+    }
+
+    .empty-hint { padding: 0 2rem 4rem; text-align: center; color: rgba(224, 224, 224, 0.7); }
+
+    .toast {
+      position: fixed; right: 18px; bottom: 18px;
+      z-index: 5000;
+      background: rgba(20, 20, 30, 0.92);
+      border: 1px solid rgba(0, 212, 255, 0.25);
+      box-shadow: 0 0 25px rgba(0, 212, 255, 0.18);
+      border-radius: 14px;
+      padding: 12px 14px;
+      max-width: 360px;
+      display: none;
+      backdrop-filter: blur(12px);
+      white-space: pre-line;
+    }
+
+    .toast-title { font-weight: 700; color: var(--primary); margin-bottom: 6px; }
+    .toast-text { font-size: 0.95rem; color: rgba(224, 224, 224, 0.85); line-height: 1.5; }
+    .toast-actions { display: flex; gap: 10px; margin-top: 10px; }
+    .toast-actions button {
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.06);
+      color: var(--light);
+      padding: 8px 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all .2s ease;
+    }
+    .toast-actions button:hover {
+      transform: translateY(-2px);
+      border-color: rgba(0, 212, 255, 0.45);
+      box-shadow: 0 0 18px rgba(0, 212, 255, 0.12);
+    }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+  </style>
+
+  <!-- 外部资源全部“可失败”，不会影响站点主体功能 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
+
 <body>
-    <!-- 背景粒子 -->
-    <div id="particles-js"></div>
+  <!-- 背景粒子 -->
+  <div id="particles-js"><canvas id="particles-canvas"></canvas></div>
 
-    <!-- 导航栏 -->
-    <nav class="navbar">
-        <div class="logo">DAHAI CINEMA</div>
-        <div class="nav-center">
-            <a href="#" class="nav-item"><i class="fas fa-home"></i> 首页</a>
-            <a href="#movies" class="nav-item"><i class="fas fa-film"></i> 电影</a>
-            <a href="#tv" class="nav-item"><i class="fas fa-tv"></i> 剧集</a>
-            <a href="#anime" class="nav-item"><i class="fas fa-gamepad"></i> 动漫</a>
-            <a href="#collections" class="nav-item"><i class="fas fa-star"></i> 收藏</a>
-        </div>
-        <div class="user-menu">
-            <button class="nav-item" id="userBtn"><i class="fas fa-user"></i> 大海</button>
-        </div>
-    </nav>
+  <!-- 导航栏 -->
+  <nav class="navbar">
+    <div class="logo">DAHAI CINEMA</div>
+    <div class="nav-center">
+      <a href="#" class="nav-item"><i class="fas fa-home"></i> 首页</a>
+      <a href="#movies" class="nav-item"><i class="fas fa-film"></i> 电影</a>
+      <a href="#tv" class="nav-item"><i class="fas fa-tv"></i> 剧集</a>
+      <a href="#anime" class="nav-item"><i class="fas fa-gamepad"></i> 动漫</a>
+      <a href="#collections" class="nav-item"><i class="fas fa-star"></i> 收藏</a>
+    </div>
+    <div class="user-menu">
+      <button class="nav-item" id="userBtn"><i class="fas fa-user"></i> 大海</button>
+    </div>
+  </nav>
 
-    <!-- 主内容区 -->
-    <main>
-        <!-- 英雄区域 -->
-        <section class="hero">
-            <h1 class="hero-title floating">沉浸式私人观影体验</h1>
-            <p class="hero-subtitle">
-                一个完全属于你的影视空间 · 精选全球优质内容 · 无广告干扰 · 个性推荐
-            </p>
-            
-            <!-- 搜索框 -->
-            <div class="search-container">
-                <input type="text" 
-                       class="search-box" 
-                       placeholder="搜索电影、剧集、动漫（支持输入 BV 号或 B站链接）..." 
-                       id="searchInput">
-                <button class="search-btn" id="searchBtn">
-                    <i class="fas fa-search"></i> 搜索
-                </button>
-            </div>
-            
-            <!-- 快速链接 -->
-            <div class="quick-links">
-                <a href="#" class="quick-link" data-category="action">
-                    <i class="fas fa-explosion"></i> 动作大片
-                </a>
-                <a href="#" class="quick-link" data-category="sci-fi">
-                    <i class="fas fa-robot"></i> 科幻未来
-                </a>
-                <a href="#" class="quick-link" data-category="drama">
-                    <i class="fas fa-theater-masks"></i> 剧情佳作
-                </a>
-                <a href="#" class="quick-link" data-category="comedy">
-                    <i class="fas fa-laugh"></i> 喜剧轻松
-                </a>
-                <a href="#" class="quick-link" data-category="anime">
-                    <i class="fas fa-dragon"></i> 热血动漫
-                </a>
-            </div>
-        </section>
+  <!-- 主内容区 -->
+  <main>
+    <!-- 英雄区域 -->
+    <section class="hero">
+      <h1 class="hero-title floating">沉浸式私人观影体验</h1>
+      <p class="hero-subtitle">一个完全属于你的影视空间 · 精选全球优质内容 · 无广告干扰 · 个性推荐</p>
 
-        <!-- 搜索结果（默认隐藏） -->
-        <h2 class="section-title" id="searchTitle" style="display:none;">
-            <i class="fas fa-search"></i> 搜索结果
-        </h2>
-        <div class="movies-grid" id="searchMovies" style="display:none;"></div>
-        <div class="center-row" id="searchMoreRow" style="display:none;">
-            <button class="load-more-btn" id="searchMoreBtn">
-                <i class="fas fa-plus"></i> 加载更多
-            </button>
-        </div>
+      <!-- 搜索框 -->
+      <div class="search-container">
+        <input
+          type="text"
+          class="search-box"
+          placeholder="搜索电影、剧集、动漫（支持输入 BV 号或 B站链接）..."
+          id="searchInput"
+        />
+        <button class="search-btn" id="searchBtn"><i class="fas fa-search"></i> 搜索</button>
+      </div>
 
-        <!-- 热门推荐 -->
-        <h2 class="section-title" id="movies">
-            <i class="fas fa-fire"></i> 今日热门推荐
-        </h2>
-        <div class="movies-grid" id="hotMovies">
-            <!-- 动态生成 -->
-        </div>
+      <!-- 快速链接 -->
+      <div class="quick-links">
+        <a href="#" class="quick-link" data-category="action"><i class="fas fa-explosion"></i> 动作大片</a>
+        <a href="#" class="quick-link" data-category="sci-fi"><i class="fas fa-robot"></i> 科幻未来</a>
+        <a href="#" class="quick-link" data-category="drama"><i class="fas fa-theater-masks"></i> 剧情佳作</a>
+        <a href="#" class="quick-link" data-category="comedy"><i class="fas fa-laugh"></i> 喜剧轻松</a>
+        <a href="#" class="quick-link" data-category="anime"><i class="fas fa-dragon"></i> 热血动漫</a>
+      </div>
+    </section>
 
-        <!-- 最新上映 -->
-        <h2 class="section-title" id="tv">
-            <i class="fas fa-bolt"></i> 最新上映
-        </h2>
-        <div class="movies-grid" id="newMovies">
-            <!-- 动态生成 -->
-        </div>
-
-        <!-- 更多推荐（自动拉取B站热门/搜索结果，视频数量显著提升） -->
-        <h2 class="section-title" id="discoverTitle" style="display:none;">
-            <i class="fas fa-compass"></i> 更多推荐
-        </h2>
-        <div class="movies-grid" id="discoverMovies" style="display:none;"></div>
-        <div class="center-row" id="discoverMoreRow" style="display:none;">
-            <button class="load-more-btn" id="discoverMoreBtn">
-                <i class="fas fa-rotate"></i> 换一批
-            </button>
-        </div>
-
-        <!-- 加载动画 -->
-        <div class="loader" id="loader"></div>
-
-        <div class="empty-hint" id="emptyHint" style="display:none;"></div>
-    </main>
-
-    <!-- 视频播放器模态框 -->
-    <div class="modal" id="videoModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title" id="modalTitle">正在播放</h3>
-                <button class="close-modal" id="closeModal">&times;</button>
-            </div>
-            <div class="video-container" id="videoContainer">
-                <!-- 视频将在这里加载 -->
-            </div>
-        </div>
+    <!-- 搜索结果（默认隐藏） -->
+    <h2 class="section-title" id="searchTitle" style="display:none;"><i class="fas fa-search"></i> 搜索结果</h2>
+    <div class="movies-grid" id="searchMovies" style="display:none;"></div>
+    <div class="center-row" id="searchMoreRow" style="display:none;">
+      <button class="load-more-btn" id="searchMoreBtn"><i class="fas fa-plus"></i> 加载更多</button>
     </div>
 
-    <!-- Toast -->
-    <div class="toast" id="toast">
-        <div class="toast-title" id="toastTitle">提示</div>
-        <div class="toast-text" id="toastText"></div>
-        <div class="toast-actions" id="toastActions"></div>
+    <!-- 热门推荐 -->
+    <h2 class="section-title" id="movies"><i class="fas fa-fire"></i> 今日热门推荐</h2>
+
+    <!-- ✅ 关键修复：先静态渲染 8 个卡片（确保“无论 JS 是否执行，页面都永远有影片显示”） -->
+    <div class="movies-grid" id="hotMovies">
+      <!-- 说明：这些 BV 是示例；你可以替换成你自己的 BV 列表 -->
+      <!-- 卡片 1 -->
+      <div class="movie-card" data-id="BV1fX4y1V7Vc" data-bvid="BV1fX4y1V7Vc">
+        <img class="card-img" alt="BV1fX4y1V7Vc" src="data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27400%27%20height%3D%27600%27%20viewBox%3D%270%200%20400%20600%27%3E%3Cdefs%3E%3ClinearGradient%20id%3D%27g%27%20x1%3D%270%27%20y1%3D%270%27%20x2%3D%271%27%20y2%3D%271%27%3E%3Cstop%20offset%3D%270%27%20stop-color%3D%27%2300d4ff%27%20stop-opacity%3D%270.9%27/%3E%3Cstop%20offset%3D%271%27%20stop-color%3D%27%239d4edd%27%20stop-opacity%3D%270.9%27/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect%20width%3D%27400%27%20height%3D%27600%27%20fill%3D%27%2306070b%27/%3E%3Crect%20width%3D%27400%27%20height%3D%27600%27%20fill%3D%27url(%23g)%27%20opacity%3D%270.7%27/%3E%3Crect%20x%3D%2724%27%20y%3D%2724%27%20width%3D%27352%27%20height%3D%27552%27%20rx%3D%2718%27%20fill%3D%27rgba(0%2C0%2C0%2C0.35)%27%20stroke%3D%27rgba(255%2C255%2C255%2C0.12)%27/%3E%3Ctext%20x%3D%2740%27%20y%3D%27130%27%20fill%3D%27rgba(255%2C255%2C255%2C0.92)%27%20font-size%3D%2718%27%20font-family%3D%27Inter%2C%20system-ui%2C%20sans-serif%27%20letter-spacing%3D%272%27%3ED A H A I%20C I N E M A%3C/text%3E%3Ctext%20x%3D%2740%27%20y%3D%27240%27%20fill%3D%27rgba(255%2C255%2C255%2C0.95)%27%20font-size%3D%2730%27%20font-family%3D%27Inter%2C%20system-ui%2C%20sans-serif%27%20font-weight%3D%27800%27%3EBV1fX4y1V7Vc%3C/text%3E%3Ctext%20x%3D%2740%27%20y%3D%27530%27%20fill%3D%27rgba(255%2C255%2C255%2C0.7)%27%20font-size%3D%2714%27%20font-family%3D%27Inter%2C%20system-ui%2C%20sans-serif%27%3E%E7%82%B9%E5%87%BB%E8%A7%82%E7%9C%8B%20%7C%20BV%20%E7%A8%BF%E4%BB%B6%3C/text%3E%3C/svg%3E" />
+        <div class="card-overlay">
+          <h3 class="card-title">BV1fX4y1V7Vc</h3>
+          <div class="card-meta"><span>—</span><span>⭐ —</span><span>—</span></div>
+          <div class="card-actions">
+            <a class="watch-btn" href="https://www.bilibili.com/video/BV1fX4y1V7Vc" target="_blank" rel="noopener">
+              <i class="fas fa-play"></i> 立即观看
+            </a>
+            <a class="info-btn" href="#" data-id="BV1fX4y1V7Vc"><i class="fas fa-info-circle"></i> 详情</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 卡片 2 -->
+      <div class="movie-card" data-id="BV1cT411R7tY" data-bvid="BV1cT411R7tY">
+        <img class="card-img" alt="BV1cT411R7tY" src="data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27400%27%20height%3D%27600%27%20viewBox%3D%270%200%20400%20600%27%3E%3Cdefs%3E%3ClinearGradient%20id%3D%27g%27%20x1%3D%270%27%20y1%3D%270%27%20x2%3D%271%27%20y2%3D%271%27%3E%3Cstop%20offset%3D%270%27%20stop-color%3D%27%239d4edd%27%20stop-opacity%3D%270.9%27/%3E%3Cstop%20offset%3D%271%27%20stop-color%3D%27%2300d4ff%27%20stop-opacity%3D%270.9%27/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect%20width%3D%27400%27%20height%3D%27600%27%20fill%3D%27%2306070b%27/%3E%3Crect%20width%3D%27400%27%20height%3D%27600%27%20fill%3D%27url(%23g)%27%20opacity%3D%270.7%27/%3E%3Crect%20x%3D%2724%27%20y%3D%2724%27%20width%3D%27352%27%20height%3D%27552%27%20rx%3D%2718%27%20fill%3D%27rgba(0%2C0%2C0%2C0.35)%27%20stroke%3D%27rgba(255%2C255%2C255%2C0.12)%27/%3E%3Ctext%20x%3D%2740%27%20y%3D%27130%27%20fill%3D%27rgba(255%2C255%2C255%2C0.92)%27%20font-size%3D%2718%27%20font-family%3D%27Inter%2C%20system-ui%2C%20sans-serif%27%20letter-spacing%3D%272%27%3ED A H A I%20C I N E M A%3C/text%3E%3Ctext%20x%3D%2740%27%20y%3D%27240%27%20fill%3D%27rgba(255%2C255%2C255%2C0.95)%27%20font-size%3D%2730%27%20font-family%3D%27Inter%2C%20system-ui%2C%20sans-serif%27%20font-weight%3D%27800%27%3EBV1cT411R7tY%3C/text%3E%3Ctext%20x%3D%2740%27%20y%3D%27530%27%20fill%3D%27rgba(255%2C255%2C255%2C0.7)%27%20font-size%3D%2714%27%20font-family%3D%27Inter%2C%20system-ui%2C%20sans-serif%27%3E%E7%82%B9%E5%87%BB%E8%A7%82%E7%9C%8B%20%7C%20BV%20%E7%A8%BF%E4%BB%B6%3C/text%3E%3C/svg%3E" />
+        <div class="card-overlay">
+          <h3 class="card-title">BV1cT411R7tY</h3>
+          <div class="card-meta"><span>—</span><span>⭐ —</span><span>—</span></div>
+          <div class="card-actions">
+            <a class="watch-btn" href="https://www.bilibili.com/video/BV1cT411R7tY" target="_blank" rel="noopener">
+              <i class="fas fa-play"></i> 立即观看
+            </a>
+            <a class="info-btn" href="#" data-id="BV1cT411R7tY"><i class="fas fa-info-circle"></i> 详情</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 卡片 3 -->
+      <div class="movie-card" data-id="BV1Gu4y1U7YJ" data-bvid="BV1Gu4y1U7YJ">
+        <img class="card-img" alt="BV1Gu4y1U7YJ" src="data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27400%27%20height%3D%27600%27%20viewBox%3D%270%200%20400%20600%27%3E%3Cdefs%3E%3ClinearGradient%20id%3D%27g%27%20x1%3D%270%27%20y1%3D%270%27%20x2%3D%271%27%20y2%3D%271%27%3E%3Cstop%20offset%3D%270%27%20stop-color%3D%27%2300d4ff%27%20stop-opacity%3D%270.9%27/%3E%3Cstop%20offset%3D%271%27%20stop-color%3D%27%23ff6b6b%27%20stop-opacity%3D%270.9%27/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect%20width%3D%27400%27%20height%3D%27600%27%20fill%3D%27%2306070b%27/%3E%3Crect%20width%3D%27400%27%20height%3D%27600%27%20fill%3D%27url(%23g)%27%20opacity%3D%270.65%27/%3E%3Crect%20x%3D%2724%27%20y%3D%2724%27%20width%3D%27352%27%20height%3D%27552%27%20rx%3D%2718%27%20fill%3D%27rgba(0%2C0%2C0%2C0.35)%27%20stroke%3D%27rgba(255%2C255%2C255%2C0.12)%27/%3E%3Ctext%20x%3D%2740%27%20y%3D%27130%27%20fill%3D%27rgba(255%2C255%2C255%2C0.92)%27%20font-size%3D%2718%27%20font-family%3D%27Inter%2C%20system-ui%2C%20sans-serif%27%20letter-spacing%3D%272%27%3ED A H A I%20C I N E M A%3C/text%3E%3Ctext%20x%3D%2740%27%20y%3D%27240%27%20fill%3D%27rgba(255%2C255%2C255%2C0.95)%27%20font-size%3D%2730%27%20font-family%3D%27Inter%2C%20system-ui%2C%20sans-serif%27%20font-weight%3D%27800%27%3EBV1Gu4y1U7YJ%3C/text%3E%3Ctext%20x%3D%2740%27%20y%3D%27530%27%20fill%3D%27rgba(255%2C255%2C255%2C0.7)%27%20font-size%3D%2714%27%20font-family%3D%27Inter%2C%20system-ui%2C%20sans-serif%27%3E%E7%82%B9%E5%87%BB%E8%A7%82%E7%9C%8B%20%7C%20BV%20%E7%A8%BF%E4%BB%B6%3C/text%3E%3C/svg%3E" />
+        <div class="card-overlay">
+          <h3 class="card-title">BV1Gu4y1U7YJ</h3>
+          <div class="card-meta"><span>—</span><span>⭐ —</span><span>—</span></div>
+          <div class="card-actions">
+            <a class="watch-btn" href="https://www.bilibili.com/video/BV1Gu4y1U7YJ" target="_blank" rel="noopener">
+              <i class="fas fa-play"></i> 立即观看
+            </a>
+            <a class="info-btn" href="#" data-id="BV1Gu4y1U7YJ"><i class="fas fa-info-circle"></i> 详情</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 卡片 4 -->
+      <div class="movie-card" data-id="BV1No4y1Z7K8" data-bvid="BV1No4y1Z7K8">
+        <img class="card-img" alt="BV1No4y1Z7K8" src="data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27400%27%20height%3D%27600%27%20viewBox%3D%270%200%20400%20600%27%3E%3Cdefs%3E%3ClinearGradient%20id%3D%27g%27%20x1%3D%270%27%20y1%3D%270%27%20x2%3D%271%27%20y2%3D%271%27%3E%3Cstop%20offset%3D%270%27%20stop-color%3D%27%23ff6b6b%27%20stop-opacity%3D%270.85%27/%3E%3Cstop%20offset%3D%271%27%20stop-color%3D%27%239d4edd%27%20stop-opacity%3D%270.85%27/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect%20width%3D%27400%27%20height%3D%27600%27%20fill%3D%27%2306070b%27/%3E%3Crect%20width%3D%27400%27%20height%3D%27600%27%20fill%3D%27url(%23g)%27%20opacity%3D%270.65%27/%3E%3Crect%20x%3D%2724%27%20y%3D%2724%27%20width%3D%27352%27%20height%3D%27552%27%20rx%3D%2718%27%20fill%3D%27rgba(0%2C0%2C0%2C0.35)%27%20stroke%3D%27rgba(255%2C255%2C255%2C0.12)%27/%3E%3Ctext%20x%3D%2740%27%20y%3D%27130%27%20fill%3D%27rgba(255%2C255%2C255%2C0.92)%27%20font-size%3D%2718%27%20font-family%3D%27Inter%2C%20system-ui%2C%20sans-serif%27%20letter-spacing%3D%272%27%3ED A H A I%20C I N E M A%3C/text%3E%3Ctext%20x%3D%2740%27%20y%3D%27240%27%20fill%3D%27rgba(255%2C255%2C255%2C0.95)%27%20font-size%3D%2730%27%20font-family%3D%27Inter%2C%20system-ui%2C%20sans-serif%27%20font-weight%3D%27800%27%3EBV1No4y1Z7K8%3C/text%3E%3Ctext%20x%3D%2740%27%20y%3D%27530%27%20fill%3D%27rgba(255%2C255%2C255%2C0.7)%27%20font-size%3D%2714%27%20font-family%3D%27Inter%2C%20system-ui%2C%20sans-serif%27%3E%E7%82%B9%E5%87%BB%E8%A7%82%E7%9C%8B%20%7C%20BV%20%E7%A8%BF%E4%BB%B6%3C/text%3E%3C/svg%3E" />
+        <div class="card-overlay">
+          <h3 class="card-title">BV1No4y1Z7K8</h3>
+          <div class="card-meta"><span>—</span><span>⭐ —</span><span>—</span></div>
+          <div class="card-actions">
+            <a class="watch-btn" href="https://www.bilibili.com/video/BV1No4y1Z7K8" target="_blank" rel="noopener">
+              <i class="fas fa-play"></i> 立即观看
+            </a>
+            <a class="info-btn" href="#" data-id="BV1No4y1Z7K8"><i class="fas fa-info-circle"></i> 详情</a>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- 页脚 -->
-    <footer class="footer">
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>DAHAI CINEMA</h3>
-                <p>一个完全个性化的私人观影空间，为您提供沉浸式的观影体验。</p>
-                <div class="social-links">
-                    <a href="#" class="social-link"><i class="fab fa-github"></i></a>
-                    <a href="#" class="social-link"><i class="fab fa-weibo"></i></a>
-                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
-                    <a href="#" class="social-link"><i class="fab fa-discord"></i></a>
-                </div>
-            </div>
-            <div class="footer-section">
-                <h3>快速链接</h3>
-                <ul class="footer-links">
-                    <li><a href="#"><i class="fas fa-chevron-right"></i> 电影库</a></li>
-                    <li><a href="#"><i class="fas fa-chevron-right"></i> 剧集列表</a></li>
-                    <li><a href="#"><i class="fas fa-chevron-right"></i> 动漫专区</a></li>
-                    <li><a href="#"><i class="fas fa-chevron-right"></i> 我的收藏</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h3>技术支持</h3>
-                <ul class="footer-links">
-                    <li><a href="#"><i class="fas fa-code"></i> GitHub Pages</a></li>
-                    <li><a href="#"><i class="fas fa-database"></i> 视频资源API</a></li>
-                    <li><a href="#"><i class="fas fa-shield-alt"></i> 安全加密</a></li>
-                    <li><a href="#"><i class="fas fa-bolt"></i> 全球CDN加速</a></li>
-                </ul>
-            </div>
+    <!-- 最新上映 -->
+    <h2 class="section-title" id="tv"><i class="fas fa-bolt"></i> 最新上映</h2>
+    <div class="movies-grid" id="newMovies">
+      <div class="movie-card" data-id="BV1Nj411D7V4" data-bvid="BV1Nj411D7V4">
+        <img class="card-img" alt="BV1Nj411D7V4" src="data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27400%27%20height%3D%27600%27%20viewBox%3D%270%200%20400%20600%27%3E%3Cdefs%3E%3ClinearGradient%20id%3D%27g%27%20x1%3D%270%27%20y1%3D%270%27%20x2%3D%271%27%20y2%3D%271%27%3E%3Cstop%20offset%3D%270%27%20stop-color%3D%27%2300d4ff%27%20stop-opacity%3D%270.85%27/%3E%3Cstop%20offset%3D%271%27%20stop-color%3D%27%239d4edd%27%20stop-opacity%3D%270.85%27/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect%20width%3D%27400%27%20height%3D%27600%27%20fill%3D%27%2306070b%27/%3E%3Crect%20width%3D%27400%27%20height%3D%27600%27%20fill%3D%27url(%23g)%27%20opacity%3D%270.65%27/%3E%3Crect%20x%3D%2724%27%20y%3D%2724%27%20width%3D%27352%27%20height%3D%27552%27%20rx%3D%2718%27%20fill%3D%27rgba(0%2C0%2C0%2C0.35)%27%20stroke%3D%27rgba(255%2C255%2C255%2C0.12)%27/%3E%3Ctext%20x%3D%2740%27%20y%3D%27130%27%20fill%3D%27rgba(255%2C255%2C255%2C0.92)%27%20font-size%3D%2718%27%20font-family%3D%27Inter%2C%20system-ui%2C%20sans-serif%27%20letter-spacing%3D%272%27%3ED A H A I%20C I N E M A%3C/text%3E%3Ctext%20x%3D%2740%27%20y%3D%27240%27%20fill%3D%27rgba(255%2C255%2C255%2C0.95)%27%20font-size%3D%2730%27%20font-family%3D%27Inter%2C%20system-ui%2C%20sans-serif%27%20font-weight%3D%27800%27%3EBV1Nj411D7V4%3C/text%3E%3Ctext%20x%3D%2740%27%20y%3D%27530%27%20fill%3D%27rgba(255%2C255%2C255%2C0.7)%27%20font-size%3D%2714%27%20font-family%3D%27Inter%2C%20system-ui%2C%20sans-serif%27%3E%E7%82%B9%E5%87%BB%E8%A7%82%E7%9C%8B%20%7C%20BV%20%E7%A8%BF%E4%BB%B6%3C/text%3E%3C/svg%3E" />
+        <div class="card-overlay">
+          <h3 class="card-title">BV1Nj411D7V4</h3>
+          <div class="card-meta"><span>—</span><span>⭐ —</span><span>—</span></div>
+          <div class="card-actions">
+            <a class="watch-btn" href="https://www.bilibili.com/video/BV1Nj411D7V4" target="_blank" rel="noopener"><i class="fas fa-play"></i> 立即观看</a>
+            <a class="info-btn" href="#" data-id="BV1Nj411D7V4"><i class="fas fa-info-circle"></i> 详情</a>
+          </div>
         </div>
-        <div class="copyright">
-            &copy; 2023 DAHAI私人影院. 本网站仅供个人学习交流使用。
-            <br>
-            视频资源来源于互联网公开内容，版权归原作者所有。
+      </div>
+
+      <div class="movie-card" data-id="BV1No4y1Z7K9" data-bvid="BV1No4y1Z7K9">
+        <img class="card-img" alt="BV1No4y1Z7K9" src="data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27400%27%20height%3D%27600%27%20viewBox%3D%270%200%20400%20600%27%3E%3Cdefs%3E%3ClinearGradient%20id%3D%27g%27%20x1%3D%270%27%20y1%3D%270%27%20x2%3D%271%27%20y2%3D%271%27%3E%3Cstop%20offset%3D%270%27%20stop-color%3D%27%239d4edd%27%20stop-opacity%3D%270.85%27/%3E%3Cstop%20offset%3D%271%27%20stop-color%3D%27%23ff6b6b%27%20stop-opacity%3D%270.85%27/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect%20width%3D%27400%27%20height%3D%27600%27%20fill%3D%27%2306070b%27/%3E%3Crect%20width%3D%27400%27%20height%3D%27600%27%20fill%3D%27url(%23g)%27%20opacity%3D%270.65%27/%3E%3Crect%20x%3D%2724%27%20y%3D%2724%27%20width%3D%27352%27%20height%3D%27552%27%20rx%3D%2718%27%20fill%3D%27rgba(0%2C0%2C0%2C0.35)%27%20stroke%3D%27rgba(255%2C255%2C255%2C0.12)%27/%3E%3Ctext%20x%3D%2740%27%20y%3D%27130%27%20fill%3D%27rgba(255%2C255%2C255%2C0.92)%27%20font-size%3D%2718%27%20font-family%3D%27Inter%2C%20system-ui%2C%20sans-serif%27%20letter-spacing%3D%272%27%3ED A H A I%20C I N E M A%3C/text%3E%3Ctext%20x%3D%2740%27%20y%3D%27240%27%20fill%3D%27rgba(255%2C255%2C255%2C0.95)%27%20font-size%3D%2730%27%20font-family%3D%27Inter%2C%20system-ui%2C%20sans-serif%27%20font-weight%3D%27800%27%3EBV1No4y1Z7K9%3C/text%3E%3Ctext%20x%3D%2740%27%20y%3D%27530%27%20fill%3D%27rgba(255%2C255%2C255%2C0.7)%27%20font-size%3D%2714%27%20font-family%3D%27Inter%2C%20system-ui%2C%20sans-serif%27%3E%E7%82%B9%E5%87%BB%E8%A7%82%E7%9C%8B%20%7C%20BV%20%E7%A8%BF%E4%BB%B6%3C/text%3E%3C/svg%3E" />
+        <div class="card-overlay">
+          <h3 class="card-title">BV1No4y1Z7K9</h3>
+          <div class="card-meta"><span>—</span><span>⭐ —</span><span>—</span></div>
+          <div class="card-actions">
+            <a class="watch-btn" href="https://www.bilibili.com/video/BV1No4y1Z7K9" target="_blank" rel="noopener"><i class="fas fa-play"></i> 立即观看</a>
+            <a class="info-btn" href="#" data-id="BV1No4y1Z7K9"><i class="fas fa-info-circle"></i> 详情</a>
+          </div>
         </div>
-    </footer>
+      </div>
 
-    <!-- 脚本 -->
-<script>
-        // =========================
-        // 0) 配置区（可选）
-        // =========================
-        const CONFIG = {
-            // 如果你的网站部署环境请求 B站 API 会遇到 CORS：
-            // 1) 先把下面 apiProxy 留空运行看看（有些环境可直接请求成功）
-            // 2) 如果不行，再配置代理（例如 Cloudflare Worker），格式： "https://your-worker.workers.dev/?url="
-            apiProxy: "https://xxxxxx.workers.dev/?url=",
+      <div class="movie-card" data-id="BV1Nj411D7V5" data-bvid="BV1Nj411D7V5">
+        <img class="card-img" alt="BV1Nj411D7V5" src="data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27400%27%20height%3D%27600%27%20viewBox%3D%270%200%20400%20600%27%3E%3Cdefs%3E%3ClinearGradient%20id%3D%27g%27%20x1%3D%270%27%20y1%3D%270%27%20x2%3D%271%27%20y2%3D%271%27%3E%3Cstop%20offset%3D%270%27%20stop-color%3D%27%2300d4ff%27%20stop-opacity%3D%270.85%27/%3E%3Cstop%20offset%3D%271%27%20stop-color%3D%27%23ff6b6b%27%20stop-opacity%3D%270.85%27/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect%20width%3D%27400%27%20height%3D%27600%27%20fill%3D%27%2306070b%27/%3E%3Crect%20width%3D%27400%27%20height%3D%27600%27%20fill%3D%27url(%23g)%27%20opacity%3D%270.65%27/%3E%3Crect%20x%3D%2724%27%20y%3D%2724%27%20width%3D%27352%27%20height%3D%27552%27%20rx%3D%2718%27%20fill%3D%27rgba(0%2C0%2C0%2C0.35)%27%20stroke%3D%27rgba(255%2C255%2C255%2C0.12)%27/%3E%3Ctext%20x%3D%2740%27%20y%3D%27130%27%20fill%3D%27rgba(255%2C255%2C255%2C0.92)%27%20font-size%3D%2718%27%20font-family%3D%27Inter%2C%20system-ui%2C%20sans-serif%27%20letter-spacing%3D%272%27%3ED A H A I%20C I N E M A%3C/text%3E%3Ctext%20x%3D%2740%27%20y%3D%27240%27%20fill%3D%27rgba(255%2C255%2C255%2C0.95)%27%20font-size%3D%2730%27%20font-family%3D%27Inter%2C%20system-ui%2C%20sans-serif%27%20font-weight%3D%27800%27%3EBV1Nj411D7V5%3C/text%3E%3Ctext%20x%3D%2740%27%20y%3D%27530%27%20fill%3D%27rgba(255%2C255%2C255%2C0.7)%27%20font-size%3D%2714%27%20font-family%3D%27Inter%2C%20system-ui%2C%20sans-serif%27%3E%E7%82%B9%E5%87%BB%E8%A7%82%E7%9C%8B%20%7C%20BV%20%E7%A8%BF%E4%BB%B6%3C/text%3E%3C/svg%3E" />
+        <div class="card-overlay">
+          <h3 class="card-title">BV1Nj411D7V5</h3>
+          <div class="card-meta"><span>—</span><span>⭐ —</span><span>—</span></div>
+          <div class="card-actions">
+            <a class="watch-btn" href="https://www.bilibili.com/video/BV1Nj411D7V5" target="_blank" rel="noopener"><i class="fas fa-play"></i> 立即观看</a>
+            <a class="info-btn" href="#" data-id="BV1Nj411D7V5"><i class="fas fa-info-circle"></i> 详情</a>
+          </div>
+        </div>
+      </div>
 
-            // 是否在页面加载时尝试“自动校准”封面/标题（根据 bvid 拉取真实信息）
-            syncMetaOnLoad: true,
+      <div class="movie-card" data-id="BV1Nj411D7V6" data-bvid="BV1Nj411D7V6">
+        <img class="card-img" alt="BV1Nj411D7V6" src="data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27400%27%20height%3D%27600%27%20viewBox%3D%270%200%20400%20600%27%3E%3Cdefs%3E%3ClinearGradient%20id%3D%27g%27%20x1%3D%270%27%20y1%3D%270%27%20x2%3D%271%27%20y2%3D%271%27%3E%3Cstop%20offset%3D%270%27%20stop-color%3D%27%23ff6b6b%27%20stop-opacity%3D%270.85%27/%3E%3Cstop%20offset%3D%271%27%20stop-color%3D%27%239d4edd%27%20stop-opacity%3D%270.85%27/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect%20width%3D%27400%27%20height%3D%27600%27%20fill%3D%27%2306070b%27/%3E%3Crect%20width%3D%27400%27%20height%3D%27600%27%20fill%3D%27url(%23g)%27%20opacity%3D%270.65%27/%3E%3Crect%20x%3D%2724%27%20y%3D%2724%27%20width%3D%27352%27%20height%3D%27552%27%20rx%3D%2718%27%20fill%3D%27rgba(0%2C0%2C0%2C0.35)%27%20stroke%3D%27rgba(255%2C255%2C255%2C0.12)%27/%3E%3Ctext%20x%3D%2740%27%20y%3D%27130%27%20fill%3D%27rgba(255%2C255%2C255%2C0.92)%27%20font-size%3D%2718%27%20font-family%3D%27Inter%2C%20system-ui%2C%20sans-serif%27%20letter-spacing%3D%272%27%3ED A H A I%20C I N E M A%3C/text%3E%3Ctext%20x%3D%2740%27%20y%3D%27240%27%20fill%3D%27rgba(255%2C255%2C255%2C0.95)%27%20font-size%3D%2730%27%20font-family%3D%27Inter%2C%20system-ui%2C%20sans-serif%27%20font-weight%3D%27800%27%3EBV1Nj411D7V6%3C/text%3E%3Ctext%20x%3D%2740%27%20y%3D%27530%27%20fill%3D%27rgba(255%2C255%2C255%2C0.7)%27%20font-size%3D%2714%27%20font-family%3D%27Inter%2C%20system-ui%2C%20sans-serif%27%3E%E7%82%B9%E5%87%BB%E8%A7%82%E7%9C%8B%20%7C%20BV%20%E7%A8%BF%E4%BB%B6%3C/text%3E%3C/svg%3E" />
+        <div class="card-overlay">
+          <h3 class="card-title">BV1Nj411D7V6</h3>
+          <div class="card-meta"><span>—</span><span>⭐ —</span><span>—</span></div>
+          <div class="card-actions">
+            <a class="watch-btn" href="https://www.bilibili.com/video/BV1Nj411D7V6" target="_blank" rel="noopener"><i class="fas fa-play"></i> 立即观看</a>
+            <a class="info-btn" href="#" data-id="BV1Nj411D7V6"><i class="fas fa-info-circle"></i> 详情</a>
+          </div>
+        </div>
+      </div>
+    </div>
 
-            // “更多推荐”每次拉取数量
-            discoverPageSize: 24,
+    <!-- 更多推荐（在线拉取，失败则不影响主站） -->
+    <h2 class="section-title" id="discoverTitle" style="display:none;"><i class="fas fa-compass"></i> 更多推荐</h2>
+    <div class="movies-grid" id="discoverMovies" style="display:none;"></div>
+    <div class="center-row" id="discoverMoreRow" style="display:none;">
+      <button class="load-more-btn" id="discoverMoreBtn"><i class="fas fa-rotate"></i> 换一批</button>
+    </div>
 
-            // 搜索每页数量
-            searchPageSize: 24,
+    <!-- 加载动画 -->
+    <div class="loader" id="loader"></div>
+    <div class="empty-hint" id="emptyHint" style="display:none;"></div>
+  </main>
 
-            // 本地缓存（减少重复请求）时长：分钟
-            metaCacheMinutes: 60 * 24
-        };
+  <!-- 视频播放器模态框 -->
+  <div class="modal" id="videoModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalTitle">正在播放</h3>
+        <button class="close-modal" id="closeModal">&times;</button>
+      </div>
+      <div class="video-container" id="videoContainer"></div>
+    </div>
+  </div>
 
-        // =========================
-        // =========================
-        // 1) 粒子背景（非阻塞加载：避免 CDN 失败导致整站“无视频/无搜索”）
-        // =========================
-        function loadScriptOnce(src, timeoutMs = 8000) {
-            return new Promise((resolve, reject) => {
-                // 已加载
-                for (const s of document.scripts) {
-                    if (s && s.src && s.src === src) return resolve(true);
-                }
-                const script = document.createElement('script');
-                script.src = src;
-                script.async = true;
-                script.crossOrigin = "anonymous";
-                let done = false;
+  <!-- Toast -->
+  <div class="toast" id="toast">
+    <div class="toast-title" id="toastTitle">提示</div>
+    <div class="toast-text" id="toastText"></div>
+    <div class="toast-actions" id="toastActions"></div>
+  </div>
 
-                const timer = setTimeout(() => {
-                    if (done) return;
-                    done = true;
-                    script.remove();
-                    reject(new Error('Script load timeout: ' + src));
-                }, timeoutMs);
+  <!-- 页脚 -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>DAHAI CINEMA</h3>
+        <p>一个完全个性化的私人观影空间，为您提供沉浸式的观影体验。</p>
+        <div class="social-links">
+          <a href="#" class="social-link" aria-label="github"><i class="fab fa-github"></i></a>
+          <a href="#" class="social-link" aria-label="weibo"><i class="fab fa-weibo"></i></a>
+          <a href="#" class="social-link" aria-label="twitter"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="social-link" aria-label="discord"><i class="fab fa-discord"></i></a>
+        </div>
+      </div>
+      <div class="footer-section">
+        <h3>快速链接</h3>
+        <ul class="footer-links">
+          <li><a href="#"><i class="fas fa-chevron-right"></i> 电影库</a></li>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> 剧集列表</a></li>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> 动漫专区</a></li>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> 我的收藏</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>技术支持</h3>
+        <ul class="footer-links">
+          <li><a href="#"><i class="fas fa-code"></i> GitHub Pages</a></li>
+          <li><a href="#"><i class="fas fa-database"></i> B站公开播放器</a></li>
+          <li><a href="#"><i class="fas fa-shield-alt"></i> 安全加密</a></li>
+          <li><a href="#"><i class="fas fa-bolt"></i> CDN加速</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="copyright">
+      &copy; 2023 DAHAI私人影院. 本网站仅供个人学习交流使用。
+      <br />视频资源来源于互联网公开内容，版权归原作者所有。
+    </div>
+  </footer>
 
-                script.onload = () => {
-                    if (done) return;
-                    done = true;
-                    clearTimeout(timer);
-                    resolve(true);
-                };
-                script.onerror = () => {
-                    if (done) return;
-                    done = true;
-                    clearTimeout(timer);
-                    script.remove();
-                    reject(new Error('Script load error: ' + src));
-                };
+  <!-- ✅ 关键修复：所有 JS 都放在页面底部，并且任何错误都不会阻塞“影片显示” -->
+  <script>
+    // =========================
+    // 0) 配置区
+    // =========================
+    const CONFIG = {
+      // GitHub Pages 下，直接请求 api.bilibili.com 往往会被 CORS 拦截。
+      // 需要你部署一个代理（Cloudflare Worker），然后填入：
+      // apiProxy: "https://xxxx.workers.dev/?url="
+      apiProxy: "",
 
-                document.head.appendChild(script);
-            });
-        }
+      // 页面加载时是否尝试用 B站 view API 同步真实标题/封面（失败不影响页面）
+      syncMetaOnLoad: true,
 
-        async function ensureParticlesLib() {
-            if (typeof window.particlesJS === 'function') return true;
+      // “更多推荐”每次拉取数量
+      discoverPageSize: 24,
 
-            // 多 CDN 兜底（哪个能连上就用哪个）
-            const sources = [
-                "https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js",
-                "https://fastly.jsdelivr.net/particles.js/2.0.0/particles.min.js",
-                "https://unpkg.com/particles.js@2.0.0/particles.min.js"
-            ];
+      // 搜索每页数量（在线搜索）
+      searchPageSize: 24,
 
-            for (const src of sources) {
-                try {
-                    await loadScriptOnce(src, 6000);
-                    if (typeof window.particlesJS === 'function') return true;
-                } catch (e) {
-                    // 忽略，继续尝试下一个 CDN
-                }
-            }
-            return false;
-        }
-
-        async function initParticlesBackground() {
-            try {
-                const ok = await ensureParticlesLib();
-                if (!ok) return;
-
-                // 这里沿用你原来的粒子参数，保持视觉风格不变
-                particlesJS('particles-js', {
-            particles: {
-                number: { value: 80, density: { enable: true, value_area: 800 } },
-                color: { value: "#00d4ff" },
-                shape: { type: "circle" },
-                opacity: { value: 0.5, random: true },
-                size: { value: 3, random: true },
-                line_linked: {
-                    enable: true,
-                    distance: 150,
-                    color: "#00d4ff",
-                    opacity: 0.2,
-                    width: 1
-                },
-                move: {
-                    enable: true,
-                    speed: 2,
-                    direction: "none",
-                    random: true,
-                    straight: false,
-                    out_mode: "out",
-                    bounce: false
-                }
-            },
-            interactivity: {
-                detect_on: "canvas",
-                events: {
-                    onhover: { enable: true, mode: "repulse" },
-                    onclick: { enable: true, mode: "push" }
-                }
-            },
-            retina_detect: true
-        });
-            } catch (e) {
-                // 不要让粒子失败影响主功能（列表/搜索/播放）
-                console.warn("particles init skipped:", e);
-            }
-        }
-
-export default {
-  async fetch(request, env) {
-    const corsHeaders = {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET,OPTIONS",
-      "Access-Control-Allow-Headers": "*",
-      "Access-Control-Max-Age": "86400",
+      // 缓存分钟数
+      metaCacheMinutes: 60 * 24
     };
 
-    if (request.method === "OPTIONS") {
-      return new Response(null, { headers: corsHeaders });
+    // =========================
+    // 1) Store（统一数据源，避免“标题/封面/播放不一致”）
+    // =========================
+    const Store = {
+      byId: new Map(),     // id(这里用 bvid) -> movie
+      search: { keyword: "", page: 1, hasMore: false },
+      discover: { page: 1 }
+    };
+
+    function upsertMovie(m) {
+      const id = String(m.id || m.bvid || cryptoRandomId());
+      m.id = id;
+      m.bvid = m.bvid ? String(m.bvid) : "";
+      Store.byId.set(id, m);
+      return m;
     }
 
-    const u = new URL(request.url);
-    const target = u.searchParams.get("url");
-    if (!target) {
-      return new Response("Missing ?url=", { status: 400, headers: corsHeaders });
+    function cryptoRandomId() {
+      return "m_" + Math.random().toString(16).slice(2) + "_" + Date.now().toString(16);
     }
 
-    let targetUrl;
-    try {
-      targetUrl = new URL(target);
-    } catch {
-      return new Response("Bad url", { status: 400, headers: corsHeaders });
+    // =========================
+    // 2) 从页面静态卡片“读取”种子影片（确保永远有影片）
+    // =========================
+    function readSeedFromDom() {
+      const cards = document.querySelectorAll(".movie-card[data-bvid]");
+      cards.forEach(card => {
+        const bvid = card.getAttribute("data-bvid") || "";
+        const id = card.getAttribute("data-id") || bvid || cryptoRandomId();
+        const title = (card.querySelector(".card-title")?.textContent || bvid || "未命名").trim();
+        const poster = card.querySelector("img")?.getAttribute("src") || "";
+        upsertMovie({
+          id,
+          bvid,
+          title,
+          poster,
+          year: "",
+          rating: "",
+          duration: "",
+          category: ["本地片库"],
+          description: "本地片库（可输入 BV 号进行播放/校准标题封面）。"
+        });
+      });
     }
 
-    // ✅ 安全：只允许代理 B站 API，避免变成公共代理
-    const ALLOW = new Set(["api.bilibili.com"]);
-    if (!ALLOW.has(targetUrl.hostname)) {
-      return new Response("Forbidden host", { status: 403, headers: corsHeaders });
+    // =========================
+    // 3) 统一事件委托：点击卡片 / 播放 / 详情
+    // =========================
+    document.addEventListener("click", async (e) => {
+      const watch = e.target.closest(".watch-btn");
+      const info = e.target.closest(".info-btn");
+      const card = e.target.closest(".movie-card");
+
+      // 播放：如果 JS 可用 -> 模态框播放；否则 <a> 会直接跳转 B站（保底）
+      if (watch) {
+        const bvid = getBvidFromEl(watch);
+        if (bvid) {
+          // 如果是 <a>，阻止默认跳转，改为站内弹窗播放
+          e.preventDefault();
+          e.stopPropagation();
+          const m = Store.byId.get(bvid) || upsertMovie({ id: bvid, bvid, title: bvid, poster: "" });
+          await openPlayer(m);
+        }
+        return;
+      }
+
+      // 详情
+      if (info) {
+        e.preventDefault();
+        e.stopPropagation();
+        const bvid = getBvidFromEl(info);
+        if (!bvid) return;
+        const m = Store.byId.get(bvid) || upsertMovie({ id: bvid, bvid, title: bvid, poster: "" });
+        await openInfo(m);
+        return;
+      }
+
+      // 点击卡片也打开详情
+      if (card) {
+        const bvid = card.getAttribute("data-bvid") || card.getAttribute("data-id");
+        if (!bvid) return;
+        const m = Store.byId.get(bvid) || upsertMovie({ id: bvid, bvid, title: bvid, poster: "" });
+        await openInfo(m);
+      }
+    });
+
+    function getBvidFromEl(el) {
+      // 优先从最近的 card 上读 bvid
+      const card = el.closest(".movie-card");
+      const bvid = card?.getAttribute("data-bvid") || el.getAttribute("data-id") || "";
+      return bvid || null;
     }
 
-    const headers = new Headers();
-    headers.set("Accept", "application/json");
-    headers.set("Referer", "https://www.bilibili.com/");
-    headers.set("Origin", "https://www.bilibili.com");
-    headers.set(
-      "User-Agent",
-      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36"
-    );
+    // =========================
+    // 4) 播放器 / 详情
+    // =========================
+    async function openPlayer(movie) {
+      const modal = document.getElementById("videoModal");
+      const titleEl = document.getElementById("modalTitle");
+      const container = document.getElementById("videoContainer");
 
-    // 🔒 可选：如果你想让“关键词搜索”更稳定，可在 Worker 里配置环境变量 BILI_COOKIE
-    // Cloudflare → Worker → Settings → Variables → Add variable:
-    // Name: BILI_COOKIE
-    // Value: 你的cookie字符串（不要公开）
-    if (env.BILI_COOKIE) {
-      headers.set("Cookie", env.BILI_COOKIE);
+      titleEl.textContent = `正在播放：${movie.title || movie.bvid || "未命名"}`;
+      modal.style.display = "flex";
+      document.body.style.overflow = "hidden";
+
+      const bvid = movie.bvid || movie.id;
+      container.innerHTML = `
+        <iframe
+          src="https://player.bilibili.com/player.html?bvid=${encodeURIComponent(bvid)}&autoplay=1&page=1"
+          width="100%"
+          height="600"
+          scrolling="no"
+          frameborder="0"
+          allowfullscreen="true"
+          referrerpolicy="no-referrer"
+          style="border-radius: 10px;"
+        ></iframe>
+      `;
+
+      // 后台校准真实标题/封面（失败不影响播放）
+      await syncMovieMeta(movie, { silent: true });
+      titleEl.textContent = `正在播放：${movie.title || movie.bvid || "未命名"}`;
     }
 
-    const resp = await fetch(targetUrl.toString(), { method: "GET", headers });
+    async function openInfo(movie) {
+      const modal = document.getElementById("videoModal");
+      const titleEl = document.getElementById("modalTitle");
+      const container = document.getElementById("videoContainer");
 
-    const outHeaders = new Headers(resp.headers);
-    Object.entries(corsHeaders).forEach(([k, v]) => outHeaders.set(k, v));
-    outHeaders.set("Cache-Control", "public, max-age=60");
+      await syncMovieMeta(movie, { silent: true });
 
-    return new Response(resp.body, { status: resp.status, headers: outHeaders });
-  },
-};
+      titleEl.textContent = movie.title || movie.bvid || "影片详情";
+      const cats = Array.isArray(movie.category) ? movie.category : (movie.category ? [movie.category] : []);
+      const poster = movie.poster || "";
 
-        const movies = {
-            hot: [
-                {
-                    id: 1,
-                    title: "流浪地球2",
-                    year: "2023",
-                    rating: "8.8",
-                    duration: "173分钟",
-                    category: ["科幻", "灾难"],
-                    poster: "https://picsum.photos/seed/movie1/400/600",
-                    bvid: "BV1fX4y1V7Vc",
-                    description: "太阳即将毁灭，人类在地球表面建造出巨大的推进器，寻找新的家园。"
-                },
-                {
-                    id: 2,
-                    title: "阿凡达：水之道",
-                    year: "2022",
-                    rating: "8.2",
-                    duration: "192分钟",
-                    category: ["科幻", "冒险"],
-                    poster: "https://picsum.photos/seed/movie2/400/600",
-                    bvid: "BV1cT411R7tY",
-                    description: "萨利一家搬到潘多拉星球的海域，开启全新冒险。"
-                },
-                {
-                    id: 3,
-                    title: "奥本海默",
-                    year: "2023",
-                    rating: "8.7",
-                    duration: "180分钟",
-                    category: ["传记", "历史"],
-                    poster: "https://picsum.photos/seed/movie3/400/600",
-                    bvid: "BV1Gu4y1U7YJ",
-                    description: "原子弹之父罗伯特·奥本海默的传奇一生。"
-                },
-                {
-                    id: 4,
-                    title: "蜘蛛侠：纵横宇宙",
-                    year: "2023",
-                    rating: "9.0",
-                    duration: "140分钟",
-                    category: ["动画", "动作"],
-                    poster: "https://picsum.photos/seed/movie4/400/600",
-                    bvid: "BV1No4y1Z7K8",
-                    description: "迈尔斯·莫拉莱斯穿梭多元宇宙，开启全新冒险。"
-                }
-            ],
-            new: [
-                {
-                    id: 5,
-                    title: "碟中谍7",
-                    year: "2023",
-                    rating: "8.5",
-                    duration: "164分钟",
-                    category: ["动作", "冒险"],
-                    poster: "https://picsum.photos/seed/movie5/400/600",
-                    bvid: "BV1Nj411D7V4",
-                    description: "伊森·亨特与IMF小组迎接全新致命任务。"
-                },
-                {
-                    id: 6,
-                    title: "闪电侠",
-                    year: "2023",
-                    rating: "8.3",
-                    duration: "144分钟",
-                    category: ["动作", "科幻"],
-                    poster: "https://picsum.photos/seed/movie6/400/600",
-                    bvid: "BV1No4y1Z7K9",
-                    description: "巴里·艾伦利用超能力穿越时空改变过去。"
-                },
-                {
-                    id: 7,
-                    title: "银河护卫队3",
-                    year: "2023",
-                    rating: "8.7",
-                    duration: "150分钟",
-                    category: ["科幻", "喜剧"],
-                    poster: "https://picsum.photos/seed/movie7/400/600",
-                    bvid: "BV1Nj411D7V5",
-                    description: "银河护卫队成员踏上最终冒险之旅。"
-                },
-                {
-                    id: 8,
-                    title: "长安三万里",
-                    year: "2023",
-                    rating: "9.1",
-                    duration: "168分钟",
-                    category: ["动画", "历史"],
-                    poster: "https://picsum.photos/seed/movie8/400/600",
-                    bvid: "BV1Nj411D7V6",
-                    description: "大唐盛世的诗歌与梦想，李白与高适的友谊。"
-                }
-            ]
-        };
+      container.innerHTML = `
+        <div style="padding: 2rem; max-width: 900px; width: 100%;">
+          <div style="display: flex; gap: 2rem; margin-bottom: 2rem; flex-wrap: wrap;">
+            <img src="${escapeHtmlAttr(poster)}" alt="${escapeHtmlAttr(movie.title || movie.bvid || '未命名')}"
+                 style="width: 200px; height: 300px; object-fit: cover; border-radius: 10px; border: 1px solid rgba(255,255,255,0.08); background: rgba(0,0,0,0.2);" />
+            <div style="flex: 1; min-width: 240px;">
+              <h2 style="color: var(--primary); margin-bottom: 1rem; font-weight: 800;">${escapeHtml(movie.title || movie.bvid || "未命名")}</h2>
 
-        // =========================
-        // 3) 全局状态（统一管理，解决“标题/封面/播放不一致”的根因）
-        // =========================
-        const Store = {
-            byId: new Map(),   // id -> movie
-            byBvid: new Map(), // bvid -> movie
-            search: {
-                keyword: "",
-                page: 1,
-                hasMore: false,
-                remoteEnabled: true
-            },
-            discover: {
-                page: 1,
-                hasMore: true
+              <div style="display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; color: rgba(255,255,255,0.7);">
+                ${movie.year ? `<span>${escapeHtml(movie.year)}</span>` : ""}
+                ${movie.duration ? `<span>${escapeHtml(movie.duration)}</span>` : ""}
+                <span class="mono">${escapeHtml(movie.bvid || movie.id)}</span>
+              </div>
+
+              <div style="margin-bottom: 1.2rem;">
+                ${cats.map(cat => `<span style="background: rgba(0,212,255,0.1); color: var(--primary);
+                  padding: 0.3rem 0.8rem; border-radius: 15px; margin-right: 0.5rem; font-size: 0.9rem;">${escapeHtml(cat)}</span>`).join("")}
+              </div>
+
+              <p style="line-height: 1.7; color: rgba(255,255,255,0.85);">${escapeHtml(movie.description || "暂无简介")}</p>
+
+              <div style="display:flex; gap: 12px; margin-top: 18px; flex-wrap: wrap;">
+                <a class="watch-btn" href="https://www.bilibili.com/video/${encodeURIComponent(movie.bvid || movie.id)}" target="_blank" rel="noopener"
+                   style="flex: 1; min-width: 200px; padding: 1rem; font-size: 1.05rem;">
+                  <i class="fas fa-play"></i> 立即观看
+                </a>
+                <a class="info-btn" href="https://www.bilibili.com/video/${encodeURIComponent(movie.bvid || movie.id)}" target="_blank" rel="noopener"
+                   style="flex: 1; min-width: 200px; padding: 1rem; font-size: 1.05rem; text-decoration:none;">
+                  <i class="fas fa-arrow-up-right-from-square"></i> 打开B站页面
+                </a>
+              </div>
+
+              <div style="margin-top: 12px; color: rgba(224,224,224,0.65); font-size: 0.92rem;">
+                如果你想“标题/封面自动变真实”，请配置 <span class="mono">CONFIG.apiProxy</span>（Cloudflare Worker 代理）。
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      modal.style.display = "flex";
+      document.body.style.overflow = "hidden";
+    }
+
+    // 关闭模态框
+    document.getElementById("closeModal").addEventListener("click", closeModal);
+    document.getElementById("videoModal").addEventListener("click", (e) => { if (e.target.id === "videoModal") closeModal(); });
+    function closeModal() {
+      document.getElementById("videoModal").style.display = "none";
+      document.getElementById("videoContainer").innerHTML = "";
+      document.body.style.overflow = "auto";
+    }
+
+    // =========================
+    // 5) 搜索：本地永远可用；在线（可选）
+    // =========================
+    function parseBvid(input) {
+      const str = String(input || "");
+      const m = str.match(/BV[0-9A-Za-z]{10}/i);
+      return m ? m[0].toUpperCase() : null;
+    }
+
+    function localSearch(keyword) {
+      const q = String(keyword || "").trim().toLowerCase();
+      if (!q) return [];
+      const items = Array.from(Store.byId.values());
+      return items.filter(m => {
+        const hay = [m.title, m.description, m.bvid].filter(Boolean).join(" ").toLowerCase();
+        return hay.includes(q);
+      });
+    }
+
+    async function performSearch({ append } = { append: false }) {
+      const input = document.getElementById("searchInput");
+      const query = (input.value || "").trim();
+      if (!query) return;
+
+      hideEmpty();
+      showSearchSection(true);
+
+      // BV / 链接：直接播放（并尝试同步标题封面）
+      const bvid = parseBvid(query);
+      if (bvid) {
+        const m = Store.byId.get(bvid) || upsertMovie({ id: bvid, bvid, title: bvid, poster: "" });
+        await syncMovieMeta(m, { silent: true });
+        await openPlayer(m);
+        return;
+      }
+
+      // 本地搜索先展示
+      const local = localSearch(query);
+      renderGrid(document.getElementById("searchMovies"), local);
+
+      // 如果本地命中为空，提示：输入 BV 更准
+      if (local.length === 0) {
+        showEmpty(`本地片库没有匹配“${query}”。\n\n✅ 你可以直接输入 BV 号或 B站链接（例如：BVxxxxxxx），即可播放并自动加入片库。`);
+      }
+    }
+
+    function showSearchSection(show) {
+      document.getElementById("searchTitle").style.display = show ? "flex" : "none";
+      document.getElementById("searchMovies").style.display = show ? "grid" : "none";
+      document.getElementById("searchMoreRow").style.display = "none";
+    }
+
+    function renderGrid(el, items) {
+      el.innerHTML = items.map(generateMovieCard).join("");
+    }
+
+    function generateMovieCard(movie) {
+      const poster = movie.poster || "";
+      const title = movie.title || movie.bvid || "未命名";
+      const bvid = movie.bvid || movie.id;
+      const duration = movie.duration || "—";
+      const year = movie.year || "—";
+
+      return `
+        <div class="movie-card" data-id="${escapeHtmlAttr(bvid)}" data-bvid="${escapeHtmlAttr(bvid)}">
+          <img src="${escapeHtmlAttr(poster)}" alt="${escapeHtmlAttr(title)}" class="card-img">
+          <div class="card-overlay">
+            <h3 class="card-title">${escapeHtml(title)}</h3>
+            <div class="card-meta"><span>${escapeHtml(year)}</span><span class="mono">${escapeHtml(bvid)}</span><span>${escapeHtml(duration)}</span></div>
+            <div class="card-actions">
+              <a class="watch-btn" href="https://www.bilibili.com/video/${encodeURIComponent(bvid)}" target="_blank" rel="noopener">
+                <i class="fas fa-play"></i> 立即观看
+              </a>
+              <a class="info-btn" href="#" data-id="${escapeHtmlAttr(bvid)}"><i class="fas fa-info-circle"></i> 详情</a>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    document.getElementById("searchBtn").addEventListener("click", () => performSearch({ append: false }));
+    document.getElementById("searchInput").addEventListener("keypress", (e) => { if (e.key === "Enter") performSearch({ append: false }); });
+
+    document.querySelectorAll(".quick-link").forEach(link => {
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        const map = { action: "动作", "sci-fi": "科幻", drama: "剧情", comedy: "喜剧", anime: "动漫" };
+        const kw = map[link.getAttribute("data-category")] || "";
+        document.getElementById("searchInput").value = kw;
+        performSearch({ append: false });
+      });
+    });
+
+    // =========================
+    // 6) 元信息同步：B站 view API（可选，失败不影响页面）
+    // =========================
+    function cacheKeyForBvid(bvid) { return "bili_meta_" + bvid; }
+
+    function readMetaCache(bvid) {
+      try {
+        const raw = localStorage.getItem(cacheKeyForBvid(bvid));
+        if (!raw) return null;
+        const obj = JSON.parse(raw);
+        const ageMin = (Date.now() - obj.ts) / 60000;
+        if (ageMin > CONFIG.metaCacheMinutes) return null;
+        return obj.data || null;
+      } catch { return null; }
+    }
+
+    function writeMetaCache(bvid, data) {
+      try { localStorage.setItem(cacheKeyForBvid(bvid), JSON.stringify({ ts: Date.now(), data })); } catch {}
+    }
+
+    async function syncMovieMeta(movie, { silent } = { silent: false }) {
+      const bvid = movie.bvid || movie.id;
+      if (!bvid || !/^BV/i.test(bvid)) return null;
+
+      const cached = readMetaCache(bvid);
+      if (cached) {
+        applyMeta(movie, cached);
+        updateCardDom(bvid, movie);
+        return movie;
+      }
+
+      const view = await fetchBiliView(bvid, { silent: true });
+      if (!view) return null;
+
+      writeMetaCache(bvid, view);
+      applyMeta(movie, view);
+      updateCardDom(bvid, movie);
+      return movie;
+    }
+
+    function applyMeta(movie, view) {
+      if (!view) return;
+      if (view.title) movie.title = view.title;
+      if (view.pic) movie.poster = ensureHttps(view.pic);
+      if (typeof view.duration === "number") movie.duration = formatDuration(view.duration);
+      if (view.desc && (!movie.description || movie.description.length < 10)) movie.description = view.desc;
+      if (!movie.year && typeof view.pubdate === "number") movie.year = String(new Date(view.pubdate * 1000).getFullYear());
+    }
+
+    function updateCardDom(bvid, movie) {
+      const cards = document.querySelectorAll(`.movie-card[data-bvid="${cssEscape(bvid)}"]`);
+      cards.forEach(card => {
+        const img = card.querySelector(".card-img");
+        const titleEl = card.querySelector(".card-title");
+        if (img && movie.poster) img.src = movie.poster;
+        if (img && movie.title) img.alt = movie.title;
+        if (titleEl && movie.title) titleEl.textContent = movie.title;
+      });
+    }
+
+    function ensureHttps(url) {
+      if (!url) return url;
+      if (url.startsWith("//")) return "https:" + url;
+      return url;
+    }
+
+    function formatDuration(seconds) {
+      const s = Math.max(0, Number(seconds) || 0);
+      const h = Math.floor(s / 3600);
+      const m = Math.floor((s % 3600) / 60);
+      const sec = Math.floor(s % 60);
+      if (h > 0) return `${h}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+      return `${m}:${String(sec).padStart(2,'0')}`;
+    }
+
+    async function fetchBiliView(bvid, { silent } = { silent: false }) {
+      const url = `https://api.bilibili.com/x/web-interface/view?bvid=${encodeURIComponent(bvid)}`;
+      const json = await apiFetchJson(url, { silent });
+      if (!json || json.code !== 0 || !json.data) return null;
+      return json.data;
+    }
+
+    async function fetchBiliPopular(pn, ps, { silent } = { silent: false }) {
+      const url = `https://api.bilibili.com/x/web-interface/popular?pn=${encodeURIComponent(pn)}&ps=${encodeURIComponent(ps)}`;
+      const json = await apiFetchJson(url, { silent });
+      if (!json || json.code !== 0 || !json.data || !Array.isArray(json.data.list)) return null;
+      return json.data.list;
+    }
+
+    async function apiFetchJson(url, { silent } = { silent: false }) {
+      const target = CONFIG.apiProxy ? (CONFIG.apiProxy + encodeURIComponent(url)) : url;
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 8000);
+
+      try {
+        const resp = await fetch(target, { method: "GET", signal: controller.signal, headers: { "Accept": "application/json" } });
+        clearTimeout(timeout);
+        if (!resp.ok) return null;
+        return await resp.json();
+      } catch (e) {
+        clearTimeout(timeout);
+        return null;
+      }
+    }
+
+    // =========================
+    // 7) 更多推荐（在线，失败不影响页面）
+    // =========================
+    async function loadDiscover({ refresh } = { refresh: false }) {
+      const titleEl = document.getElementById("discoverTitle");
+      const gridEl = document.getElementById("discoverMovies");
+      const rowEl = document.getElementById("discoverMoreRow");
+      const loader = document.getElementById("loader");
+
+      if (refresh) Store.discover.page += 1;
+      const page = Store.discover.page;
+
+      loader.style.display = "block";
+      const list = await fetchBiliPopular(page, CONFIG.discoverPageSize, { silent: true });
+      loader.style.display = "none";
+
+      if (!list || list.length === 0) {
+        // 如果没有代理/跨域：不显示更多推荐，也不报错（主站照样有片库）
+        titleEl.style.display = "none";
+        gridEl.style.display = "none";
+        rowEl.style.display = "none";
+        return;
+      }
+
+      const items = list.map(v => upsertMovie({
+        id: v.bvid,
+        bvid: v.bvid,
+        title: v.title || v.bvid,
+        poster: ensureHttps(v.pic || ""),
+        duration: typeof v.duration === "number" ? formatDuration(v.duration) : "",
+        category: ["热门推荐"],
+        description: v.desc || ""
+      }));
+
+      titleEl.style.display = "flex";
+      gridEl.style.display = "grid";
+      rowEl.style.display = "flex";
+      renderGrid(gridEl, items);
+    }
+
+    document.getElementById("discoverMoreBtn").addEventListener("click", () => loadDiscover({ refresh: true }));
+
+    // =========================
+    // 8) Toast / Empty
+    // =========================
+    function showEmpty(text) {
+      const el = document.getElementById("emptyHint");
+      el.textContent = text || "";
+      el.style.display = "block";
+    }
+    function hideEmpty() {
+      const el = document.getElementById("emptyHint");
+      el.style.display = "none";
+      el.textContent = "";
+    }
+
+    function toast(title, text, actions) {
+      const t = document.getElementById("toast");
+      document.getElementById("toastTitle").textContent = title || "提示";
+      document.getElementById("toastText").textContent = text || "";
+      const ta = document.getElementById("toastActions");
+      ta.innerHTML = "";
+
+      (actions || []).forEach(a => {
+        const btn = document.createElement("button");
+        btn.textContent = a.text;
+        btn.addEventListener("click", () => { try { a.action && a.action(); } catch {} });
+        ta.appendChild(btn);
+      });
+
+      t.style.display = "block";
+      clearTimeout(t._hideTimer);
+      t._hideTimer = setTimeout(() => { t.style.display = "none"; }, 8000);
+    }
+
+    // =========================
+    // 9) 背景粒子（本地 canvas 实现，保证不会阻塞）
+    // =========================
+    function startCanvasParticles() {
+      const canvas = document.getElementById("particles-canvas");
+      if (!canvas) return;
+
+      const ctx = canvas.getContext("2d", { alpha: true });
+      if (!ctx) return;
+
+      let w = 0, h = 0, dpr = 1;
+      const particles = [];
+      const N = 80;
+      const maxDist = 140;
+
+      function resize() {
+        dpr = window.devicePixelRatio || 1;
+        w = canvas.clientWidth;
+        h = canvas.clientHeight;
+        canvas.width = Math.floor(w * dpr);
+        canvas.height = Math.floor(h * dpr);
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+
+      function rand(min, max) { return min + Math.random() * (max - min); }
+
+      function init() {
+        particles.length = 0;
+        for (let i = 0; i < N; i++) {
+          particles.push({
+            x: rand(0, w), y: rand(0, h),
+            vx: rand(-0.6, 0.6), vy: rand(-0.6, 0.6),
+            r: rand(1.2, 2.8),
+            a: rand(0.2, 0.7)
+          });
+        }
+      }
+
+      function step() {
+        ctx.clearRect(0, 0, w, h);
+
+        // 点
+        for (const p of particles) {
+          p.x += p.vx; p.y += p.vy;
+          if (p.x < -10) p.x = w + 10;
+          if (p.x > w + 10) p.x = -10;
+          if (p.y < -10) p.y = h + 10;
+          if (p.y > h + 10) p.y = -10;
+
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(0, 212, 255, ${p.a})`;
+          ctx.fill();
+        }
+
+        // 线
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i + 1; j < particles.length; j++) {
+            const a = particles[i], b = particles[j];
+            const dx = a.x - b.x, dy = a.y - b.y;
+            const dist = Math.sqrt(dx*dx + dy*dy);
+            if (dist < maxDist) {
+              const alpha = (1 - dist / maxDist) * 0.22;
+              ctx.beginPath();
+              ctx.moveTo(a.x, a.y);
+              ctx.lineTo(b.x, b.y);
+              ctx.strokeStyle = `rgba(0, 212, 255, ${alpha})`;
+              ctx.lineWidth = 1;
+              ctx.stroke();
             }
-        };
-
-        function upsertMovie(movie) {
-            const id = String(movie.bvid ?? movie.id ?? cryptoRandomId());
-            movie.id = id;
-
-            // poster 统一兜底：保证“封面不会与标题完全无关”
-            movie.poster = normalizePoster(movie.poster, movie.title, movie.bvid || id);
-
-            Store.byId.set(id, movie);
-            if (movie.bvid) Store.byBvid.set(movie.bvid, movie);
-            return movie;
+          }
         }
 
-        function cryptoRandomId() {
-            return "m_" + Math.random().toString(16).slice(2) + "_" + Date.now().toString(16);
-        }
-
-        function normalizePoster(posterUrl, title, seed) {
-            // 你原代码用 picsum 随机图，会造成“封面与标题不一致”
-            // 这里改成：默认用“可读封面(带标题)”作为兜底，保证一致性。
-            if (!posterUrl || String(posterUrl).includes("picsum.photos")) {
-                return makeTextPoster(title || "未命名影片", seed);
-            }
-            return posterUrl;
-        }
-
-        function makeTextPoster(title, seed) {
-            const safeTitle = String(title || "未命名影片").slice(0, 28);
-            const s = String(seed || "seed");
-            const hash = simpleHash(s);
-            const hue1 = 180 + (hash % 40); // 蓝青
-            const hue2 = 260 + (hash % 50); // 紫
-            const svg = `
-<svg xmlns="http://www.w3.org/2000/svg" width="400" height="600" viewBox="0 0 400 600">
-  <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="hsl(${hue1}, 90%, 55%)" stop-opacity="0.85"/>
-      <stop offset="1" stop-color="hsl(${hue2}, 80%, 55%)" stop-opacity="0.85"/>
-    </linearGradient>
-    <filter id="n">
-      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/>
-      <feColorMatrix type="matrix"
-        values="0 0 0 0 0
-                0 0 0 0 0.8
-                0 0 0 0 1
-                0 0 0 .18 0"/>
-    </filter>
-  </defs>
-
-  <rect width="400" height="600" fill="#06070b"/>
-  <rect width="400" height="600" fill="url(#g)"/>
-  <rect width="400" height="600" filter="url(#n)" opacity="0.25"/>
-  <rect x="24" y="24" width="352" height="552" rx="18" fill="rgba(0,0,0,0.35)" stroke="rgba(255,255,255,0.12)"/>
-
-  <text x="40" y="120" fill="rgba(255,255,255,0.92)" font-size="18" font-family="Inter, system-ui, sans-serif" letter-spacing="2">DAHAI CINEMA</text>
-
-  <text x="40" y="220" fill="rgba(255,255,255,0.95)" font-size="34" font-family="Inter, system-ui, sans-serif" font-weight="800">
-    ${escapeXml(multilineTitle(safeTitle, 10)).join("")}
-  </text>
-
-  <text x="40" y="520" fill="rgba(255,255,255,0.7)" font-size="14" font-family="Inter, system-ui, sans-serif">
-    沉浸式私人观影体验
-  </text>
-</svg>`;
-            return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
-        }
-
-        function multilineTitle(t, maxLen) {
-            const str = String(t);
-            const lines = [];
-            let cur = "";
-            for (const ch of str) {
-                cur += ch;
-                if (cur.length >= maxLen) {
-                    lines.push(cur);
-                    cur = "";
-                }
-            }
-            if (cur) lines.push(cur);
-            // 每行用 <tspan> 换行
-            return lines.slice(0, 3).map((line, idx) => {
-                const dy = idx === 0 ? 0 : 44;
-                const y = idx === 0 ? 0 : dy;
-                return `<tspan x="40" dy="${idx === 0 ? 0 : 44}">${line}</tspan>`;
-            });
-        }
-
-        function escapeXml(s) {
-            return String(s)
-                .replaceAll("&", "&amp;")
-                .replaceAll("<", "&lt;")
-                .replaceAll(">", "&gt;")
-                .replaceAll("\"", "&quot;")
-                .replaceAll("'", "&apos;");
-        }
-
-        function simpleHash(str) {
-            let h = 2166136261;
-            for (let i = 0; i < str.length; i++) {
-                h ^= str.charCodeAt(i);
-                h = Math.imul(h, 16777619);
-            }
-            return Math.abs(h);
-        }
-
-        // =========================
-        // 4) 渲染（事件委托：避免重复绑定，减少“错绑导致标题不一致”）
-        // =========================
-        function generateMovieCard(movie) {
-            const poster = movie.poster || makeTextPoster(movie.title, movie.bvid || movie.id);
-            const year = movie.year || "";
-            const rating = movie.rating || "";
-            const duration = movie.duration || "";
-            return `
-                <div class="movie-card" data-id="${escapeHtmlAttr(movie.id)}">
-                    <img src="${escapeHtmlAttr(poster)}" alt="${escapeHtmlAttr(movie.title || '未命名')}" class="card-img">
-                    <div class="card-overlay">
-                        <h3 class="card-title">${escapeHtml(movie.title || '未命名')}</h3>
-                        <div class="card-meta">
-                            <span>${escapeHtml(year)}</span>
-                            <span>${rating ? '⭐ ' + escapeHtml(rating) : ''}</span>
-                            <span>${escapeHtml(duration)}</span>
-                        </div>
-                        <div class="card-actions">
-                            <button class="watch-btn" data-id="${escapeHtmlAttr(movie.id)}">
-                                <i class="fas fa-play"></i> 立即观看
-                            </button>
-                            <button class="info-btn" data-id="${escapeHtmlAttr(movie.id)}">
-                                <i class="fas fa-info-circle"></i> 详情
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        function escapeHtml(s) {
-            return String(s ?? "")
-                .replaceAll("&", "&amp;")
-                .replaceAll("<", "&lt;")
-                .replaceAll(">", "&gt;")
-                .replaceAll("\"", "&quot;")
-                .replaceAll("'", "&#39;");
-        }
-
-        function escapeHtmlAttr(s) {
-            return escapeHtml(s).replaceAll("\n", " ");
-        }
-
-        function renderGrid(el, items) {
-            el.innerHTML = items.map(generateMovieCard).join("");
-        }
-
-        // =========================
-        // 5) 播放与详情（统一从 Store 取数据，保证一致）
-        // =========================
-        async function openPlayer(movie) {
-            const modal = document.getElementById('videoModal');
-            const titleEl = document.getElementById('modalTitle');
-            const container = document.getElementById('videoContainer');
-
-            titleEl.textContent = `正在播放：${movie.title || '未命名'}`;
-            container.innerHTML = `
-                <div style="width:100%; text-align:center;">
-                    <div class="loader" style="display:block;"></div>
-                    <div style="margin-top:12px; color: rgba(224,224,224,0.75);">
-                        正在加载播放器...
-                    </div>
-                </div>
-            `;
-
-            modal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-
-            if (!movie.bvid) {
-                container.innerHTML = `
-                    <div style="text-align:center; padding: 2rem;">
-                        <div style="font-size:1.2rem; color: rgba(255,255,255,0.85); margin-bottom: 8px;">该条目缺少 BV 号</div>
-                        <div style="color: rgba(224,224,224,0.7);">请在搜索框输入 BV 号或 B站链接，即可加入并播放。</div>
-                    </div>
-                `;
-                return;
-            }
-
-            // 先把 iframe 放出来（播放最快），再后台校准封面/标题
-            container.innerHTML = `
-                <iframe 
-                    src="https://player.bilibili.com/player.html?bvid=${encodeURIComponent(movie.bvid)}&autoplay=1&page=1"
-                    width="100%" 
-                    height="600" 
-                    scrolling="no" 
-                    frameborder="0" 
-                    allowfullscreen="true"
-                    referrerpolicy="no-referrer"
-                    style="border-radius: 10px;"
-                ></iframe>
-            `;
-
-            // 后台拉取真实标题/封面，修复“播放和标题不一致”
-            const updated = await syncMovieMeta(movie, { silent: true });
-            if (updated && updated.title) {
-                titleEl.textContent = `正在播放：${updated.title}`;
-            }
-        }
-
-        async function openInfo(movie) {
-            const modal = document.getElementById('videoModal');
-            const titleEl = document.getElementById('modalTitle');
-            const container = document.getElementById('videoContainer');
-
-            // 尽量先同步一次元信息（让“标题/封面/播放”一致）
-            await syncMovieMeta(movie, { silent: true });
-
-            titleEl.textContent = movie.title || '影片详情';
-            const cats = Array.isArray(movie.category) ? movie.category : (movie.category ? [movie.category] : []);
-            const poster = movie.poster || makeTextPoster(movie.title, movie.bvid || movie.id);
-
-            container.innerHTML = `
-                <div style="padding: 2rem; max-width: 900px; width: 100%;">
-                    <div style="display: flex; gap: 2rem; margin-bottom: 2rem; flex-wrap: wrap;">
-                        <img src="${escapeHtmlAttr(poster)}" alt="${escapeHtmlAttr(movie.title || '未命名')}" 
-                             style="width: 200px; height: 300px; object-fit: cover; border-radius: 10px; border: 1px solid rgba(255,255,255,0.08);">
-                        <div style="flex: 1; min-width: 240px;">
-                            <h2 style="color: var(--primary); margin-bottom: 1rem; font-weight: 800;">${escapeHtml(movie.title || '未命名')}</h2>
-                            <div style="display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; color: rgba(255,255,255,0.7);">
-                                ${movie.year ? `<span>${escapeHtml(movie.year)}</span>` : ""}
-                                ${movie.rating ? `<span>⭐ ${escapeHtml(movie.rating)}</span>` : ""}
-                                ${movie.duration ? `<span>${escapeHtml(movie.duration)}</span>` : ""}
-                                ${movie.bvid ? `<span class="mono">${escapeHtml(movie.bvid)}</span>` : ""}
-                            </div>
-                            <div style="margin-bottom: 1.2rem;">
-                                ${cats.map(cat => 
-                                    `<span style="background: rgba(0,212,255,0.1); color: var(--primary); 
-                                        padding: 0.3rem 0.8rem; border-radius: 15px; margin-right: 0.5rem; 
-                                        font-size: 0.9rem;">${escapeHtml(cat)}</span>`
-                                ).join('')}
-                            </div>
-                            <p style="line-height: 1.7; color: rgba(255,255,255,0.85);">
-                                ${escapeHtml(movie.description || "暂无简介")}
-                            </p>
-
-                            <div style="display:flex; gap: 12px; margin-top: 18px; flex-wrap: wrap;">
-                                <button class="watch-btn" style="flex: 1; min-width: 200px; padding: 1rem; font-size: 1.05rem;"
-                                        data-id="${escapeHtmlAttr(movie.id)}">
-                                    <i class="fas fa-play"></i> 立即观看
-                                </button>
-                                ${movie.bvid ? `
-                                    <a href="https://www.bilibili.com/video/${encodeURIComponent(movie.bvid)}" target="_blank"
-                                       style="flex: 1; min-width: 200px; text-decoration:none;">
-                                        <button class="info-btn" style="width: 100%; padding: 1rem; font-size: 1.05rem;">
-                                            <i class="fas fa-arrow-up-right-from-square"></i> 打开B站页面
-                                        </button>
-                                    </a>
-                                ` : ""}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            modal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        }
-
-        // =========================
-        // 6) B站元信息同步：封面/标题/时长
-        // =========================
-        function cacheKeyForBvid(bvid) {
-            return "bili_meta_" + bvid;
-        }
-
-        function readMetaCache(bvid) {
-            try {
-                const raw = localStorage.getItem(cacheKeyForBvid(bvid));
-                if (!raw) return null;
-                const obj = JSON.parse(raw);
-                const ageMin = (Date.now() - obj.ts) / 60000;
-                if (ageMin > CONFIG.metaCacheMinutes) return null;
-                return obj.data || null;
-            } catch {
-                return null;
-            }
-        }
-
-        function writeMetaCache(bvid, data) {
-            try {
-                localStorage.setItem(cacheKeyForBvid(bvid), JSON.stringify({ ts: Date.now(), data }));
-            } catch {}
-        }
-
-        async function syncMovieMeta(movie, { silent } = { silent: false }) {
-            if (!movie || !movie.bvid) return null;
-
-            // 先读缓存
-            const cached = readMetaCache(movie.bvid);
-            if (cached) {
-                applyMeta(movie, cached);
-                rerenderIfVisible(movie);
-                return movie;
-            }
-
-            // 再拉远程
-            const view = await fetchBiliView(movie.bvid, { silent });
-            if (!view) return null;
-
-            writeMetaCache(movie.bvid, view);
-            applyMeta(movie, view);
-            rerenderIfVisible(movie);
-            return movie;
-        }
-
-        function applyMeta(movie, view) {
-            // view: { title, pic, duration, desc, pubdate, owner, stat, ... }
-            if (!view) return;
-
-            const oldTitle = movie.title;
-            if (view.title) movie.title = view.title;
-            if (view.pic) movie.poster = normalizePoster(ensureHttps(view.pic), movie.title, movie.bvid || movie.id);
-
-            // duration 秒 -> xx分钟 或 hh:mm:ss
-            if (typeof view.duration === "number") {
-                movie.duration = formatDuration(view.duration);
-            }
-            // desc
-            if (view.desc && (!movie.description || movie.description.length < 10)) {
-                movie.description = view.desc;
-            }
-
-            // 尝试把 year 设一下（不强依赖）
-            if (!movie.year && typeof view.pubdate === "number") {
-                const d = new Date(view.pubdate * 1000);
-                movie.year = String(d.getFullYear());
-            }
-
-            // 标记来源
-            movie._source = "bili_view";
-            movie._synced = true;
-
-            // 如果标题变化非常大，说明你原来的“标题<->bvid”映射不正确
-            // 这里自动以真实标题为准，从根源修复“播放标题不一致”
-            if (oldTitle && view.title && oldTitle !== view.title) {
-                // no-op: 仅说明原因，已以真实标题覆盖
-            }
-        }
-
-        function ensureHttps(url) {
-            if (!url) return url;
-            if (url.startsWith("//")) return "https:" + url;
-            return url;
-        }
-
-        function formatDuration(seconds) {
-            const s = Math.max(0, Number(seconds) || 0);
-            const h = Math.floor(s / 3600);
-            const m = Math.floor((s % 3600) / 60);
-            const sec = Math.floor(s % 60);
-            if (h > 0) return `${h}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
-            return `${m}:${String(sec).padStart(2,'0')}`;
-        }
-
-        function rerenderIfVisible(movie) {
-            // 简单做法：如果在当前页面网格里，下一次渲染会更新；
-            // 为了直观：直接局部更新 img/标题
-            const cards = document.querySelectorAll(`.movie-card[data-id="${CSS.escape(String(movie.id))}"]`);
-            cards.forEach(card => {
-                const img = card.querySelector(".card-img");
-                const titleEl = card.querySelector(".card-title");
-                if (img && movie.poster) img.src = movie.poster;
-                if (titleEl && movie.title) titleEl.textContent = movie.title;
-                if (img && movie.title) img.alt = movie.title;
-            });
-        }
-
-        async function fetchBiliView(bvid, { silent } = { silent: false }) {
-            const url = `https://api.bilibili.com/x/web-interface/view?bvid=${encodeURIComponent(bvid)}`;
-            const json = await apiFetchJson(url, { silent });
-            if (!json || json.code !== 0 || !json.data) return null;
-            return json.data;
-        }
-
-        async function fetchBiliPopular(pn, ps, { silent } = { silent: false }) {
-            const url = `https://api.bilibili.com/x/web-interface/popular?pn=${encodeURIComponent(pn)}&ps=${encodeURIComponent(ps)}`;
-            const json = await apiFetchJson(url, { silent });
-            if (!json || json.code !== 0 || !json.data || !Array.isArray(json.data.list)) return null;
-            return json.data.list;
-        }
-        // =========================
-        // 5.5) 热门片库“预热”（用于：搜索接口被拦截时仍能通过关键词找到更多内容）
-        // =========================
-        async function seedFromPopular(pages = 3, ps = 24, { silent } = { silent: true }) {
-            try {
-                if (!Store._popularSeededPages) Store._popularSeededPages = new Set();
-
-                for (let p = 1; p <= pages; p++) {
-                    if (Store._popularSeededPages.has(p)) continue;
-
-                    const list = await fetchBiliPopular(p, ps, { silent });
-                    if (Array.isArray(list) && list.length > 0) {
-                        list.forEach(v => {
-                            const movie = upsertMovie({
-                                id: v.bvid || v.aid || cryptoRandomId(),
-                                title: v.title || (v.bvid || "未命名"),
-                                year: "",
-                                rating: "",
-                                duration: v.duration ? formatDuration(v.duration) : "",
-                                category: ["热门推荐"],
-                                poster: ensureHttps(v.pic || v.cover || ""),
-                                bvid: v.bvid || "",
-                                description: v.desc || ""
-                            });
-                            movie._source = "bili_popular_seed";
-                        });
-                        Store._popularSeededPages.add(p);
-                    } else {
-                        // 接口没数据就别继续刷了
-                        Store._popularSeededPages.add(p);
-                    }
-                }
-            } catch (e) {
-                // 忽略：不影响主流程
-            }
-        }
-
-
-
-        async function fetchBiliSearch(keyword, page, pageSize, { silent } = { silent: false }) {
-            const url = `https://api.bilibili.com/x/web-interface/search/type?search_type=video&keyword=${encodeURIComponent(keyword)}&page=${encodeURIComponent(page)}&page_size=${encodeURIComponent(pageSize)}`;
-            const json = await apiFetchJson(url, { silent });
-            if (!json || json.code !== 0 || !json.data) return null;
-            const res = json.data.result || [];
-            return Array.isArray(res) ? res : [];
-        }
-
-        async function apiFetchJson(url, { silent } = { silent: false }) {
-            const target = CONFIG.apiProxy ? (CONFIG.apiProxy + encodeURIComponent(url)) : url;
-            const controller = new AbortController();
-            const timeout = setTimeout(() => controller.abort(), 8000);
-
-            try {
-                const resp = await fetch(target, {
-                    method: "GET",
-                    signal: controller.signal,
-                    headers: {
-                        // 一些环境需要带 referer/user-agent 才稳，这里尽量兼容
-                        "Accept": "application/json"
-                    }
-                });
-                clearTimeout(timeout);
-                if (!resp.ok) {
-                    if (!silent) toast(`请求失败：${resp.status}`, `无法拉取更多视频数据。你可以稍后重试，或配置 API 代理。`);
-                    return null;
-                }
-                const json = await resp.json();
-                return json;
-            } catch (e) {
-                clearTimeout(timeout);
-
-                // 常见：TypeError: Failed to fetch（CORS 或网络）
-                if (!silent) {
-                    toast("无法访问视频数据接口", "你的部署环境可能限制跨域（CORS），导致无法拉取“更多推荐/在线搜索/自动校准封面标题”。\n\n✅ 解决：配置 CONFIG.apiProxy（Cloudflare Worker 等）即可。", [
-                        { text: "知道了", action: () => hideToast() }
-                    ]);
-                }
-                return null;
-            }
-        }
-
-        // =========================
-        // 7) 搜索：本地筛选 + 在线补全（关键词/分类）
-        // =========================
-        function parseBvid(input) {
-            const str = String(input || "");
-            const m = str.match(/BV[0-9A-Za-z]{10}/i);
-            return m ? m[0].toUpperCase() : null;
-        }
-
-        function localSearch(keyword) {
-            const q = String(keyword || "").trim().toLowerCase();
-            if (!q) return [];
-            const items = Array.from(Store.byId.values());
-            return items.filter(m => {
-                const hay = [
-                    m.title, m.year, m.duration, m.description,
-                    Array.isArray(m.category) ? m.category.join(" ") : m.category
-                ].filter(Boolean).join(" ").toLowerCase();
-                return hay.includes(q);
-            });
-        }
-
-        async function performSearch({ append } = { append: false }) {
-            const input = document.getElementById('searchInput');
-            const query = (input.value || "").trim();
-            if (!query) return;
-
-            const loader = document.getElementById('loader');
-            loader.style.display = 'block';
-
-            // 如果输入 BV 号 / B站链接：直接加入并播放
-            const bvid = parseBvid(query);
-            if (bvid) {
-                loader.style.display = 'none';
-                const existing = Store.byBvid.get(bvid);
-                const movie = existing || upsertMovie({
-                    id: bvid,
-                    title: bvid,
-                    year: "",
-                    rating: "",
-                    duration: "",
-                    category: ["来自搜索"],
-                    poster: "",
-                    bvid,
-                    description: "从 B站 BV 号/链接添加的资源。"
-                });
-
-                // 先同步标题封面，再播放（更一致）
-                await syncMovieMeta(movie, { silent: true });
-                await openPlayer(movie);
-                return;
-            }
-
-            // 本地结果
-            const local = localSearch(query);
-
-            // 显示结果容器
-            showSearchSection(true);
-            document.getElementById('emptyHint').style.display = 'none';
-
-            // 在线搜索补全
-            if (!append) {
-                Store.search.keyword = query;
-                Store.search.page = 1;
-                Store.search.hasMore = false;
-                // 先用本地结果渲染
-                renderGrid(document.getElementById('searchMovies'), local.slice(0, CONFIG.searchPageSize));
-            }
-
-            // 如果本地够多且不追加，就不用远程
-            if (!append && local.length >= 12) {
-                loader.style.display = 'none';
-                document.getElementById('searchMoreRow').style.display = 'none';
-                return;
-            }
-
-            // 远程搜索（需要 API 可访问）
-            const page = append ? (Store.search.page + 1) : 1;
-            const remote = await fetchBiliSearch(query, page, CONFIG.searchPageSize, { silent: true });
-
-            loader.style.display = 'none';
-
-            if (!remote || remote.length === 0) {
-                // 远程不可用 / 没结果
-
-                // 若已配置 apiProxy，但搜索接口可能被拦截（例如 -412），这里尝试：
-                // 先拉取几页“热门列表”扩充片库，再做一次本地关键词匹配（不依赖搜索接口）
-                if (!append && CONFIG.apiProxy) {
-                    await seedFromPopular(3, 24, { silent: true });
-                    const local2 = localSearch(query);
-                    if (local2.length > 0) {
-                        renderGrid(document.getElementById('searchMovies'), local2.slice(0, CONFIG.searchPageSize));
-                        Store.search.hasMore = local2.length > CONFIG.searchPageSize;
-                        document.getElementById('searchMoreRow').style.display = Store.search.hasMore ? 'flex' : 'none';
-                        return;
-                    }
-                }
-                if (!append && local.length === 0) {
-                    showEmpty(`没有找到与 “${escapeHtml(query)}” 相关的影片。你可以尝试：\n1) 输入 BV 号 / B站链接\n2) 或配置 apiProxy 启用在线搜索`);
-                }
-                document.getElementById('searchMoreRow').style.display = 'none';
-                return;
-            }
-
-            // 转换远程结果为 movie
-            const remoteMovies = remote.map(r => {
-                const title = stripHtml(r.title || "");
-                const m = upsertMovie({
-                    id: r.bvid || cryptoRandomId(),
-                    title: title || (r.bvid || "未命名"),
-                    year: "",
-                    rating: "",
-                    duration: r.duration || "",
-                    category: ["来自搜索"],
-                    poster: ensureHttps(r.pic || ""),
-                    bvid: r.bvid || "",
-                    description: stripHtml(r.description || "")
-                });
-                m._source = "bili_search";
-                return m;
-            });
-
-            // 合并展示
-            const grid = document.getElementById('searchMovies');
-            const currentHtml = grid.innerHTML;
-            if (append && currentHtml) {
-                grid.innerHTML += remoteMovies.map(generateMovieCard).join("");
-            } else {
-                // 合并本地 + 远程去重（以 bvid/id 为主）
-                const merged = [];
-                const seen = new Set();
-                local.forEach(m => {
-                    const k = m.bvid || m.id;
-                    if (!seen.has(k)) { merged.push(m); seen.add(k); }
-                });
-                remoteMovies.forEach(m => {
-                    const k = m.bvid || m.id;
-                    if (!seen.has(k)) { merged.push(m); seen.add(k); }
-                });
-                renderGrid(grid, merged);
-            }
-
-            // 分页
-            Store.search.page = page;
-            // B站搜索一般可以更多页，这里直接给“加载更多”按钮
-            Store.search.hasMore = true;
-            document.getElementById('searchMoreRow').style.display = 'flex';
-        }
-
-        function stripHtml(html) {
-            return String(html || "").replace(/<[^>]+>/g, "");
-        }
-
-        function showSearchSection(show) {
-            const title = document.getElementById('searchTitle');
-            const grid = document.getElementById('searchMovies');
-            title.style.display = show ? "flex" : "none";
-            grid.style.display = show ? "grid" : "none";
-        }
-
-        function showEmpty(text) {
-            const el = document.getElementById('emptyHint');
-            el.innerHTML = `<div style="white-space: pre-line;">${escapeHtml(text)}</div>`;
-            el.style.display = 'block';
-        }
-
-        function hideEmpty() {
-            const el = document.getElementById('emptyHint');
-            el.style.display = 'none';
-            el.textContent = '';
-        }
-
-        function searchByCategory(category) {
-            const categoryKeywords = {
-                'action': '动作',
-                'sci-fi': '科幻',
-                'drama': '剧情',
-                'comedy': '喜剧',
-                'anime': '动漫'
-            };
-            const kw = categoryKeywords[category] || category;
-            document.getElementById('searchInput').value = kw;
-            performSearch({ append: false });
-        }
-
-        // =========================
-        // 8) 更多推荐（热门榜单）：显著增加视频数量
-        // =========================
-        async function loadDiscover({ refresh } = { refresh: false }) {
-            const titleEl = document.getElementById('discoverTitle');
-            const gridEl = document.getElementById('discoverMovies');
-            const rowEl = document.getElementById('discoverMoreRow');
-            const loader = document.getElementById('loader');
-
-            if (refresh) Store.discover.page += 1;
-            const page = Store.discover.page;
-
-            loader.style.display = 'block';
-            const list = await fetchBiliPopular(page, CONFIG.discoverPageSize, { silent: true });
-            loader.style.display = 'none';
-
-            if (!list || list.length === 0) {
-                // 如果接口不可用，则不显示“更多推荐”避免干扰
-                titleEl.style.display = 'none';
-                gridEl.style.display = 'none';
-                rowEl.style.display = 'none';
-                return;
-            }
-
-            const discoverMovies = list.map(v => {
-                const m = upsertMovie({
-                    id: v.bvid || cryptoRandomId(),
-                    title: v.title || (v.bvid || "未命名"),
-                    year: "",
-                    rating: "",
-                    duration: typeof v.duration === "number" ? formatDuration(v.duration) : "",
-                    category: ["热门推荐"],
-                    poster: ensureHttps(v.pic || ""),
-                    bvid: v.bvid || "",
-                    description: v.desc || ""
-                });
-                m._source = "bili_popular";
-                return m;
-            });
-
-            titleEl.style.display = 'flex';
-            gridEl.style.display = 'grid';
-            rowEl.style.display = 'flex';
-
-            renderGrid(gridEl, discoverMovies);
-        }
-
-        // =========================
-        // 9) 初始化：渲染本地列表 + 可选校准元信息
-        // =========================
-        function initMovies() {
-            // 把本地数据放入 Store
-            const hot = movies.hot.map(m => upsertMovie({ ...m }));
-            const nw = movies.new.map(m => upsertMovie({ ...m }));
-
-            renderGrid(document.getElementById('hotMovies'), hot);
-            renderGrid(document.getElementById('newMovies'), nw);
-
-            // 可选：页面加载自动校准（能访问 API 时会把标题/封面改为真实）
-            if (CONFIG.syncMetaOnLoad) {
-                // 小批量并发，避免卡顿
-                const seed = [...hot, ...nw].filter(m => m.bvid);
-                batchSync(seed, 3);
-            }
-        }
-
-        async function batchSync(list, concurrency) {
-            const queue = [...list];
-            const workers = new Array(concurrency).fill(0).map(async () => {
-                while (queue.length) {
-                    const movie = queue.shift();
-                    if (!movie) break;
-                    await syncMovieMeta(movie, { silent: true });
-                }
-            });
-            await Promise.all(workers);
-        }
-
-        function initSearch() {
-            const searchBtn = document.getElementById('searchBtn');
-            const searchInput = document.getElementById('searchInput');
-            const moreBtn = document.getElementById('searchMoreBtn');
-
-            searchBtn.addEventListener('click', () => performSearch({ append: false }));
-            searchInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') performSearch({ append: false });
-            });
-            moreBtn.addEventListener('click', () => performSearch({ append: true }));
-
-            // 快速链接
-            document.querySelectorAll('.quick-link').forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const category = this.getAttribute('data-category');
-                    searchByCategory(category);
-                });
-            });
-        }
-
-        // 统一点击处理（事件委托）
-        document.addEventListener("click", async (e) => {
-            const watchBtn = e.target.closest(".watch-btn");
-            const infoBtn = e.target.closest(".info-btn");
-            const card = e.target.closest(".movie-card");
-
-            if (watchBtn) {
-                e.preventDefault();
-                e.stopPropagation();
-                const id = watchBtn.getAttribute("data-id");
-                const movie = Store.byId.get(String(id));
-                if (movie) await openPlayer(movie);
-                return;
-            }
-
-            if (infoBtn) {
-                e.preventDefault();
-                e.stopPropagation();
-                const id = infoBtn.getAttribute("data-id");
-                const movie = Store.byId.get(String(id));
-                if (movie) await openInfo(movie);
-                return;
-            }
-
-            if (card) {
-                const id = card.getAttribute("data-id");
-                const movie = Store.byId.get(String(id));
-                if (movie) await openInfo(movie);
-                return;
-            }
-        });
-
-        // 关闭模态框
-        document.getElementById('closeModal').addEventListener('click', closeModal);
-
-        // 点击模态框背景关闭
-        document.getElementById('videoModal').addEventListener('click', function(e) {
-            if (e.target === this) closeModal();
-        });
-
-        function closeModal() {
-            const modal = document.getElementById('videoModal');
-            const container = document.getElementById('videoContainer');
-            modal.style.display = 'none';
-            container.innerHTML = '';
-            document.body.style.overflow = 'auto';
-        }
-
-        // 用户按钮
-        document.getElementById('userBtn').addEventListener('click', function() {
-            alert(`👤 用户：大海\n📧 邮箱：dahai@example.com\n⭐ 收藏：32 部影片\n\n欢迎来到您的私人影院！`);
-        });
-
-        // 更多推荐按钮
-        document.getElementById('discoverMoreBtn').addEventListener('click', function() {
-            loadDiscover({ refresh: true });
-        });
-
-        // =========================
-        // 10) Toast
-        // =========================
-        function toast(title, text, actions) {
-            const t = document.getElementById("toast");
-            const tt = document.getElementById("toastTitle");
-            const tx = document.getElementById("toastText");
-            const ta = document.getElementById("toastActions");
-
-            tt.textContent = title || "提示";
-            tx.textContent = text || "";
-            ta.innerHTML = "";
-
-            (actions || []).forEach(a => {
-                const btn = document.createElement("button");
-                btn.textContent = a.text;
-                btn.addEventListener("click", () => {
-                    try { a.action && a.action(); } catch {}
-                });
-                ta.appendChild(btn);
-            });
-
-            t.style.display = "block";
-            clearTimeout(t._hideTimer);
-            t._hideTimer = setTimeout(() => {
-                hideToast();
-            }, 9000);
-        }
-
-        function hideToast() {
-            const t = document.getElementById("toast");
-            t.style.display = "none";
-        }
-
-        // =========================
-        // 11) 页面加载
-        // =========================
-        document.addEventListener('DOMContentLoaded', function() {
-            // 背景特效非阻塞加载（失败也不影响主功能）
-            initParticlesBackground();
-
-            initMovies();
-            initSearch();
-            hideEmpty();
-
-            // 尝试加载“更多推荐”（成功则视频数量显著增加）
-            loadDiscover({ refresh: false });
-        });
-
-        // 兼容旧调用（如果你未来还有其他脚本引用）
-        window.playVideo = async function(bvid, title) {
-            const movie = upsertMovie({
-                id: bvid || cryptoRandomId(),
-                title: title || bvid || "未命名",
-                bvid: bvid || "",
-                poster: "",
-                category: ["外部调用"],
-                description: ""
-            });
-            await syncMovieMeta(movie, { silent: true });
-            await openPlayer(movie);
-        };
-    </script>
+        requestAnimationFrame(step);
+      }
+
+      resize();
+      init();
+      step();
+
+      window.addEventListener("resize", () => { resize(); init(); });
+    }
+
+    // =========================
+    // 10) 工具：转义
+    // =========================
+    function escapeHtml(s) {
+      return String(s ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll("\"", "&quot;")
+        .replaceAll("'", "&#39;");
+    }
+    function escapeHtmlAttr(s) { return escapeHtml(s).replaceAll("\n", " "); }
+    function cssEscape(s) { return String(s).replaceAll('"','\\"'); }
+
+    // =========================
+    // 11) 初始化（核心）
+    // =========================
+    document.addEventListener("DOMContentLoaded", async () => {
+      // ✅ 永远先读静态片库 -> 页面保证有影片
+      readSeedFromDom();
+
+      // ✅ 背景粒子（本地）
+      startCanvasParticles();
+
+      // 用户按钮
+      document.getElementById("userBtn").addEventListener("click", () => {
+        toast("👤 用户：大海", "欢迎来到您的私人影院！\n提示：输入 BV 号可直接播放。", [
+          { text: "知道了", action: () => document.getElementById("toast").style.display = "none" }
+        ]);
+      });
+
+      // 可选：尝试校准标题/封面（失败不影响）
+      if (CONFIG.syncMetaOnLoad) {
+        const seed = Array.from(Store.byId.values()).slice(0, 8);
+        for (const m of seed) await syncMovieMeta(m, { silent: true });
+      }
+
+      // 可选：更多推荐（需要代理或跨域允许）
+      await loadDiscover({ refresh: false });
+
+      // 如果你看见“仍然没有更多推荐”，那是因为没配置 apiProxy（但本地片库一定有影片）
+      if (!CONFIG.apiProxy) {
+        // 不打扰用户，只在控制台说明
+        console.log("[DAHAI] 未配置 CONFIG.apiProxy：在线热门/校准可能因 CORS 失败，但本地片库正常显示。");
+      }
+    });
+  </script>
 </body>
 </html>
