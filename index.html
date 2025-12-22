@@ -829,7 +829,7 @@
             // 如果你的网站部署环境请求 B站 API 会遇到 CORS：
             // 1) 先把下面 apiProxy 留空运行看看（有些环境可直接请求成功）
             // 2) 如果不行，再配置代理（例如 Cloudflare Worker），格式： "https://your-worker.workers.dev/?url="
-            apiProxy: "",
+            apiProxy: "https://xxxxxx.workers.dev/?url=",
 
             // 是否在页面加载时尝试“自动校准”封面/标题（根据 bvid 拉取真实信息）
             syncMetaOnLoad: true,
@@ -951,10 +951,65 @@
             }
         }
 
-        // =========================
-        // 2) 你的原始数据（保留不动）
-        //    但：为了“封面/标题一致”，我会自动处理 picsum 封面为“可读封面”
-        // =========================
+export default {
+  async fetch(request, env) {
+    const corsHeaders = {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET,OPTIONS",
+      "Access-Control-Allow-Headers": "*",
+      "Access-Control-Max-Age": "86400",
+    };
+
+    if (request.method === "OPTIONS") {
+      return new Response(null, { headers: corsHeaders });
+    }
+
+    const u = new URL(request.url);
+    const target = u.searchParams.get("url");
+    if (!target) {
+      return new Response("Missing ?url=", { status: 400, headers: corsHeaders });
+    }
+
+    let targetUrl;
+    try {
+      targetUrl = new URL(target);
+    } catch {
+      return new Response("Bad url", { status: 400, headers: corsHeaders });
+    }
+
+    // ✅ 安全：只允许代理 B站 API，避免变成公共代理
+    const ALLOW = new Set(["api.bilibili.com"]);
+    if (!ALLOW.has(targetUrl.hostname)) {
+      return new Response("Forbidden host", { status: 403, headers: corsHeaders });
+    }
+
+    const headers = new Headers();
+    headers.set("Accept", "application/json");
+    headers.set("Referer", "https://www.bilibili.com/");
+    headers.set("Origin", "https://www.bilibili.com");
+    headers.set(
+      "User-Agent",
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36"
+    );
+
+    // 🔒 可选：如果你想让“关键词搜索”更稳定，可在 Worker 里配置环境变量 BILI_COOKIE
+    // Cloudflare → Worker → Settings → Variables → Add variable:
+    // Name: BILI_COOKIE
+    // Value: 你的cookie字符串（不要公开）
+    if (env.BILI_COOKIE) {
+      headers.set("Cookie", env.BILI_COOKIE);
+    }
+
+    const resp = await fetch(targetUrl.toString(), { method: "GET", headers });
+
+    const outHeaders = new Headers(resp.headers);
+    Object.entries(corsHeaders).forEach(([k, v]) => outHeaders.set(k, v));
+    outHeaders.set("Cache-Control", "public, max-age=60");
+
+    return new Response(resp.body, { status: resp.status, headers: outHeaders });
+  },
+};
+
         const movies = {
             hot: [
                 {
