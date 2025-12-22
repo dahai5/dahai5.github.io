@@ -43,7 +43,7 @@
             z-index: -1;
         }
 
-        /* 导航栏 */
+        /* 导航栏 - 科幻风格 */
         .navbar {
             background: rgba(10, 10, 15, 0.85);
             backdrop-filter: blur(20px);
@@ -72,6 +72,13 @@
             letter-spacing: 1px;
         }
 
+        .logo::before {
+            content: "▶";
+            color: var(--primary);
+            font-size: 1.5rem;
+            animation: pulse 2s infinite;
+        }
+
         .nav-center {
             display: flex;
             gap: 2.5rem;
@@ -94,7 +101,22 @@
             color: var(--primary);
         }
 
-        /* 主搜索区域 */
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), transparent);
+            transition: width 0.3s ease;
+        }
+
+        .nav-item:hover::after {
+            width: 100%;
+        }
+
+        /* 主搜索区域 - 居中大气 */
         .hero {
             margin-top: 120px;
             padding: 4rem 2rem;
@@ -115,6 +137,15 @@
             line-height: 1.1;
         }
 
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: rgba(224, 224, 224, 0.8);
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            line-height: 1.6;
+        }
+
+        /* 主搜索框 */
         .search-container {
             max-width: 800px;
             margin: 0 auto 3rem;
@@ -140,6 +171,10 @@
             background: rgba(255, 255, 255, 0.12);
         }
 
+        .search-box::placeholder {
+            color: rgba(224, 224, 224, 0.5);
+        }
+
         .search-btn {
             position: absolute;
             right: 10px;
@@ -155,7 +190,41 @@
             transition: all 0.3s ease;
         }
 
-        /* 内容区域 */
+        .search-btn:hover {
+            transform: translateY(-50%) scale(1.05);
+            box-shadow: var(--glow);
+        }
+
+        /* 快速分类按钮 */
+        .quick-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .quick-link {
+            background: var(--glass);
+            border: 1px solid rgba(0, 212, 255, 0.1);
+            padding: 0.8rem 1.8rem;
+            border-radius: 25px;
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quick-link:hover {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        /* 视频网格 - 卡片式设计 */
         .section-title {
             font-size: 2.2rem;
             margin: 4rem 0 2rem;
@@ -189,20 +258,24 @@
             transition: all 0.4s ease;
             border: 1px solid rgba(255, 255, 255, 0.05);
             position: relative;
-            height: 500px;
         }
 
         .movie-card:hover {
             transform: translateY(-10px) scale(1.02);
             border-color: var(--primary);
             box-shadow: var(--glow);
+            background: rgba(255, 255, 255, 0.08);
         }
 
         .card-img {
             width: 100%;
-            height: 100%;
+            height: 380px;
             object-fit: cover;
             transition: transform 0.5s ease;
+        }
+
+        .movie-card:hover .card-img {
+            transform: scale(1.1);
         }
 
         .card-overlay {
@@ -210,8 +283,13 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(transparent, rgba(0, 0, 0, 0.95));
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
             padding: 2rem 1.5rem 1.5rem;
+            transform: translateY(100%);
+            transition: transform 0.4s ease;
+        }
+
+        .movie-card:hover .card-overlay {
             transform: translateY(0);
         }
 
@@ -254,7 +332,18 @@
             color: white;
         }
 
-        /* 视频播放器 */
+        .info-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--light);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .watch-btn:hover, .info-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* 视频播放器模态框 */
         .modal {
             display: none;
             position: fixed;
@@ -310,6 +399,11 @@
             transition: all 0.3s ease;
         }
 
+        .close-modal:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--accent);
+        }
+
         .video-container {
             padding: 2rem;
             min-height: 600px;
@@ -326,21 +420,90 @@
             margin-top: 4rem;
         }
 
-        /* 加载动画 */
-        .loader {
-            display: none;
-            width: 50px;
-            height: 50px;
-            border: 3px solid rgba(0, 212, 255, 0.1);
-            border-top: 3px solid var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 2rem auto;
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .footer-section h3 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: rgba(224, 224, 224, 0.7);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+            transform: translateX(5px);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--light);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: rgba(224, 224, 224, 0.5);
+            font-size: 0.9rem;
+        }
+
+        /* 动画效果 */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .floating {
+            animation: float 3s ease-in-out infinite;
         }
 
         /* 响应式设计 */
@@ -366,6 +529,50 @@
                 gap: 1rem;
                 padding: 0 1rem;
             }
+            
+            .modal-content {
+                width: 95%;
+            }
+            
+            .video-container {
+                padding: 1rem;
+                min-height: 400px;
+            }
+        }
+
+        /* 加载动画 */
+        .loader {
+            display: none;
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(0, 212, 255, 0.1);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 2rem auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 滚动条美化 */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--darker);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--primary), var(--secondary));
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, var(--secondary), var(--primary));
         }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -383,6 +590,7 @@
             <a href="#movies" class="nav-item"><i class="fas fa-film"></i> 电影</a>
             <a href="#tv" class="nav-item"><i class="fas fa-tv"></i> 剧集</a>
             <a href="#anime" class="nav-item"><i class="fas fa-gamepad"></i> 动漫</a>
+            <a href="#collections" class="nav-item"><i class="fas fa-star"></i> 收藏</a>
         </div>
         <div class="user-menu">
             <button class="nav-item" id="userBtn"><i class="fas fa-user"></i> 大海</button>
@@ -393,7 +601,7 @@
     <main>
         <!-- 英雄区域 -->
         <section class="hero">
-            <h1 class="hero-title">沉浸式私人观影体验</h1>
+            <h1 class="hero-title floating">沉浸式私人观影体验</h1>
             <p class="hero-subtitle">
                 一个完全属于你的影视空间 · 精选全球优质内容 · 无广告干扰 · 个性推荐
             </p>
@@ -408,22 +616,41 @@
                     <i class="fas fa-search"></i> 搜索
                 </button>
             </div>
+            
+            <!-- 快速链接 -->
+            <div class="quick-links">
+                <a href="#" class="quick-link" data-category="action">
+                    <i class="fas fa-explosion"></i> 动作大片
+                </a>
+                <a href="#" class="quick-link" data-category="sci-fi">
+                    <i class="fas fa-robot"></i> 科幻未来
+                </a>
+                <a href="#" class="quick-link" data-category="drama">
+                    <i class="fas fa-theater-masks"></i> 剧情佳作
+                </a>
+                <a href="#" class="quick-link" data-category="comedy">
+                    <i class="fas fa-laugh"></i> 喜剧轻松
+                </a>
+                <a href="#" class="quick-link" data-category="anime">
+                    <i class="fas fa-dragon"></i> 热血动漫
+                </a>
+            </div>
         </section>
 
-        <!-- 搜索结果区域 -->
-        <h2 class="section-title" id="searchResultsTitle" style="display: none;">
-            <i class="fas fa-search"></i> 搜索结果
-        </h2>
-        <div class="movies-grid" id="searchResults">
-            <!-- 搜索结果将在这里动态生成 -->
-        </div>
-
         <!-- 热门推荐 -->
-        <h2 class="section-title" id="hotMoviesTitle">
-            <i class="fas fa-fire"></i> 热门推荐
+        <h2 class="section-title" id="movies">
+            <i class="fas fa-fire"></i> 今日热门推荐
         </h2>
         <div class="movies-grid" id="hotMovies">
-            <!-- 热门电影将在这里动态生成 -->
+            <!-- 动态生成 -->
+        </div>
+
+        <!-- 最新上映 -->
+        <h2 class="section-title" id="tv">
+            <i class="fas fa-bolt"></i> 最新上映
+        </h2>
+        <div class="movies-grid" id="newMovies">
+            <!-- 动态生成 -->
         </div>
 
         <!-- 加载动画 -->
@@ -449,19 +676,43 @@
             <div class="footer-section">
                 <h3>DAHAI CINEMA</h3>
                 <p>一个完全个性化的私人观影空间，为您提供沉浸式的观影体验。</p>
-                <div class="copyright">
-                    &copy; 2023 DAHAI私人影院. 本网站仅供个人学习交流使用。
-                    <br>
-                    视频资源来源于B站公开内容，版权归原作者所有。
+                <div class="social-links">
+                    <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-weibo"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-discord"></i></a>
                 </div>
             </div>
+            <div class="footer-section">
+                <h3>快速链接</h3>
+                <ul class="footer-links">
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> 电影库</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> 剧集列表</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> 动漫专区</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> 我的收藏</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>技术支持</h3>
+                <ul class="footer-links">
+                    <li><a href="#"><i class="fas fa-code"></i> GitHub Pages</a></li>
+                    <li><a href="#"><i class="fas fa-database"></i> 视频资源API</a></li>
+                    <li><a href="#"><i class="fas fa-shield-alt"></i> 安全加密</a></li>
+                    <li><a href="#"><i class="fas fa-bolt"></i> 全球CDN加速</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2023 DAHAI私人影院. 本网站仅供个人学习交流使用。
+            <br>
+            视频资源来源于互联网公开内容，版权归原作者所有。
         </div>
     </footer>
 
     <!-- 脚本 -->
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script>
-        // ==================== 初始化 ====================
+        // 初始化粒子背景
         particlesJS('particles-js', {
             particles: {
                 number: { value: 80, density: { enable: true, value_area: 800 } },
@@ -485,52 +736,131 @@
                     out_mode: "out",
                     bounce: false
                 }
-            }
+            },
+            interactivity: {
+                detect_on: "canvas",
+                events: {
+                    onhover: { enable: true, mode: "repulse" },
+                    onclick: { enable: true, mode: "push" }
+                }
+            },
+            retina_detect: true
         });
 
-        // ==================== 全局变量 ====================
-        let currentSearchResults = [];
-        let currentPage = 1;
-        let isLoading = false;
+        // 电影数据
+        const movies = {
+            hot: [
+                {
+                    id: 1,
+                    title: "流浪地球2",
+                    year: "2023",
+                    rating: "8.8",
+                    duration: "173分钟",
+                    category: ["科幻", "灾难"],
+                    poster: "https://picsum.photos/seed/movie1/400/600",
+                    bvid: "BV1fX4y1V7Vc",
+                    description: "太阳即将毁灭，人类在地球表面建造出巨大的推进器，寻找新的家园。"
+                },
+                {
+                    id: 2,
+                    title: "阿凡达：水之道",
+                    year: "2022",
+                    rating: "8.2",
+                    duration: "192分钟",
+                    category: ["科幻", "冒险"],
+                    poster: "https://picsum.photos/seed/movie2/400/600",
+                    bvid: "BV1cT411R7tY",
+                    description: "萨利一家搬到潘多拉星球的海域，开启全新冒险。"
+                },
+                {
+                    id: 3,
+                    title: "奥本海默",
+                    year: "2023",
+                    rating: "8.7",
+                    duration: "180分钟",
+                    category: ["传记", "历史"],
+                    poster: "https://picsum.photos/seed/movie3/400/600",
+                    bvid: "BV1Gu4y1U7YJ",
+                    description: "原子弹之父罗伯特·奥本海默的传奇一生。"
+                },
+                {
+                    id: 4,
+                    title: "蜘蛛侠：纵横宇宙",
+                    year: "2023",
+                    rating: "9.0",
+                    duration: "140分钟",
+                    category: ["动画", "动作"],
+                    poster: "https://picsum.photos/seed/movie4/400/600",
+                    bvid: "BV1No4y1Z7K8",
+                    description: "迈尔斯·莫拉莱斯穿梭多元宇宙，开启全新冒险。"
+                }
+            ],
+            new: [
+                {
+                    id: 5,
+                    title: "碟中谍7",
+                    year: "2023",
+                    rating: "8.5",
+                    duration: "164分钟",
+                    category: ["动作", "冒险"],
+                    poster: "https://picsum.photos/seed/movie5/400/600",
+                    bvid: "BV1Nj411D7V4",
+                    description: "伊森·亨特与IMF小组迎接全新致命任务。"
+                },
+                {
+                    id: 6,
+                    title: "闪电侠",
+                    year: "2023",
+                    rating: "8.3",
+                    duration: "144分钟",
+                    category: ["动作", "科幻"],
+                    poster: "https://picsum.photos/seed/movie6/400/600",
+                    bvid: "BV1No4y1Z7K9",
+                    description: "巴里·艾伦利用超能力穿越时空改变过去。"
+                },
+                {
+                    id: 7,
+                    title: "银河护卫队3",
+                    year: "2023",
+                    rating: "8.7",
+                    duration: "150分钟",
+                    category: ["科幻", "喜剧"],
+                    poster: "https://picsum.photos/seed/movie7/400/600",
+                    bvid: "BV1Nj411D7V5",
+                    description: "银河护卫队成员踏上最终冒险之旅。"
+                },
+                {
+                    id: 8,
+                    title: "长安三万里",
+                    year: "2023",
+                    rating: "9.1",
+                    duration: "168分钟",
+                    category: ["动画", "历史"],
+                    poster: "https://picsum.photos/seed/movie8/400/600",
+                    bvid: "BV1Nj411D7V6",
+                    description: "大唐盛世的诗歌与梦想，李白与高适的友谊。"
+                }
+            ]
+        };
 
-        // ==================== 豆瓣电影API代理 ====================
-        // 由于豆瓣API有跨域限制，我们使用公共代理
-        const DOUBAN_API = 'https://api.wmdb.tv/api/v1/movie/search';
-        
-        // ==================== B站搜索API ====================
-        // 使用B站搜索接口获取视频信息
-        const BILIBILI_SEARCH_API = 'https://api.bilibili.com/x/web-interface/search/type';
-        
-        // ==================== 初始化热门电影 ====================
-        const defaultMovies = [
-            { title: "流浪地球2", year: "2023", rating: "8.8", bvid: "BV1fX4y1V7Vc" },
-            { title: "阿凡达：水之道", year: "2022", rating: "8.2", bvid: "BV1cT411R7tY" },
-            { title: "奥本海默", year: "2023", rating: "8.7", bvid: "BV1Gu4y1U7YJ" },
-            { title: "蜘蛛侠：纵横宇宙", year: "2023", rating: "9.0", bvid: "BV1No4y1Z7K8" },
-            { title: "碟中谍7", year: "2023", rating: "8.5", bvid: "BV1Nj411D7V4" },
-            { title: "闪电侠", year: "2023", rating: "8.3", bvid: "BV1No4y1Z7K9" }
-        ];
-
-        // ==================== 工具函数 ====================
-        
-        // 生成电影卡片HTML
+        // 生成电影卡片
         function generateMovieCard(movie) {
-            // 使用豆瓣API获取的电影海报，如果没有则使用默认图片
-            const poster = movie.poster || `https://picsum.photos/seed/${movie.title}/400/600`;
-            
             return `
-                <div class="movie-card" data-id="${movie.bvid || movie.id}">
-                    <img src="${poster}" alt="${movie.title}" class="card-img">
+                <div class="movie-card" data-id="${movie.id}">
+                    <img src="${movie.poster}" alt="${movie.title}" class="card-img">
                     <div class="card-overlay">
                         <h3 class="card-title">${movie.title}</h3>
                         <div class="card-meta">
-                            <span>${movie.year || '年份未知'}</span>
-                            <span>⭐ ${movie.rating || movie.rate || '评分未知'}</span>
-                            <span>${movie.duration || '时长未知'}</span>
+                            <span>${movie.year}</span>
+                            <span>⭐ ${movie.rating}</span>
+                            <span>${movie.duration}</span>
                         </div>
                         <div class="card-actions">
-                            <button class="watch-btn" data-bvid="${movie.bvid}" data-title="${movie.title}">
+                            <button class="watch-btn" data-bvid="${movie.bvid}">
                                 <i class="fas fa-play"></i> 立即观看
+                            </button>
+                            <button class="info-btn" data-info="${movie.id}">
+                                <i class="fas fa-info-circle"></i> 详情
                             </button>
                         </div>
                     </div>
@@ -538,168 +868,42 @@
             `;
         }
 
-        // 显示加载动画
-        function showLoader() {
-            document.getElementById('loader').style.display = 'block';
-            isLoading = true;
-        }
-
-        // 隐藏加载动画
-        function hideLoader() {
-            document.getElementById('loader').style.display = 'none';
-            isLoading = false;
-        }
-
-        // ==================== 电影搜索功能 ====================
-        
-        // 从豆瓣API搜索电影信息
-        async function searchMoviesFromDouban(query) {
-            try {
-                showLoader();
-                
-                const response = await fetch(`${DOUBAN_API}?q=${encodeURIComponent(query)}`);
-                const movies = await response.json();
-                
-                // 限制结果数量
-                return movies.slice(0, 12).map(movie => ({
-                    title: movie.originalName || movie.name || '未知标题',
-                    year: movie.year || '年份未知',
-                    rating: movie.rate || '评分未知',
-                    duration: movie.mins || '时长未知',
-                    poster: movie.poster || null,
-                    // 获取B站视频ID（需要二次搜索）
-                    bvid: null
-                }));
-            } catch (error) {
-                console.error('豆瓣搜索失败:', error);
-                return [];
-            } finally {
-                hideLoader();
-            }
-        }
-
-        // 从B站搜索视频
-        async function searchVideosFromBilibili(query) {
-            try {
-                // B站搜索API参数
-                const params = new URLSearchParams({
-                    search_type: 'video',
-                    keyword: query,
-                    page: currentPage,
-                    tids: 1, // 动画
-                    order: 'totalrank'
-                });
-
-                // 使用CORS代理绕过跨域限制
-                const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-                const apiUrl = `${BILIBILI_SEARCH_API}?${params}`;
-                
-                const response = await fetch(proxyUrl + apiUrl, {
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-                    }
-                });
-                
-                const data = await response.json();
-                
-                if (data.code === 0 && data.data.result) {
-                    return data.data.result.map(item => ({
-                        title: item.title.replace(/<[^>]+>/g, ''), // 移除HTML标签
-                        bvid: item.bvid,
-                        duration: formatDuration(item.duration),
-                        poster: item.pic,
-                        rating: item.play ? formatNumber(item.play) + '播放' : '热度未知'
-                    }));
-                }
-                return [];
-            } catch (error) {
-                console.error('B站搜索失败:', error);
-                return [];
-            }
-        }
-
-        // ==================== 主搜索函数 ====================
-        async function performSearch() {
-            const query = document.getElementById('searchInput').value.trim();
-            if (!query) return;
+        // 初始化电影网格
+        function initMovies() {
+            const hotGrid = document.getElementById('hotMovies');
+            const newGrid = document.getElementById('newMovies');
             
-            showLoader();
-            
-            try {
-                // 1. 先搜索B站视频
-                const bilibiliResults = await searchVideosFromBilibili(query);
-                
-                // 2. 如果B站没有结果，搜索豆瓣获取电影信息
-                if (bilibiliResults.length === 0) {
-                    const doubanResults = await searchMoviesFromDouban(query);
-                    
-                    // 合并结果
-                    currentSearchResults = doubanResults;
-                } else {
-                    currentSearchResults = bilibiliResults;
-                }
-                
-                // 显示搜索结果
-                displaySearchResults();
-                
-            } catch (error) {
-                console.error('搜索失败:', error);
-                alert('搜索失败，请稍后重试或使用其他关键词。');
-            } finally {
-                hideLoader();
-            }
-        }
-
-        // 显示搜索结果
-        function displaySearchResults() {
-            const searchResultsContainer = document.getElementById('searchResults');
-            const searchResultsTitle = document.getElementById('searchResultsTitle');
-            
-            // 清空之前的结果
-            searchResultsContainer.innerHTML = '';
-            
-            if (currentSearchResults.length === 0) {
-                searchResultsContainer.innerHTML = `
-                    <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: rgba(255,255,255,0.5);">
-                        <i class="fas fa-film" style="font-size: 3rem; margin-bottom: 1rem;"></i>
-                        <h3>未找到相关影片</h3>
-                        <p>尝试搜索其他关键词，或直接输入B站视频BV号</p>
-                    </div>
-                `;
-            } else {
-                // 生成电影卡片
-                currentSearchResults.forEach(movie => {
-                    searchResultsContainer.innerHTML += generateMovieCard(movie);
-                });
-                
-                // 绑定播放事件
-                bindWatchEvents();
-            }
-            
-            // 显示搜索结果标题
-            searchResultsTitle.style.display = 'block';
-            
-            // 隐藏热门推荐
-            document.getElementById('hotMoviesTitle').style.display = 'none';
-            document.getElementById('hotMovies').style.display = 'none';
-            
-            // 滚动到搜索结果
-            searchResultsContainer.scrollIntoView({ behavior: 'smooth' });
-        }
-
-        // ==================== 热门电影初始化 ====================
-        function initHotMovies() {
-            const hotMoviesContainer = document.getElementById('hotMovies');
-            
-            defaultMovies.forEach(movie => {
-                hotMoviesContainer.innerHTML += generateMovieCard(movie);
+            movies.hot.forEach(movie => {
+                hotGrid.innerHTML += generateMovieCard(movie);
             });
             
-            bindWatchEvents();
+            movies.new.forEach(movie => {
+                newGrid.innerHTML += generateMovieCard(movie);
+            });
+            
+            // 绑定点击事件
+            document.querySelectorAll('.watch-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const bvid = this.getAttribute('data-bvid');
+                    const movieCard = this.closest('.movie-card');
+                    const title = movieCard.querySelector('.card-title').textContent;
+                    playVideo(bvid, title);
+                });
+            });
+            
+            document.querySelectorAll('.movie-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const movieId = this.getAttribute('data-id');
+                    const movie = [...movies.hot, ...movies.new].find(m => m.id == movieId);
+                    if (movie) {
+                        showMovieInfo(movie);
+                    }
+                });
+            });
         }
 
-        // ==================== 视频播放功能 ====================
+        // 播放视频
         function playVideo(bvid, title) {
             const modal = document.getElementById('videoModal');
             const titleEl = document.getElementById('modalTitle');
@@ -725,125 +929,136 @@
             
             modal.style.display = 'flex';
             document.body.style.overflow = 'hidden';
+        }
+
+        // 显示电影信息
+        function showMovieInfo(movie) {
+            const modal = document.getElementById('videoModal');
+            const titleEl = document.getElementById('modalTitle');
+            const container = document.getElementById('videoContainer');
             
-            // 记录播放历史
-            saveToHistory({ bvid, title, time: new Date().toLocaleString() });
-        }
-
-        // ==================== 辅助函数 ====================
-        function formatDuration(seconds) {
-            if (!seconds) return '时长未知';
-            const minutes = Math.floor(seconds / 60);
-            const secs = seconds % 60;
-            return `${minutes}分${secs}秒`;
-        }
-
-        function formatNumber(num) {
-            if (num >= 10000) {
-                return (num / 10000).toFixed(1) + '万';
-            }
-            return num;
-        }
-
-        function saveToHistory(video) {
-            let history = JSON.parse(localStorage.getItem('videoHistory') || '[]');
-            history.unshift(video);
-            history = history.slice(0, 20); // 只保留最近20条
-            localStorage.setItem('videoHistory', JSON.stringify(history));
-        }
-
-        // ==================== 事件绑定 ====================
-        function bindWatchEvents() {
-            document.querySelectorAll('.watch-btn').forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    const bvid = this.getAttribute('data-bvid');
-                    const title = this.getAttribute('data-title');
-                    
-                    if (bvid && bvid.startsWith('BV')) {
-                        playVideo(bvid, title);
-                    } else {
-                        // 如果没有BVID，尝试搜索
-                        const movieTitle = this.closest('.movie-card').querySelector('.card-title').textContent;
-                        searchAndPlay(movieTitle);
-                    }
-                });
-            });
-        }
-
-        async function searchAndPlay(title) {
-            showLoader();
-            try {
-                const videos = await searchVideosFromBilibili(title);
-                if (videos.length > 0) {
-                    playVideo(videos[0].bvid, videos[0].title);
-                } else {
-                    alert(`未找到"${title}"的在线视频资源`);
-                }
-            } catch (error) {
-                console.error('搜索播放失败:', error);
-                alert('播放失败，请稍后重试');
-            } finally {
-                hideLoader();
-            }
-        }
-
-        // ==================== 页面初始化 ====================
-        document.addEventListener('DOMContentLoaded', function() {
-            // 初始化热门电影
-            initHotMovies();
+            titleEl.textContent = movie.title;
+            container.innerHTML = `
+                <div style="padding: 2rem; max-width: 800px;">
+                    <div style="display: flex; gap: 2rem; margin-bottom: 2rem;">
+                        <img src="${movie.poster}" alt="${movie.title}" 
+                             style="width: 200px; height: 300px; object-fit: cover; border-radius: 10px;">
+                        <div>
+                            <h2 style="color: var(--primary); margin-bottom: 1rem;">${movie.title}</h2>
+                            <div style="display: flex; gap: 1rem; margin-bottom: 1rem; color: rgba(255,255,255,0.7);">
+                                <span>${movie.year}</span>
+                                <span>⭐ ${movie.rating}</span>
+                                <span>${movie.duration}</span>
+                            </div>
+                            <div style="margin-bottom: 1.5rem;">
+                                ${movie.category.map(cat => 
+                                    `<span style="background: rgba(0,212,255,0.1); color: var(--primary); 
+                                        padding: 0.3rem 0.8rem; border-radius: 15px; margin-right: 0.5rem; 
+                                        font-size: 0.9rem;">${cat}</span>`
+                                ).join('')}
+                            </div>
+                            <p style="line-height: 1.6; color: rgba(255,255,255,0.8);">
+                                ${movie.description}
+                            </p>
+                        </div>
+                    </div>
+                    <button class="watch-btn" style="width: 100%; padding: 1rem; font-size: 1.1rem;"
+                            onclick="playVideo('${movie.bvid}', '${movie.title}')">
+                        <i class="fas fa-play"></i> 立即观看
+                    </button>
+                </div>
+            `;
             
-            // 搜索按钮事件
-            document.getElementById('searchBtn').addEventListener('click', performSearch);
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        // 搜索功能
+        function initSearch() {
+            const searchBtn = document.getElementById('searchBtn');
+            const searchInput = document.getElementById('searchInput');
             
-            // 搜索框回车事件
-            document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            searchBtn.addEventListener('click', performSearch);
+            searchInput.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') performSearch();
             });
             
-            // 关闭模态框
-            document.getElementById('closeModal').addEventListener('click', function() {
-                const modal = document.getElementById('videoModal');
-                const container = document.getElementById('videoContainer');
-                
-                modal.style.display = 'none';
-                container.innerHTML = '';
-                document.body.style.overflow = 'auto';
+            // 快速链接
+            document.querySelectorAll('.quick-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const category = this.getAttribute('data-category');
+                    searchByCategory(category);
+                });
             });
+        }
+        
+        function performSearch() {
+            const query = document.getElementById('searchInput').value.trim();
+            if (!query) return;
             
-            // 点击模态框背景关闭
-            document.getElementById('videoModal').addEventListener('click', function(e) {
-                if (e.target === this) {
-                    this.style.display = 'none';
-                    document.getElementById('videoContainer').innerHTML = '';
-                    document.body.style.overflow = 'auto';
-                }
-            });
+            // 显示加载动画
+            const loader = document.getElementById('loader');
+            loader.style.display = 'block';
             
-            // 用户按钮
-            document.getElementById('userBtn').addEventListener('click', function() {
-                alert(`👤 欢迎回来，大海！\n\n📺 您的私人影院已就绪\n🎬 输入关键词开始搜索\n▶️ 点击电影卡片即可播放`);
-            });
+            // 模拟搜索
+            setTimeout(() => {
+                loader.style.display = 'none';
+                alert(`搜索关键词: "${query}"\n\n提示：实际功能需要接入视频数据库API。\n当前为演示版本，您可以点击电影卡片查看详情。`);
+            }, 1000);
+        }
+        
+        function searchByCategory(category) {
+            const categoryNames = {
+                'action': '动作大片',
+                'sci-fi': '科幻未来',
+                'drama': '剧情佳作',
+                'comedy': '喜剧轻松',
+                'anime': '热血动漫'
+            };
             
-            // 首页按钮
-            document.querySelector('a[href="#"]').addEventListener('click', function(e) {
-                e.preventDefault();
-                location.reload();
-            });
+            alert(`切换到分类: ${categoryNames[category] || category}\n\n正在为您筛选相关影片...`);
+        }
+
+        // 关闭模态框
+        document.getElementById('closeModal').addEventListener('click', function() {
+            const modal = document.getElementById('videoModal');
+            const container = document.getElementById('videoContainer');
+            
+            modal.style.display = 'none';
+            container.innerHTML = '';
+            document.body.style.overflow = 'auto';
         });
 
-        // ==================== 窗口事件 ====================
-        window.addEventListener('scroll', function() {
-            // 无限滚动加载（如果需要）
-            if (isLoading) return;
-            
-            const scrollPosition = window.innerHeight + window.scrollY;
-            const pageHeight = document.documentElement.offsetHeight;
-            
-            if (scrollPosition >= pageHeight - 500) {
-                // 可以在这里实现分页加载
+        // 点击模态框背景关闭
+        document.getElementById('videoModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.style.display = 'none';
+                document.getElementById('videoContainer').innerHTML = '';
+                document.body.style.overflow = 'auto';
             }
         });
+
+        // 用户按钮
+        document.getElementById('userBtn').addEventListener('click', function() {
+            alert(`👤 用户：大海\n📧 邮箱：dahai@example.com\n⭐ 收藏：32 部影片\n\n欢迎来到您的私人影院！`);
+        });
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            initMovies();
+            initSearch();
+            
+            // 添加一些动画效果
+            setTimeout(() => {
+                document.querySelectorAll('.movie-card').forEach((card, index) => {
+                    card.style.animationDelay = `${index * 0.1}s`;
+                });
+            }, 500);
+        });
+
+        // 添加到全局作用域
+        window.playVideo = playVideo;
     </script>
 </body>
 </html>
