@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>大海影视 - 免费观看电影电视剧</title>
+    <title>大海影视 - B站资源观看站</title>
     <style>
         * {
             margin: 0;
@@ -35,7 +35,7 @@
         .logo {
             font-size: 1.8em;
             font-weight: bold;
-            color: #e50914;
+            color: #00a1d6; /* B站蓝色 */
             text-decoration: none;
             display: flex;
             align-items: center;
@@ -55,7 +55,7 @@
         }
         
         .nav-links a:hover {
-            color: #e50914;
+            color: #00a1d6; /* B站蓝色 */
         }
         
         .search-box {
@@ -70,7 +70,7 @@
         /* 英雄区域 */
         .hero {
             margin-top: 80px;
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://i0.hdslb.com/bfs/archive/5b3c5b3f5f3f5f3f5f3f5f3f5f3f5f3f.jpg');
             background-size: cover;
             background-position: center;
             padding: 100px 30px;
@@ -78,12 +78,19 @@
         }
         
         .hero h1 {
-            font-size: 3.5em;
+            font-size: 3em;
             margin-bottom: 20px;
-            background: linear-gradient(45deg, #e50914, #ff6b6b);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #fff;
+        }
+        
+        .hero .bilibili-badge {
+            display: inline-block;
+            background: #00a1d6;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin-bottom: 20px;
         }
         
         .hero p {
@@ -94,7 +101,7 @@
         }
         
         .play-btn {
-            background: #e50914;
+            background: #00a1d6; /* B站蓝色 */
             color: white;
             border: none;
             padding: 15px 40px;
@@ -109,6 +116,7 @@
         
         .play-btn:hover {
             transform: scale(1.05);
+            background: #0092c4;
         }
         
         /* 内容区域 */
@@ -128,7 +136,7 @@
         
         .movie-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 30px;
             margin-bottom: 60px;
         }
@@ -139,15 +147,17 @@
             overflow: hidden;
             transition: transform 0.3s;
             position: relative;
+            border: 1px solid #333;
         }
         
         .movie-card:hover {
             transform: translateY(-10px);
+            border-color: #00a1d6;
         }
         
         .movie-card img {
             width: 100%;
-            height: 350px;
+            height: 200px;
             object-fit: cover;
         }
         
@@ -161,6 +171,13 @@
             color: #fff;
         }
         
+        .movie-desc {
+            color: #aaa;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        
         .movie-meta {
             color: #888;
             font-size: 0.9em;
@@ -170,18 +187,22 @@
         }
         
         .watch-btn {
-            background: #333;
+            background: #00a1d6;
             color: white;
             border: none;
-            padding: 8px 20px;
+            padding: 10px 20px;
             border-radius: 4px;
             width: 100%;
             cursor: pointer;
             transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
         
         .watch-btn:hover {
-            background: #e50914;
+            background: #0092c4;
         }
         
         /* 分类标签 */
@@ -194,7 +215,7 @@
         
         .category-tag {
             background: #333;
-            padding: 5px 15px;
+            padding: 8px 20px;
             border-radius: 20px;
             font-size: 0.9em;
             cursor: pointer;
@@ -202,7 +223,7 @@
         }
         
         .category-tag:hover {
-            background: #e50914;
+            background: #00a1d6;
         }
         
         /* 底部 */
@@ -228,6 +249,7 @@
         .copyright {
             color: #666;
             font-size: 0.9em;
+            line-height: 1.6;
         }
         
         /* 响应式 */
@@ -269,22 +291,22 @@
         
         <div class="nav-links">
             <a href="#"><i class="fas fa-home"></i> 首页</a>
-            <a href="#movies"><i class="fas fa-play-circle"></i> 电影</a>
-            <a href="#tv"><i class="fas fa-tv"></i> 电视剧</a>
+            <a href="#movies"><i class="fas fa-play-circle"></i> 电影解说</a>
+            <a href="#tv"><i class="fas fa-tv"></i> 剧集解说</a>
             <a href="#anime"><i class="fas fa-gamepad"></i> 动漫</a>
-            <a href="#collections"><i class="fas fa-star"></i> 收藏</a>
         </div>
         
-        <input type="text" class="search-box" placeholder="搜索电影、电视剧...">
+        <input type="text" class="search-box" placeholder="搜索B站影视资源...">
     </nav>
     
     <!-- 英雄区域 -->
     <section class="hero">
-        <h1>畅享海量影视资源</h1>
-        <p>最新电影、热门电视剧、经典动漫，尽在大海影视。完全免费，无需注册！</p>
+        <span class="bilibili-badge">📺 同步B站热门影视内容</span>
+        <h1>发现优质影视解说与混剪</h1>
+        <p>精选B站优质UP主的电影解说、电视剧解析、经典片段混剪</p>
         <button class="play-btn">
             <i class="fas fa-play"></i>
-            立即观看推荐影片
+            观看今日推荐
         </button>
     </section>
     
@@ -292,149 +314,155 @@
     <div class="container">
         <!-- 热门分类 -->
         <div class="category-tags">
-            <span class="category-tag">热门推荐</span>
-            <span class="category-tag">最新上映</span>
-            <span class="category-tag">高分经典</span>
-            <span class="category-tag">动作冒险</span>
-            <span class="category-tag">科幻奇幻</span>
-            <span class="category-tag">爱情喜剧</span>
-            <span class="category-tag">恐怖悬疑</span>
-            <span class="category-tag">国产剧集</span>
-            <span class="category-tag">美剧韩剧</span>
-            <span class="category-tag">日漫国漫</span>
+            <span class="category-tag">电影解说</span>
+            <span class="category-tag">电视剧解说</span>
+            <span class="category-tag">经典混剪</span>
+            <span class="category-tag">悬疑烧脑</span>
+            <span class="category-tag">科幻大片</span>
+            <span class="category-tag">喜剧搞笑</span>
+            <span class="category-tag">动漫推荐</span>
+            <span class="category-tag">纪录片</span>
         </div>
         
-        <!-- 热门电影 -->
+        <!-- 热门电影解说 -->
         <h2 class="section-title" id="movies">
             <i class="fas fa-fire"></i>
-            热门电影
+            热门电影解说
         </h2>
         
         <div class="movie-grid">
-            <!-- 电影1 -->
+            <!-- 电影1 - 盗梦空间解说 -->
             <div class="movie-card">
-                <img src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="电影封面">
+                <img src="https://i0.hdslb.com/bfs/archive/5b3c5b3f5f3f5f3f5f3f5f3f5f3f5f3f.jpg" alt="盗梦空间解说">
                 <div class="movie-info">
-                    <div class="movie-title">盗梦空间</div>
+                    <div class="movie-title">《盗梦空间》深度解析</div>
+                    <div class="movie-desc">层层梦境，时间膨胀，诺兰经典烧脑大作全面解读</div>
                     <div class="movie-meta">
-                        <span>2010</span>
-                        <span>9.3分</span>
+                        <span>UP：木鱼水心</span>
+                        <span>45分钟</span>
                     </div>
-                    <button class="watch-btn" data-video="bilibili_video_id_1">
-                        <i class="fas fa-play"></i> 立即观看
+                    <button class="watch-btn" data-video="inception">
+                        <i class="fab fa-bilibili"></i> B站观看
                     </button>
                 </div>
             </div>
             
-            <!-- 电影2 -->
+            <!-- 电影2 - 星际穿越解说 -->
             <div class="movie-card">
-                <img src="https://images.unsplash.com/photo-1531259683007-016a7b628fc3?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="电影封面">
+                <img src="https://i0.hdslb.com/bfs/archive/6c4d5e6f7g8h9i0j1k2l3m4n5o6p7q.jpg" alt="星际穿越解说">
                 <div class="movie-info">
-                    <div class="movie-title">星际穿越</div>
+                    <div class="movie-title">《星际穿越》科学解析</div>
+                    <div class="movie-desc">黑洞、虫洞、五维空间，硬核科幻的浪漫与科学</div>
                     <div class="movie-meta">
-                        <span>2014</span>
-                        <span>9.4分</span>
+                        <span>UP：电影爆博士</span>
+                        <span>60分钟</span>
                     </div>
-                    <button class="watch-btn" data-video="bilibili_video_id_2">
-                        <i class="fas fa-play"></i> 立即观看
+                    <button class="watch-btn" data-video="interstellar">
+                        <i class="fab fa-bilibili"></i> B站观看
                     </button>
                 </div>
             </div>
             
-            <!-- 电影3 -->
+            <!-- 电影3 - 复仇者联盟解说 -->
             <div class="movie-card">
-                <img src="https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="电影封面">
+                <img src="https://i0.hdslb.com/bfs/archive/7d8e9f0g1h2i3j4k5l6m7n8o9p0q1r.jpg" alt="复联解说">
                 <div class="movie-info">
-                    <div class="movie-title">复仇者联盟4</div>
+                    <div class="movie-title">漫威十年全系列回顾</div>
+                    <div class="movie-desc">从钢铁侠到终局之战，漫威电影宇宙完整时间线</div>
                     <div class="movie-meta">
-                        <span>2019</span>
-                        <span>8.5分</span>
+                        <span>UP：电影最TOP</span>
+                        <span>120分钟</span>
                     </div>
-                    <button class="watch-btn" data-video="bilibili_video_id_3">
-                        <i class="fas fa-play"></i> 立即观看
+                    <button class="watch-btn" data-video="marvel">
+                        <i class="fab fa-bilibili"></i> B站观看
                     </button>
                 </div>
             </div>
             
-            <!-- 电影4 -->
+            <!-- 电影4 - 哈利波特系列 -->
             <div class="movie-card">
-                <img src="https://images.unsplash.com/photo-1542204165-65bf26472b9b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="电影封面">
+                <img src="https://i0.hdslb.com/bfs/archive/8e9f0g1h2i3j4k5l6m7n8o9p0q1r2s.jpg" alt="哈利波特解说">
                 <div class="movie-info">
-                    <div class="movie-title">肖申克的救赎</div>
+                    <div class="movie-title">哈利波特全系列解析</div>
+                    <div class="movie-desc">霍格沃茨的魔法世界，从魔法石到死亡圣器</div>
                     <div class="movie-meta">
-                        <span>1994</span>
-                        <span>9.7分</span>
+                        <span>UP：小片片说大片</span>
+                        <span>180分钟</span>
                     </div>
-                    <button class="watch-btn" data-video="bilibili_video_id_4">
-                        <i class="fas fa-play"></i> 立即观看
+                    <button class="watch-btn" data-video="harrypotter">
+                        <i class="fab fa-bilibili"></i> B站观看
                     </button>
                 </div>
             </div>
         </div>
         
-        <!-- 热门电视剧 -->
+        <!-- 热门电视剧解说 -->
         <h2 class="section-title" id="tv">
             <i class="fas fa-tv"></i>
-            热门电视剧
+            热门电视剧解说
         </h2>
         
         <div class="movie-grid">
-            <!-- 电视剧1 -->
+            <!-- 电视剧1 - 权力的游戏 -->
             <div class="movie-card">
-                <img src="https://images.unsplash.com/photo-1585776245865-b92ae54c5c96?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="剧集封面">
+                <img src="https://i0.hdslb.com/bfs/archive/9f0g1h2i3j4k5l6m7n8o9p0q1r2s3t.jpg" alt="权游解说">
                 <div class="movie-info">
-                    <div class="movie-title">权力的游戏</div>
+                    <div class="movie-title">《权力的游戏》全季解说</div>
+                    <div class="movie-desc">维斯特洛的权力游戏，从临冬城到铁王座</div>
                     <div class="movie-meta">
-                        <span>8季</span>
-                        <span>9.2分</span>
+                        <span>UP：嘻咦啊看</span>
+                        <span>240分钟</span>
                     </div>
-                    <button class="watch-btn" data-video="bilibili_video_id_5">
-                        <i class="fas fa-play"></i> 立即观看
+                    <button class="watch-btn" data-video="got">
+                        <i class="fab fa-bilibili"></i> B站观看
                     </button>
                 </div>
             </div>
             
-            <!-- 电视剧2 -->
+            <!-- 电视剧2 - 绝命毒师 -->
             <div class="movie-card">
-                <img src="https://images.unsplash.com/photo-1511988617509-a57c8a288659?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="剧集封面">
+                <img src="https://i0.hdslb.com/bfs/archive/0g1h2i3j4k5l6m7n8o9p0q1r2s3t4u.jpg" alt="绝命毒师解说">
                 <div class="movie-info">
-                    <div class="movie-title">绝命毒师</div>
+                    <div class="movie-title">《绝命毒师》化学课</div>
+                    <div class="movie-desc">从化学老师到毒品帝国，人性与道德的边界</div>
                     <div class="movie-meta">
-                        <span>5季</span>
-                        <span>9.5分</span>
+                        <span>UP：电影爆博士</span>
+                        <span>180分钟</span>
                     </div>
-                    <button class="watch-btn" data-video="bilibili_video_id_6">
-                        <i class="fas fa-play"></i> 立即观看
+                    <button class="watch-btn" data-video="breakingbad">
+                        <i class="fab fa-bilibili"></i> B站观看
                     </button>
                 </div>
             </div>
             
-            <!-- 电视剧3 -->
+            <!-- 电视剧3 - 黑镜 -->
             <div class="movie-card">
-                <img src="https://images.unsplash.com/photo-1533616688419-b7a585564f70?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="剧集封面">
+                <img src="https://i0.hdslb.com/bfs/archive/1h2i3j4k5l6m7n8o9p0q1r2s3t4u5v.jpg" alt="黑镜解说">
                 <div class="movie-info">
-                    <div class="movie-title">纸牌屋</div>
+                    <div class="movie-title">《黑镜》科技伦理解析</div>
+                    <div class="movie-desc">科技与人性的碰撞，每个故事都是未来警示</div>
                     <div class="movie-meta">
-                        <span>6季</span>
-                        <span>8.7分</span>
+                        <span>UP：木鱼水心</span>
+                        <span>150分钟</span>
                     </div>
-                    <button class="watch-btn" data-video="bilibili_video_id_7">
-                        <i class="fas fa-play"></i> 立即观看
+                    <button class="watch-btn" data-video="blackmirror">
+                        <i class="fab fa-bilibili"></i> B站观看
                     </button>
                 </div>
             </div>
             
-            <!-- 电视剧4 -->
+            <!-- 电视剧4 - 西部世界 -->
             <div class="movie-card">
-                <img src="https://images.unsplash.com/photo-1542744095-fcf48d80b0fd?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="剧集封面">
+                <img src="https://i0.hdslb.com/bfs/archive/2i3j4k5l6m7n8o9p0q1r2s3t4u5v6w.jpg" alt="西部世界解说">
                 <div class="movie-info">
-                    <div class="movie-title">黑镜</div>
+                    <div class="movie-title">《西部世界》人工智能</div>
+                    <div class="movie-desc">机器人觉醒，乐园背后的哲学思考</div>
                     <div class="movie-meta">
-                        <span>5季</span>
-                        <span>8.8分</span>
+                        <span>UP：小片片说大片</span>
+                        <span>120分钟</span>
                     </div>
-                    <button class="watch-btn" data-video="bilibili_video_id_8">
-                        <i class="fas fa-play"></i> 立即观看
+                    <button class="watch-btn" data-video="westworld">
+                        <i class="fab fa-bilibili"></i> B站观看
                     </button>
                 </div>
             </div>
@@ -449,60 +477,120 @@
         </div>
         
         <div class="footer-links">
+            <a href="https://www.bilibili.com" target="_blank">B站官网</a>
             <a href="#">关于我们</a>
-            <a href="#">联系方式</a>
-            <a href="#">用户协议</a>
-            <a href="#">隐私政策</a>
+            <a href="#">使用说明</a>
             <a href="#">免责声明</a>
         </div>
         
         <p class="copyright">
-            © 2023 大海影视. 本网站所有视频资源均来自互联网公开内容，仅供学习交流使用。
-            <br>
+            © 2023 大海影视. 本网站所有视频资源均来自哔哩哔哩(Bilibili)平台。<br>
+            视频版权归原作者所有，本网站仅提供内容索引和推荐服务。<br>
             技术支持：GitHub Pages | 托管于GitHub
         </p>
     </footer>
     
     <!-- 视频播放器弹窗 -->
-    <div id="videoModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:2000; justify-content:center; align-items:center;">
-        <div style="width:90%; max-width:1000px; background:#111; border-radius:10px; overflow:hidden;">
+    <div id="videoModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:2000; justify-content:center; align-items:center; padding:20px;">
+        <div style="width:100%; max-width:1200px; background:#111; border-radius:10px; overflow:hidden;">
             <div style="padding:20px; display:flex; justify-content:space-between; align-items:center; background:#222;">
-                <h3 style="margin:0;">正在播放</h3>
-                <button id="closeModal" style="background:#e50914; color:white; border:none; padding:8px 20px; border-radius:4px; cursor:pointer;">关闭</button>
+                <h3 style="margin:0; color:#fff;" id="videoTitle">正在播放</h3>
+                <button id="closeModal" style="background:#00a1d6; color:white; border:none; padding:8px 20px; border-radius:4px; cursor:pointer;">关闭播放器</button>
             </div>
-            <div id="videoPlayer" style="padding:20px;">
-                <!-- 这里会动态插入视频嵌入代码 -->
-                <p style="text-align:center; color:#888;">请选择要播放的视频</p>
+            <div id="videoPlayer" style="padding:20px; min-height:600px; display:flex; align-items:center; justify-content:center;">
+                <p style="text-align:center; color:#888; font-size:1.2em;">请选择要播放的视频</p>
             </div>
         </div>
     </div>
     
     <script>
-        // 模拟视频数据
-        const videos = {
-            'bilibili_video_id_1': {
-                title: '盗梦空间',
-                embedCode: '<iframe src="//player.bilibili.com/player.html?aid=84271171&bvid=BV1q7411v7Vd&cid=144216456&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" style="width:100%; height:500px;"></iframe>'
+        // B站视频数据 - 这里替换为真实的B站视频ID
+        const bilibiliVideos = {
+            'inception': {
+                title: '《盗梦空间》深度解析',
+                bvid: 'BV1MJ41157D3', // 替换为真实B站视频ID
+                aid: '84271171'
             },
-            'bilibili_video_id_2': {
-                title: '星际穿越',
-                embedCode: '<iframe src="//player.bilibili.com/player.html?aid=84271172&bvid=BV1q7411v7Ve&cid=144216457&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" style="width:100%; height:500px;"></iframe>'
+            'interstellar': {
+                title: '《星际穿越》科学解析',
+                bvid: 'BV1MJ41157E4', // 替换为真实B站视频ID
+                aid: '84271172'
+            },
+            'marvel': {
+                title: '漫威十年全系列回顾',
+                bvid: 'BV1MJ41157F5', // 替换为真实B站视频ID
+                aid: '84271173'
+            },
+            'harrypotter': {
+                title: '哈利波特全系列解析',
+                bvid: 'BV1MJ41157G6', // 替换为真实B站视频ID
+                aid: '84271174'
+            },
+            'got': {
+                title: '《权力的游戏》全季解说',
+                bvid: 'BV1MJ41157H7', // 替换为真实B站视频ID
+                aid: '84271175'
+            },
+            'breakingbad': {
+                title: '《绝命毒师》化学课',
+                bvid: 'BV1MJ41157I8', // 替换为真实B站视频ID
+                aid: '84271176'
+            },
+            'blackmirror': {
+                title: '《黑镜》科技伦理解析',
+                bvid: 'BV1MJ41157J9', // 替换为真实B站视频ID
+                aid: '84271177'
+            },
+            'westworld': {
+                title: '《西部世界》人工智能',
+                bvid: 'BV1MJ41157K0', // 替换为真实B站视频ID
+                aid: '84271178'
             }
         };
+        
+        // 生成B站嵌入代码
+        function generateBilibiliEmbed(videoData) {
+            return `
+                <iframe 
+                    src="//player.bilibili.com/player.html?bvid=${videoData.bvid}&aid=${videoData.aid}&page=1"
+                    width="100%" 
+                    height="600" 
+                    scrolling="no" 
+                    border="0" 
+                    frameborder="no" 
+                    framespacing="0" 
+                    allowfullscreen="true"
+                    style="border-radius:8px;"
+                >
+                </iframe>
+            `;
+        }
         
         // 播放按钮点击事件
         document.querySelectorAll('.watch-btn').forEach(button => {
             button.addEventListener('click', function() {
-                const videoId = this.getAttribute('data-video');
-                const video = videos[videoId];
+                const videoKey = this.getAttribute('data-video');
+                const videoData = bilibiliVideos[videoKey];
                 
-                if (video) {
-                    document.getElementById('videoPlayer').innerHTML = video.embedCode;
+                if (videoData) {
+                    // 设置标题
+                    document.getElementById('videoTitle').textContent = videoData.title;
+                    
+                    // 生成并插入嵌入代码
+                    document.getElementById('videoPlayer').innerHTML = generateBilibiliEmbed(videoData);
+                    
+                    // 显示弹窗
                     document.getElementById('videoModal').style.display = 'flex';
                 } else {
-                    // 如果视频ID不存在，显示提示
+                    // 如果视频数据不存在，显示提示
                     document.getElementById('videoPlayer').innerHTML = 
-                        '<div style="text-align:center; padding:50px;"><h3>视频加载中...</h3><p>请稍后，或尝试其他视频</p></div>';
+                        `<div style="text-align:center; padding:50px;">
+                            <h3 style="color:#fff;">视频信息加载失败</h3>
+                            <p style="color:#aaa;">请稍后重试，或直接访问 
+                                <a href="https://www.bilibili.com" target="_blank" style="color:#00a1d6;">B站官网</a>
+                                搜索相关视频
+                            </p>
+                        </div>`;
                     document.getElementById('videoModal').style.display = 'flex';
                 }
             });
@@ -511,21 +599,15 @@
         // 关闭弹窗
         document.getElementById('closeModal').addEventListener('click', function() {
             document.getElementById('videoModal').style.display = 'none';
-            // 停止视频播放
-            const iframe = document.querySelector('#videoPlayer iframe');
-            if (iframe) {
-                iframe.src = iframe.src; // 重新加载以停止播放
-            }
+            // 清空视频播放器
+            document.getElementById('videoPlayer').innerHTML = '<p style="text-align:center; color:#888;">请选择要播放的视频</p>';
         });
         
         // 点击弹窗背景关闭
         document.getElementById('videoModal').addEventListener('click', function(e) {
             if (e.target === this) {
                 document.getElementById('videoModal').style.display = 'none';
-                const iframe = document.querySelector('#videoPlayer iframe');
-                if (iframe) {
-                    iframe.src = iframe.src;
-                }
+                document.getElementById('videoPlayer').innerHTML = '<p style="text-align:center; color:#888;">请选择要播放的视频</p>';
             }
         });
         
@@ -534,7 +616,8 @@
             if (e.key === 'Enter') {
                 const query = this.value.trim();
                 if (query) {
-                    alert('搜索: ' + query + '\n\n提示：这是演示功能，实际需要后端支持。');
+                    // 跳转到B站搜索
+                    window.open(`https://search.bilibili.com/all?keyword=${encodeURIComponent(query)}`, '_blank');
                     this.value = '';
                 }
             }
@@ -544,15 +627,28 @@
         document.querySelectorAll('.category-tag').forEach(tag => {
             tag.addEventListener('click', function() {
                 const category = this.textContent;
-                alert('切换到分类: ' + category);
+                // 跳转到B站对应分类搜索
+                window.open(`https://search.bilibili.com/all?keyword=${encodeURIComponent(category)}`, '_blank');
             });
         });
         
         // 立即观看推荐影片按钮
         document.querySelector('.play-btn').addEventListener('click', function() {
-            document.getElementById('videoPlayer').innerHTML = 
-                '<div style="text-align:center; padding:50px;"><h3>🎬 推荐影片加载中</h3><p>请从上方列表中选择您想观看的影片</p></div>';
+            // 随机选择一个视频播放
+            const videoKeys = Object.keys(bilibiliVideos);
+            const randomKey = videoKeys[Math.floor(Math.random() * videoKeys.length)];
+            const videoData = bilibiliVideos[randomKey];
+            
+            document.getElementById('videoTitle').textContent = videoData.title;
+            document.getElementById('videoPlayer').innerHTML = generateBilibiliEmbed(videoData);
             document.getElementById('videoModal').style.display = 'flex';
+        });
+        
+        // 页面加载完成提示
+        window.addEventListener('load', function() {
+            console.log('🎬 大海影视网站加载完成！');
+            console.log('📺 所有视频资源来自哔哩哔哩(Bilibili)');
+            console.log('🔗 B站官网：https://www.bilibili.com');
         });
     </script>
 </body>
