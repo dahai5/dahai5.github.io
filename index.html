@@ -3,27 +3,29 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DAHAI·私人影院 | 沉浸式观影体验</title>
-
-  <!-- ✅ 关键修复：不再依赖外部 particles.js（避免 CDN 失败导致整站 JS 不执行） -->
+  <title>DAHAI·动漫影院 | 海量动漫在线观看</title>
+  
+  <!-- 引入Font Awesome图标 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  
   <style>
     /* 全局重置与基础样式 */
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --primary: #00d4ff;      /* 科技蓝 */
-      --secondary: #9d4edd;    /* 紫罗兰 */
-      --accent: #ff6b6b;       /* 珊瑚红 */
-      --dark: #0a0a0f;         /* 深空黑 */
-      --darker: #050508;       /* 更深的黑 */
-      --light: #e0e0e0;        /* 浅灰 */
+      --primary: #00a8ff;      /* 动漫蓝 */
+      --secondary: #9c27b0;    /* 动漫紫 */
+      --accent: #ff4081;       /* 动漫粉 */
+      --dark: #0f0f1f;         /* 深空黑 */
+      --darker: #080811;       /* 更深的黑 */
+      --light: #e0e0ff;        /* 浅蓝灰 */
       --glass: rgba(255, 255, 255, 0.05);
-      --glow: 0 0 20px rgba(0, 212, 255, 0.3);
+      --glow: 0 0 20px rgba(0, 168, 255, 0.3);
     }
 
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, var(--darker) 0%, #0f172a 100%);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      background: linear-gradient(135deg, var(--darker) 0%, #1a1a2e 100%);
       color: var(--light);
       line-height: 1.6;
       min-height: 100vh;
@@ -31,8 +33,8 @@
       position: relative;
     }
 
-    /* 背景粒子效果（改为本地 canvas，不依赖外部库） */
-    #particles-js {
+    /* 背景粒子效果 */
+    #particles-canvas {
       position: fixed;
       width: 100%;
       height: 100%;
@@ -40,18 +42,13 @@
       z-index: -1;
       pointer-events: none;
     }
-    #particles-canvas {
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
 
-    /* 导航栏 - 科幻风格 */
+    /* 导航栏 - 动漫风格 */
     .navbar {
-      background: rgba(10, 10, 15, 0.85);
+      background: rgba(15, 15, 31, 0.95);
       backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(0, 212, 255, 0.1);
-      padding: 1.2rem 2rem;
+      border-bottom: 1px solid rgba(0, 168, 255, 0.1);
+      padding: 1rem 2rem;
       position: fixed;
       width: 100%;
       top: 0;
@@ -84,7 +81,7 @@
 
     .nav-center {
       display: flex;
-      gap: 2.5rem;
+      gap: 2rem;
       align-items: center;
     }
 
@@ -95,8 +92,7 @@
       font-weight: 500;
       padding: 0.5rem 0;
       transition: all 0.3s ease;
-      text-transform: uppercase;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       letter-spacing: 0.5px;
       background: none;
       border: none;
@@ -117,45 +113,44 @@
     }
     .nav-item:hover::after { width: 100%; }
 
-    /* 主搜索区域 - 居中大气 */
+    /* 主搜索区域 */
     .hero {
-      margin-top: 120px;
-      padding: 4rem 2rem;
+      margin-top: 100px;
+      padding: 3rem 2rem;
       text-align: center;
       position: relative;
       z-index: 10;
     }
 
     .hero-title {
-      font-size: 3.5rem;
+      font-size: 3rem;
       font-weight: 900;
       background: linear-gradient(45deg, var(--primary), var(--secondary), var(--accent));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      margin-bottom: 1.5rem;
-      text-transform: uppercase;
-      letter-spacing: -1px;
+      margin-bottom: 1rem;
+      letter-spacing: -0.5px;
       line-height: 1.1;
     }
 
     .hero-subtitle {
-      font-size: 1.2rem;
-      color: rgba(224, 224, 224, 0.8);
+      font-size: 1.1rem;
+      color: rgba(224, 224, 255, 0.8);
       max-width: 700px;
-      margin: 0 auto 3rem;
+      margin: 0 auto 2.5rem;
       line-height: 1.6;
     }
 
     /* 主搜索框 */
-    .search-container { max-width: 800px; margin: 0 auto 3rem; position: relative; }
+    .search-container { max-width: 800px; margin: 0 auto 2.5rem; position: relative; }
 
     .search-box {
       width: 100%;
-      padding: 1.5rem 2rem;
-      font-size: 1.1rem;
+      padding: 1.2rem 2rem;
+      font-size: 1rem;
       background: rgba(255, 255, 255, 0.08);
-      border: 2px solid rgba(0, 212, 255, 0.2);
-      border-radius: 15px;
+      border: 2px solid rgba(0, 168, 255, 0.2);
+      border-radius: 12px;
       color: var(--light);
       outline: none;
       transition: all 0.3s ease;
@@ -168,7 +163,7 @@
       background: rgba(255, 255, 255, 0.12);
     }
 
-    .search-box::placeholder { color: rgba(224, 224, 224, 0.5); }
+    .search-box::placeholder { color: rgba(224, 224, 255, 0.5); }
 
     .search-btn {
       position: absolute;
@@ -177,8 +172,8 @@
       transform: translateY(-50%);
       background: linear-gradient(45deg, var(--primary), var(--secondary));
       border: none;
-      padding: 1rem 2rem;
-      border-radius: 10px;
+      padding: 0.8rem 1.8rem;
+      border-radius: 8px;
       color: white;
       font-weight: 600;
       cursor: pointer;
@@ -193,14 +188,14 @@
       justify-content: center;
       gap: 1rem;
       flex-wrap: wrap;
-      margin-top: 2rem;
+      margin-top: 1.5rem;
     }
 
     .quick-link {
       background: var(--glass);
-      border: 1px solid rgba(0, 212, 255, 0.1);
-      padding: 0.8rem 1.8rem;
-      border-radius: 25px;
+      border: 1px solid rgba(0, 168, 255, 0.1);
+      padding: 0.6rem 1.5rem;
+      border-radius: 20px;
       color: var(--light);
       text-decoration: none;
       font-weight: 500;
@@ -209,19 +204,20 @@
       align-items: center;
       gap: 0.5rem;
       user-select: none;
+      font-size: 0.9rem;
     }
 
     .quick-link:hover {
-      background: rgba(0, 212, 255, 0.1);
+      background: rgba(0, 168, 255, 0.1);
       border-color: var(--primary);
       transform: translateY(-2px);
     }
 
-    /* 视频网格 - 卡片式设计 */
+    /* 视频网格 */
     .section-title {
-      font-size: 2.2rem;
-      margin: 4rem 0 2rem;
-      padding-left: 2rem;
+      font-size: 1.8rem;
+      margin: 3rem 0 1.5rem;
+      padding: 0 2rem;
       position: relative;
       display: flex;
       align-items: center;
@@ -230,82 +226,124 @@
 
     .section-title::before {
       content: '';
-      width: 5px;
-      height: 40px;
+      width: 4px;
+      height: 32px;
       background: linear-gradient(180deg, var(--primary), var(--secondary));
-      border-radius: 3px;
+      border-radius: 2px;
     }
 
-    .movies-grid {
+    .anime-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 2rem;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1.5rem;
       padding: 0 2rem;
-      margin-bottom: 4rem;
+      margin-bottom: 3rem;
     }
 
-    .movie-card {
+    .anime-card {
       background: rgba(255, 255, 255, 0.05);
-      border-radius: 15px;
+      border-radius: 12px;
       overflow: hidden;
       transition: all 0.4s ease;
       border: 1px solid rgba(255, 255, 255, 0.05);
       position: relative;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
     }
 
-    .movie-card:hover {
-      transform: translateY(-10px) scale(1.02);
+    .anime-card:hover {
+      transform: translateY(-8px) scale(1.02);
       border-color: var(--primary);
       box-shadow: var(--glow);
       background: rgba(255, 255, 255, 0.08);
     }
 
+    .card-img-container {
+      width: 100%;
+      height: 320px;
+      overflow: hidden;
+      position: relative;
+    }
+
     .card-img {
       width: 100%;
-      height: 380px;
+      height: 100%;
       object-fit: cover;
       transition: transform 0.5s ease;
       display: block;
-      background: rgba(0,0,0,0.2);
+      background: linear-gradient(45deg, #1a1a2e, #16213e);
     }
 
-    .movie-card:hover .card-img { transform: scale(1.1); }
+    .anime-card:hover .card-img { transform: scale(1.08); }
 
     .card-overlay {
       position: absolute;
       bottom: 0;
       left: 0;
       right: 0;
-      background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
-      padding: 2rem 1.5rem 1.5rem;
+      background: linear-gradient(transparent, rgba(0, 0, 0, 0.95));
+      padding: 1.5rem 1.2rem 1.2rem;
       transform: translateY(100%);
       transition: transform 0.4s ease;
     }
 
-    .movie-card:hover .card-overlay { transform: translateY(0); }
+    .anime-card:hover .card-overlay { transform: translateY(0); }
+
+    .card-content {
+      padding: 1.2rem;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
 
     .card-title {
-      font-size: 1.3rem;
+      font-size: 1.1rem;
       font-weight: 700;
       margin-bottom: 0.5rem;
       color: white;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      line-height: 1.3;
     }
 
     .card-meta {
       display: flex;
       justify-content: space-between;
       color: rgba(255, 255, 255, 0.7);
-      font-size: 0.9rem;
-      margin-bottom: 1rem;
-      gap: 8px;
+      font-size: 0.85rem;
+      margin-bottom: 0.8rem;
+      gap: 6px;
       flex-wrap: wrap;
     }
 
-    .card-actions { display: flex; gap: 0.8rem; }
+    .card-genres {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-bottom: 1rem;
+    }
+
+    .genre-tag {
+      background: rgba(0, 168, 255, 0.15);
+      color: var(--primary);
+      padding: 0.2rem 0.6rem;
+      border-radius: 10px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 0.8rem;
+      margin-top: auto;
+    }
 
     .watch-btn, .info-btn, .load-more-btn {
       flex: 1;
-      padding: 0.8rem;
+      padding: 0.7rem;
       border: none;
       border-radius: 8px;
       font-weight: 600;
@@ -317,6 +355,7 @@
       gap: 0.5rem;
       text-decoration: none;
       user-select: none;
+      font-size: 0.9rem;
     }
 
     .watch-btn {
@@ -332,52 +371,60 @@
 
     .watch-btn:hover, .info-btn:hover, .load-more-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
 
-    /* 视频播放器模态框 */
+    /* 播放器模态框 */
     .modal {
       display: none;
       position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.95);
+      background: rgba(0, 0, 0, 0.98);
       z-index: 2000;
       align-items: center;
       justify-content: center;
-      padding: 2rem;
+      padding: 0.5rem;
       backdrop-filter: blur(10px);
     }
 
     .modal-content {
-      width: 90%;
-      max-width: 1200px;
-      background: rgba(20, 20, 30, 0.95);
-      border-radius: 20px;
+      width: 98%;
+      max-width: 1400px;
+      background: rgba(20, 20, 40, 0.98);
+      border-radius: 16px;
       overflow: hidden;
-      border: 1px solid rgba(0, 212, 255, 0.2);
-      box-shadow: 0 0 50px rgba(0, 212, 255, 0.2);
+      border: 1px solid rgba(0, 168, 255, 0.2);
+      box-shadow: 0 0 50px rgba(0, 168, 255, 0.2);
     }
 
     .modal-header {
-      padding: 1.5rem 2rem;
+      padding: 1.2rem 1.5rem;
       background: rgba(0, 0, 0, 0.5);
-      border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+      border-bottom: 1px solid rgba(0, 168, 255, 0.2);
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
-    .modal-title { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
+    .modal-title { 
+      font-size: 1.3rem; 
+      font-weight: 700; 
+      color: var(--primary);
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
 
     .close-modal {
       background: none;
       border: none;
       color: var(--light);
-      font-size: 2rem;
+      font-size: 1.8rem;
       cursor: pointer;
-      width: 40px;
-      height: 40px;
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -388,55 +435,130 @@
     .close-modal:hover { background: rgba(255, 255, 255, 0.1); color: var(--accent); }
 
     .video-container {
-      padding: 2rem;
-      min-height: 600px;
+      position: relative;
+      padding: 0;
+      height: 70vh;
+      min-height: 450px;
+    }
+
+    .video-frame {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+      background: #000;
+    }
+
+    .video-loading {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 10;
+    }
+
+    .video-loading::after {
+      content: '';
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(0, 168, 255, 0.1);
+      border-top: 3px solid var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    .episode-section {
+      padding: 1.2rem 1.5rem;
+      background: rgba(0, 0, 0, 0.3);
+    }
+
+    .episode-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--primary);
+    }
+
+    .episode-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+      gap: 0.6rem;
+      max-height: 200px;
+      overflow-y: auto;
+      padding-right: 5px;
+    }
+
+    .episode-btn {
+      padding: 0.6rem 0.3rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      color: var(--light);
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 0.85rem;
+    }
+
+    .episode-btn:hover {
+      background: rgba(0, 168, 255, 0.2);
+      border-color: var(--primary);
+    }
+
+    .episode-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
     }
 
     /* 页脚 */
     .footer {
-      background: rgba(5, 5, 8, 0.95);
-      padding: 4rem 2rem 2rem;
-      border-top: 1px solid rgba(0, 212, 255, 0.1);
-      margin-top: 4rem;
+      background: rgba(8, 8, 17, 0.95);
+      padding: 3rem 2rem 1.5rem;
+      border-top: 1px solid rgba(0, 168, 255, 0.1);
+      margin-top: 3rem;
     }
 
     .footer-content {
       max-width: 1200px;
       margin: 0 auto;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 3rem;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 2rem;
     }
 
     .footer-section h3 {
       color: var(--primary);
-      margin-bottom: 1.5rem;
-      font-size: 1.2rem;
+      margin-bottom: 1.2rem;
+      font-size: 1.1rem;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 0.5px;
     }
 
     .footer-links { list-style: none; }
-    .footer-links li { margin-bottom: 0.8rem; }
+    .footer-links li { margin-bottom: 0.6rem; }
 
     .footer-links a {
-      color: rgba(224, 224, 224, 0.7);
+      color: rgba(224, 224, 255, 0.7);
       text-decoration: none;
       transition: all 0.3s ease;
       display: flex;
       align-items: center;
-      gap: 0.8rem;
+      gap: 0.6rem;
+      font-size: 0.9rem;
     }
 
     .footer-links a:hover { color: var(--primary); transform: translateX(5px); }
 
-    .social-links { display: flex; gap: 1rem; margin-top: 1.5rem; }
+    .social-links { display: flex; gap: 0.8rem; margin-top: 1.2rem; }
 
     .social-link {
-      width: 40px; height: 40px;
+      width: 36px; height: 36px;
       border-radius: 50%;
       background: rgba(255, 255, 255, 0.05);
       display: flex;
@@ -447,120 +569,251 @@
       transition: all 0.3s ease;
     }
 
-    .social-link:hover { background: var(--primary); transform: translateY(-5px); }
+    .social-link:hover { background: var(--primary); transform: translateY(-3px); }
 
     .copyright {
       text-align: center;
-      margin-top: 3rem;
-      padding-top: 2rem;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
       border-top: 1px solid rgba(255, 255, 255, 0.05);
-      color: rgba(224, 224, 224, 0.5);
-      font-size: 0.9rem;
+      color: rgba(224, 224, 255, 0.5);
+      font-size: 0.85rem;
     }
 
     /* 动画效果 */
     @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     .floating { animation: float 3s ease-in-out infinite; }
 
     /* 响应式设计 */
     @media (max-width: 768px) {
-      .navbar { flex-direction: column; gap: 1rem; padding: 1rem; }
-      .nav-center { flex-wrap: wrap; justify-content: center; gap: 1rem; }
-      .hero-title { font-size: 2.5rem; }
-      .movies-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; padding: 0 1rem; }
-      .modal-content { width: 95%; }
-      .video-container { padding: 1rem; min-height: 400px; }
+      .navbar { padding: 0.8rem 1rem; }
+      .logo { font-size: 1.5rem; }
+      .nav-center { gap: 1rem; }
+      .hero { margin-top: 90px; padding: 2rem 1rem; }
+      .hero-title { font-size: 2.2rem; }
+      .section-title { padding: 0 1rem; font-size: 1.5rem; }
+      .anime-grid { 
+        grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); 
+        gap: 1rem;
+        padding: 0 1rem;
+      }
+      .card-img-container { height: 240px; }
+      .modal-content { width: 99%; }
+      .video-container { height: 40vh; min-height: 280px; }
+      .episode-grid { grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); }
+      .footer { padding: 2rem 1rem 1rem; }
+    }
+
+    @media (max-width: 480px) {
+      .anime-grid { grid-template-columns: repeat(2, 1fr); }
+      .card-img-container { height: 200px; }
+      .hero-title { font-size: 1.8rem; }
+      .search-btn { padding: 0.6rem 1.2rem; font-size: 0.9rem; }
     }
 
     /* 加载动画 */
     .loader {
       display: none;
-      width: 50px; height: 50px;
-      border: 3px solid rgba(0, 212, 255, 0.1);
+      width: 40px; height: 40px;
+      border: 3px solid rgba(0, 168, 255, 0.1);
       border-top: 3px solid var(--primary);
       border-radius: 50%;
       animation: spin 1s linear infinite;
       margin: 2rem auto;
     }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
     /* 滚动条美化 */
-    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar { width: 8px; }
     ::-webkit-scrollbar-track { background: var(--darker); }
-    ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--primary), var(--secondary)); border-radius: 5px; }
+    ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--primary), var(--secondary)); border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, var(--secondary), var(--primary)); }
 
-    /* 新增小组件 */
-    .center-row { display: flex; justify-content: center; align-items: center; padding: 0 2rem 4rem; }
+    /* 新增组件 */
+    .center-row { display: flex; justify-content: center; align-items: center; padding: 0 2rem 3rem; }
 
     .load-more-btn {
-      max-width: 260px; width: 100%;
+      max-width: 240px; width: 100%;
       background: rgba(255, 255, 255, 0.08);
       color: var(--light);
-      border: 1px solid rgba(0, 212, 255, 0.25);
+      border: 1px solid rgba(0, 168, 255, 0.25);
       backdrop-filter: blur(10px);
     }
 
-    .empty-hint { padding: 0 2rem 4rem; text-align: center; color: rgba(224, 224, 224, 0.7); }
+    .empty-hint { 
+      padding: 3rem 2rem; 
+      text-align: center; 
+      color: rgba(224, 224, 255, 0.7);
+      grid-column: 1 / -1;
+    }
+
+    .empty-hint i { font-size: 3rem; margin-bottom: 1rem; color: var(--primary); }
 
     .toast {
       position: fixed; right: 18px; bottom: 18px;
       z-index: 5000;
-      background: rgba(20, 20, 30, 0.92);
-      border: 1px solid rgba(0, 212, 255, 0.25);
-      box-shadow: 0 0 25px rgba(0, 212, 255, 0.18);
-      border-radius: 14px;
-      padding: 12px 14px;
-      max-width: 360px;
+      background: rgba(20, 20, 40, 0.98);
+      border: 1px solid rgba(0, 168, 255, 0.25);
+      box-shadow: 0 0 25px rgba(0, 168, 255, 0.18);
+      border-radius: 12px;
+      padding: 10px 12px;
+      max-width: 340px;
       display: none;
       backdrop-filter: blur(12px);
       white-space: pre-line;
     }
 
-    .toast-title { font-weight: 700; color: var(--primary); margin-bottom: 6px; }
-    .toast-text { font-size: 0.95rem; color: rgba(224, 224, 224, 0.85); line-height: 1.5; }
-    .toast-actions { display: flex; gap: 10px; margin-top: 10px; }
+    .toast-title { font-weight: 700; color: var(--primary); margin-bottom: 4px; font-size: 0.95rem; }
+    .toast-text { font-size: 0.9rem; color: rgba(224, 224, 255, 0.85); line-height: 1.5; }
+    .toast-actions { display: flex; gap: 8px; margin-top: 8px; }
     .toast-actions button {
       border: 1px solid rgba(255,255,255,0.15);
       background: rgba(255,255,255,0.06);
       color: var(--light);
-      padding: 8px 10px;
-      border-radius: 10px;
+      padding: 6px 8px;
+      border-radius: 8px;
       cursor: pointer;
       transition: all .2s ease;
+      font-size: 0.85rem;
     }
     .toast-actions button:hover {
       transform: translateY(-2px);
-      border-color: rgba(0, 212, 255, 0.45);
-      box-shadow: 0 0 18px rgba(0, 212, 255, 0.12);
+      border-color: rgba(0, 168, 255, 0.45);
+      box-shadow: 0 0 15px rgba(0, 168, 255, 0.12);
     }
-    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
-  </style>
 
-  <!-- 外部资源全部“可失败”，不会影响站点主体功能 -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    .filter-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 0.8rem;
+      margin: 1.5rem 2rem 0;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      padding: 0.6rem 1.2rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(0, 168, 255, 0.1);
+      border-radius: 20px;
+      color: var(--light);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 0.9rem;
+    }
+
+    .filter-btn.active {
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .filter-btn:hover:not(.active) {
+      background: rgba(0, 168, 255, 0.1);
+      border-color: var(--primary);
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 10px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      margin-left: 0.5rem;
+      vertical-align: middle;
+    }
+
+    .status-badge.finished { background: #4caf50; color: white; }
+    .status-badge.updating { background: #2196f3; color: white; }
+    .status-badge.hot { background: #ff9800; color: white; }
+
+    /* 详情页样式 */
+    .detail-content {
+      padding: 1.5rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .detail-header {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .detail-poster {
+      width: 200px;
+      height: 280px;
+      object-fit: cover;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      flex-shrink: 0;
+    }
+
+    .detail-info {
+      flex: 1;
+      min-width: 250px;
+    }
+
+    .detail-title {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .detail-meta {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .detail-meta span {
+      background: rgba(255, 255, 255, 0.08);
+      padding: 0.3rem 0.8rem;
+      border-radius: 15px;
+      font-size: 0.85rem;
+    }
+
+    .detail-genres {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .detail-genre {
+      background: rgba(0, 168, 255, 0.15);
+      color: var(--primary);
+      padding: 0.3rem 0.8rem;
+      border-radius: 15px;
+      font-size: 0.85rem;
+    }
+
+    .detail-description {
+      line-height: 1.7;
+      color: rgba(224, 224, 255, 0.9);
+      margin-bottom: 1.5rem;
+    }
+  </style>
 </head>
 
 <body>
   <!-- 背景粒子 -->
-  <div id="particles-js"><canvas id="particles-canvas"></canvas></div>
+  <canvas id="particles-canvas"></canvas>
 
   <!-- 导航栏 -->
   <nav class="navbar">
-    <div class="logo">DAHAI CINEMA</div>
+    <div class="logo">DAHAI ANIME</div>
     <div class="nav-center">
       <a href="#" class="nav-item"><i class="fas fa-home"></i> 首页</a>
-      <a href="#movies" class="nav-item"><i class="fas fa-film"></i> 电影</a>
-      <a href="#tv" class="nav-item"><i class="fas fa-tv"></i> 剧集</a>
-      <a href="#anime" class="nav-item"><i class="fas fa-gamepad"></i> 动漫</a>
-      <a href="#collections" class="nav-item"><i class="fas fa-star"></i> 收藏</a>
+      <a href="#hot" class="nav-item"><i class="fas fa-fire"></i> 热门</a>
+      <a href="#latest" class="nav-item"><i class="fas fa-bolt"></i> 最新</a>
+      <a href="#favorites" class="nav-item"><i class="fas fa-heart"></i> 收藏</a>
     </div>
     <div class="user-menu">
-      <button class="nav-item" id="userBtn"><i class="fas fa-user"></i> 大海</button>
+      <button class="nav-item" id="userBtn"><i class="fas fa-user"></i> 用户</button>
     </div>
   </nav>
 
@@ -568,161 +821,53 @@
   <main>
     <!-- 英雄区域 -->
     <section class="hero">
-      <h1 class="hero-title floating">沉浸式私人观影体验</h1>
-      <p class="hero-subtitle">一个完全属于你的影视空间 · 精选全球优质内容 · 无广告干扰 · 个性推荐</p>
+      <h1 class="hero-title floating">海量动漫 在线观看</h1>
+      <p class="hero-subtitle">收录全网热门动漫 · 高清流畅播放 · 每日实时更新 · 无广告纯净体验</p>
 
       <!-- 搜索框 -->
       <div class="search-container">
         <input
           type="text"
           class="search-box"
-          placeholder="搜索电影、剧集、动漫（支持输入 BV 号或 B站链接）..."
+          placeholder="搜索动漫名称...（支持中文/日文/罗马音）"
           id="searchInput"
         />
         <button class="search-btn" id="searchBtn"><i class="fas fa-search"></i> 搜索</button>
       </div>
 
-      <!-- 快速链接 -->
+      <!-- 快速分类 -->
       <div class="quick-links">
-        <a href="#" class="quick-link" data-category="action"><i class="fas fa-explosion"></i> 动作大片</a>
-        <a href="#" class="quick-link" data-category="sci-fi"><i class="fas fa-robot"></i> 科幻未来</a>
-        <a href="#" class="quick-link" data-category="drama"><i class="fas fa-theater-masks"></i> 剧情佳作</a>
-        <a href="#" class="quick-link" data-category="comedy"><i class="fas fa-laugh"></i> 喜剧轻松</a>
-        <a href="#" class="quick-link" data-category="anime"><i class="fas fa-dragon"></i> 热血动漫</a>
+        <a href="#" class="quick-link" data-category="热血"><i class="fas fa-fist-raised"></i> 热血战斗</a>
+        <a href="#" class="quick-link" data-category="奇幻"><i class="fas fa-hat-wizard"></i> 奇幻冒险</a>
+        <a href="#" class="quick-link" data-category="恋爱"><i class="fas fa-heart"></i> 恋爱校园</a>
+        <a href="#" class="quick-link" data-category="科幻"><i class="fas fa-robot"></i> 科幻未来</a>
+        <a href="#" class="quick-link" data-category="搞笑"><i class="fas fa-laugh"></i> 日常搞笑</a>
       </div>
     </section>
 
-    <!-- 搜索结果（默认隐藏） -->
-    <h2 class="section-title" id="searchTitle" style="display:none;"><i class="fas fa-search"></i> 搜索结果</h2>
-    <div class="movies-grid" id="searchMovies" style="display:none;"></div>
-    <div class="center-row" id="searchMoreRow" style="display:none;">
-      <button class="load-more-btn" id="searchMoreBtn"><i class="fas fa-plus"></i> 加载更多</button>
+    <!-- 筛选标签 -->
+    <div class="filter-tabs" id="filterTabs">
+      <button class="filter-btn active" data-filter="all">全部动漫</button>
+      <button class="filter-btn" data-filter="hot">热门推荐</button>
+      <button class="filter-btn" data-filter="latest">最近更新</button>
+      <button class="filter-btn" data-filter="finished">已完结</button>
+      <button class="filter-btn" data-filter="updating">连载中</button>
     </div>
+
+    <!-- 搜索结果区域 -->
+    <h2 class="section-title" id="searchTitle" style="display:none;"><i class="fas fa-search"></i> 搜索结果</h2>
+    <div class="anime-grid" id="searchResults" style="display:none;"></div>
 
     <!-- 热门推荐 -->
-    <h2 class="section-title" id="movies"><i class="fas fa-fire"></i> 今日热门推荐</h2>
-
-    <!-- ✅ 关键修复：先静态渲染 8 个卡片（确保“无论 JS 是否执行，页面都永远有影片显示”） -->
-    <div class="movies-grid" id="hotMovies">
-      <!-- 说明：这些 BV 是示例；你可以替换成你自己的 BV 列表 -->
-      <!-- 卡片 1 -->
-      <div class="movie-card" data-id="BV1fX4y1V7Vc" data-bvid="BV1fX4y1V7Vc">
-        <img class="card-img" alt="BV1fX4y1V7Vc" src="data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27400%27%20height%3D%27600%27%20viewBox%3D%270%200%20400%20600%27%3E%3Cdefs%3E%3ClinearGradient%20id%3D%27g%27%20x1%3D%270%27%20y1%3D%270%27%20x2%3D%271%27%20y2%3D%271%27%3E%3Cstop%20offset%3D%270%27%20stop-color%3D%27%2300d4ff%27%20stop-opacity%3D%270.9%27/%3E%3Cstop%20offset%3D%271%27%20stop-color%3D%27%239d4edd%27%20stop-opacity%3D%270.9%27/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect%20width%3D%27400%27%20height%3D%27600%27%20fill%3D%27%2306070b%27/%3E%3Crect%20width%3D%27400%27%20height%3D%27600%27%20fill%3D%27url(%23g)%27%20opacity%3D%270.7%27/%3E%3Crect%20x%3D%2724%27%20y%3D%2724%27%20width%3D%27352%27%20height%3D%27552%27%20rx%3D%2718%27%20fill%3D%27rgba(0%2C0%2C0%2C0.35)%27%20stroke%3D%27rgba(255%2C255%2C255%2C0.12)%27/%3E%3Ctext%20x%3D%2740%27%20y%3D%27130%27%20fill%3D%27rgba(255%2C255%2C255%2C0.92)%27%20font-size%3D%2718%27%20font-family%3D%27Inter%2C%20system-ui%2C%20sans-serif%27%20letter-spacing%3D%272%27%3ED A H A I%20C I N E M A%3C/text%3E%3Ctext%20x%3D%2740%27%20y%3D%27240%27%20fill%3D%27rgba(255%2C255%2C255%2C0.95)%27%20font-size%3D%2730%27%20font-family%3D%27Inter%2C%20system-ui%2C%20sans-serif%27%20font-weight%3D%27800%27%3EBV1fX4y1V7Vc%3C/text%3E%3Ctext%20x%3D%2740%27%20y%3D%27530%27%20fill%3D%27rgba(255%2C255%2C255%2C0.7)%27%20font-size%3D%2714%27%20font-family%3D%27Inter%2C%20system-ui%2C%20sans-serif%27%3E%E7%82%B9%E5%87%BB%E8%A7%82%E7%9C%8B%20%7C%20BV%20%E7%A8%BF%E4%BB%B6%3C/text%3E%3C/svg%3E" />
-        <div class="card-overlay">
-          <h3 class="card-title">BV1fX4y1V7Vc</h3>
-          <div class="card-meta"><span>—</span><span>⭐ —</span><span>—</span></div>
-          <div class="card-actions">
-            <a class="watch-btn" href="https://www.bilibili.com/video/BV1fX4y1V7Vc" target="_blank" rel="noopener">
-              <i class="fas fa-play"></i> 立即观看
-            </a>
-            <a class="info-btn" href="#" data-id="BV1fX4y1V7Vc"><i class="fas fa-info-circle"></i> 详情</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- 卡片 2 -->
-      <div class="movie-card" data-id="BV1cT411R7tY" data-bvid="BV1cT411R7tY">
-        <img class="card-img" alt="BV1cT411R7tY" src="data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27400%27%20height%3D%27600%27%20viewBox%3D%270%200%20400%20600%27%3E%3Cdefs%3E%3ClinearGradient%20id%3D%27g%27%20x1%3D%270%27%20y1%3D%270%27%20x2%3D%271%27%20y2%3D%271%27%3E%3Cstop%20offset%3D%270%27%20stop-color%3D%27%239d4edd%27%20stop-opacity%3D%270.9%27/%3E%3Cstop%20offset%3D%271%27%20stop-color%3D%27%2300d4ff%27%20stop-opacity%3D%270.9%27/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect%20width%3D%27400%27%20height%3D%27600%27%20fill%3D%27%2306070b%27/%3E%3Crect%20width%3D%27400%27%20height%3D%27600%27%20fill%3D%27url(%23g)%27%20opacity%3D%270.7%27/%3E%3Crect%20x%3D%2724%27%20y%3D%2724%27%20width%3D%27352%27%20height%3D%27552%27%20rx%3D%2718%27%20fill%3D%27rgba(0%2C0%2C0%2C0.35)%27%20stroke%3D%27rgba(255%2C255%2C255%2C0.12)%27/%3E%3Ctext%20x%3D%2740%27%20y%3D%27130%27%20fill%3D%27rgba(255%2C255%2C255%2C0.92)%27%20font-size%3D%2718%27%20font-family%3D%27Inter%2C%20system-ui%2C%20sans-serif%27%20letter-spacing%3D%272%27%3ED A H A I%20C I N E M A%3C/text%3E%3Ctext%20x%3D%2740%27%20y%3D%27240%27%20fill%3D%27rgba(255%2C255%2C255%2C0.95)%27%20font-size%3D%2730%27%20font-family%3D%27Inter%2C%20system-ui%2C%20sans-serif%27%20font-weight%3D%27800%27%3EBV1cT411R7tY%3C/text%3E%3Ctext%20x%3D%2740%27%20y%3D%27530%27%20fill%3D%27rgba(255%2C255%2C255%2C0.7)%27%20font-size%3D%2714%27%20font-family%3D%27Inter%2C%20system-ui%2C%20sans-serif%27%3E%E7%82%B9%E5%87%BB%E8%A7%82%E7%9C%8B%20%7C%20BV%20%E7%A8%BF%E4%BB%B6%3C/text%3E%3C/svg%3E" />
-        <div class="card-overlay">
-          <h3 class="card-title">BV1cT411R7tY</h3>
-          <div class="card-meta"><span>—</span><span>⭐ —</span><span>—</span></div>
-          <div class="card-actions">
-            <a class="watch-btn" href="https://www.bilibili.com/video/BV1cT411R7tY" target="_blank" rel="noopener">
-              <i class="fas fa-play"></i> 立即观看
-            </a>
-            <a class="info-btn" href="#" data-id="BV1cT411R7tY"><i class="fas fa-info-circle"></i> 详情</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- 卡片 3 -->
-      <div class="movie-card" data-id="BV1Gu4y1U7YJ" data-bvid="BV1Gu4y1U7YJ">
-        <img class="card-img" alt="BV1Gu4y1U7YJ" src="data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27400%27%20height%3D%27600%27%20viewBox%3D%270%200%20400%20600%27%3E%3Cdefs%3E%3ClinearGradient%20id%3D%27g%27%20x1%3D%270%27%20y1%3D%270%27%20x2%3D%271%27%20y2%3D%271%27%3E%3Cstop%20offset%3D%270%27%20stop-color%3D%27%2300d4ff%27%20stop-opacity%3D%270.9%27/%3E%3Cstop%20offset%3D%271%27%20stop-color%3D%27%23ff6b6b%27%20stop-opacity%3D%270.9%27/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect%20width%3D%27400%27%20height%3D%27600%27%20fill%3D%27%2306070b%27/%3E%3Crect%20width%3D%27400%27%20height%3D%27600%27%20fill%3D%27url(%23g)%27%20opacity%3D%270.65%27/%3E%3Crect%20x%3D%2724%27%20y%3D%2724%27%20width%3D%27352%27%20height%3D%27552%27%20rx%3D%2718%27%20fill%3D%27rgba(0%2C0%2C0%2C0.35)%27%20stroke%3D%27rgba(255%2C255%2C255%2C0.12)%27/%3E%3Ctext%20x%3D%2740%27%20y%3D%27130%27%20fill%3D%27rgba(255%2C255%2C255%2C0.92)%27%20font-size%3D%2718%27%20font-family%3D%27Inter%2C%20system-ui%2C%20sans-serif%27%20letter-spacing%3D%272%27%3ED A H A I%20C I N E M A%3C/text%3E%3Ctext%20x%3D%2740%27%20y%3D%27240%27%20fill%3D%27rgba(255%2C255%2C255%2C0.95)%27%20font-size%3D%2730%27%20font-family%3D%27Inter%2C%20system-ui%2C%20sans-serif%27%20font-weight%3D%27800%27%3EBV1Gu4y1U7YJ%3C/text%3E%3Ctext%20x%3D%2740%27%20y%3D%27530%27%20fill%3D%27rgba(255%2C255%2C255%2C0.7)%27%20font-size%3D%2714%27%20font-family%3D%27Inter%2C%20system-ui%2C%20sans-serif%27%3E%E7%82%B9%E5%87%BB%E8%A7%82%E7%9C%8B%20%7C%20BV%20%E7%A8%BF%E4%BB%B6%3C/text%3E%3C/svg%3E" />
-        <div class="card-overlay">
-          <h3 class="card-title">BV1Gu4y1U7YJ</h3>
-          <div class="card-meta"><span>—</span><span>⭐ —</span><span>—</span></div>
-          <div class="card-actions">
-            <a class="watch-btn" href="https://www.bilibili.com/video/BV1Gu4y1U7YJ" target="_blank" rel="noopener">
-              <i class="fas fa-play"></i> 立即观看
-            </a>
-            <a class="info-btn" href="#" data-id="BV1Gu4y1U7YJ"><i class="fas fa-info-circle"></i> 详情</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- 卡片 4 -->
-      <div class="movie-card" data-id="BV1No4y1Z7K8" data-bvid="BV1No4y1Z7K8">
-        <img class="card-img" alt="BV1No4y1Z7K8" src="data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27400%27%20height%3D%27600%27%20viewBox%3D%270%200%20400%20600%27%3E%3Cdefs%3E%3ClinearGradient%20id%3D%27g%27%20x1%3D%270%27%20y1%3D%270%27%20x2%3D%271%27%20y2%3D%271%27%3E%3Cstop%20offset%3D%270%27%20stop-color%3D%27%23ff6b6b%27%20stop-opacity%3D%270.85%27/%3E%3Cstop%20offset%3D%271%27%20stop-color%3D%27%239d4edd%27%20stop-opacity%3D%270.85%27/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect%20width%3D%27400%27%20height%3D%27600%27%20fill%3D%27%2306070b%27/%3E%3Crect%20width%3D%27400%27%20height%3D%27600%27%20fill%3D%27url(%23g)%27%20opacity%3D%270.65%27/%3E%3Crect%20x%3D%2724%27%20y%3D%2724%27%20width%3D%27352%27%20height%3D%27552%27%20rx%3D%2718%27%20fill%3D%27rgba(0%2C0%2C0%2C0.35)%27%20stroke%3D%27rgba(255%2C255%2C255%2C0.12)%27/%3E%3Ctext%20x%3D%2740%27%20y%3D%27130%27%20fill%3D%27rgba(255%2C255%2C255%2C0.92)%27%20font-size%3D%2718%27%20font-family%3D%27Inter%2C%20system-ui%2C%20sans-serif%27%20letter-spacing%3D%272%27%3ED A H A I%20C I N E M A%3C/text%3E%3Ctext%20x%3D%2740%27%20y%3D%27240%27%20fill%3D%27rgba(255%2C255%2C255%2C0.95)%27%20font-size%3D%2730%27%20font-family%3D%27Inter%2C%20system-ui%2C%20sans-serif%27%20font-weight%3D%27800%27%3EBV1No4y1Z7K8%3C/text%3E%3Ctext%20x%3D%2740%27%20y%3D%27530%27%20fill%3D%27rgba(255%2C255%2C255%2C0.7)%27%20font-size%3D%2714%27%20font-family%3D%27Inter%2C%20system-ui%2C%20sans-serif%27%3E%E7%82%B9%E5%87%BB%E8%A7%82%E7%9C%8B%20%7C%20BV%20%E7%A8%BF%E4%BB%B6%3C/text%3E%3C/svg%3E" />
-        <div class="card-overlay">
-          <h3 class="card-title">BV1No4y1Z7K8</h3>
-          <div class="card-meta"><span>—</span><span>⭐ —</span><span>—</span></div>
-          <div class="card-actions">
-            <a class="watch-btn" href="https://www.bilibili.com/video/BV1No4y1Z7K8" target="_blank" rel="noopener">
-              <i class="fas fa-play"></i> 立即观看
-            </a>
-            <a class="info-btn" href="#" data-id="BV1No4y1Z7K8"><i class="fas fa-info-circle"></i> 详情</a>
-          </div>
-        </div>
-      </div>
+    <h2 class="section-title" id="hot"><i class="fas fa-fire"></i> 热门推荐</h2>
+    <div class="anime-grid" id="hotAnime">
+      <!-- 静态卡片将在这里由JS生成 -->
     </div>
 
-    <!-- 最新上映 -->
-    <h2 class="section-title" id="tv"><i class="fas fa-bolt"></i> 最新上映</h2>
-    <div class="movies-grid" id="newMovies">
-      <div class="movie-card" data-id="BV1Nj411D7V4" data-bvid="BV1Nj411D7V4">
-        <img class="card-img" alt="BV1Nj411D7V4" src="data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27400%27%20height%3D%27600%27%20viewBox%3D%270%200%20400%20600%27%3E%3Cdefs%3E%3ClinearGradient%20id%3D%27g%27%20x1%3D%270%27%20y1%3D%270%27%20x2%3D%271%27%20y2%3D%271%27%3E%3Cstop%20offset%3D%270%27%20stop-color%3D%27%2300d4ff%27%20stop-opacity%3D%270.85%27/%3E%3Cstop%20offset%3D%271%27%20stop-color%3D%27%239d4edd%27%20stop-opacity%3D%270.85%27/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect%20width%3D%27400%27%20height%3D%27600%27%20fill%3D%27%2306070b%27/%3E%3Crect%20width%3D%27400%27%20height%3D%27600%27%20fill%3D%27url(%23g)%27%20opacity%3D%270.65%27/%3E%3Crect%20x%3D%2724%27%20y%3D%2724%27%20width%3D%27352%27%20height%3D%27552%27%20rx%3D%2718%27%20fill%3D%27rgba(0%2C0%2C0%2C0.35)%27%20stroke%3D%27rgba(255%2C255%2C255%2C0.12)%27/%3E%3Ctext%20x%3D%2740%27%20y%3D%27130%27%20fill%3D%27rgba(255%2C255%2C255%2C0.92)%27%20font-size%3D%2718%27%20font-family%3D%27Inter%2C%20system-ui%2C%20sans-serif%27%20letter-spacing%3D%272%27%3ED A H A I%20C I N E M A%3C/text%3E%3Ctext%20x%3D%2740%27%20y%3D%27240%27%20fill%3D%27rgba(255%2C255%2C255%2C0.95)%27%20font-size%3D%2730%27%20font-family%3D%27Inter%2C%20system-ui%2C%20sans-serif%27%20font-weight%3D%27800%27%3EBV1Nj411D7V4%3C/text%3E%3Ctext%20x%3D%2740%27%20y%3D%27530%27%20fill%3D%27rgba(255%2C255%2C255%2C0.7)%27%20font-size%3D%2714%27%20font-family%3D%27Inter%2C%20system-ui%2C%20sans-serif%27%3E%E7%82%B9%E5%87%BB%E8%A7%82%E7%9C%8B%20%7C%20BV%20%E7%A8%BF%E4%BB%B6%3C/text%3E%3C/svg%3E" />
-        <div class="card-overlay">
-          <h3 class="card-title">BV1Nj411D7V4</h3>
-          <div class="card-meta"><span>—</span><span>⭐ —</span><span>—</span></div>
-          <div class="card-actions">
-            <a class="watch-btn" href="https://www.bilibili.com/video/BV1Nj411D7V4" target="_blank" rel="noopener"><i class="fas fa-play"></i> 立即观看</a>
-            <a class="info-btn" href="#" data-id="BV1Nj411D7V4"><i class="fas fa-info-circle"></i> 详情</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="movie-card" data-id="BV1No4y1Z7K9" data-bvid="BV1No4y1Z7K9">
-        <img class="card-img" alt="BV1No4y1Z7K9" src="data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27400%27%20height%3D%27600%27%20viewBox%3D%270%200%20400%20600%27%3E%3Cdefs%3E%3ClinearGradient%20id%3D%27g%27%20x1%3D%270%27%20y1%3D%270%27%20x2%3D%271%27%20y2%3D%271%27%3E%3Cstop%20offset%3D%270%27%20stop-color%3D%27%239d4edd%27%20stop-opacity%3D%270.85%27/%3E%3Cstop%20offset%3D%271%27%20stop-color%3D%27%23ff6b6b%27%20stop-opacity%3D%270.85%27/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect%20width%3D%27400%27%20height%3D%27600%27%20fill%3D%27%2306070b%27/%3E%3Crect%20width%3D%27400%27%20height%3D%27600%27%20fill%3D%27url(%23g)%27%20opacity%3D%270.65%27/%3E%3Crect%20x%3D%2724%27%20y%3D%2724%27%20width%3D%27352%27%20height%3D%27552%27%20rx%3D%2718%27%20fill%3D%27rgba(0%2C0%2C0%2C0.35)%27%20stroke%3D%27rgba(255%2C255%2C255%2C0.12)%27/%3E%3Ctext%20x%3D%2740%27%20y%3D%27130%27%20fill%3D%27rgba(255%2C255%2C255%2C0.92)%27%20font-size%3D%2718%27%20font-family%3D%27Inter%2C%20system-ui%2C%20sans-serif%27%20letter-spacing%3D%272%27%3ED A H A I%20C I N E M A%3C/text%3E%3Ctext%20x%3D%2740%27%20y%3D%27240%27%20fill%3D%27rgba(255%2C255%2C255%2C0.95)%27%20font-size%3D%2730%27%20font-family%3D%27Inter%2C%20system-ui%2C%20sans-serif%27%20font-weight%3D%27800%27%3EBV1No4y1Z7K9%3C/text%3E%3Ctext%20x%3D%2740%27%20y%3D%27530%27%20fill%3D%27rgba(255%2C255%2C255%2C0.7)%27%20font-size%3D%2714%27%20font-family%3D%27Inter%2C%20system-ui%2C%20sans-serif%27%3E%E7%82%B9%E5%87%BB%E8%A7%82%E7%9C%8B%20%7C%20BV%20%E7%A8%BF%E4%BB%B6%3C/text%3E%3C/svg%3E" />
-        <div class="card-overlay">
-          <h3 class="card-title">BV1No4y1Z7K9</h3>
-          <div class="card-meta"><span>—</span><span>⭐ —</span><span>—</span></div>
-          <div class="card-actions">
-            <a class="watch-btn" href="https://www.bilibili.com/video/BV1No4y1Z7K9" target="_blank" rel="noopener"><i class="fas fa-play"></i> 立即观看</a>
-            <a class="info-btn" href="#" data-id="BV1No4y1Z7K9"><i class="fas fa-info-circle"></i> 详情</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="movie-card" data-id="BV1Nj411D7V5" data-bvid="BV1Nj411D7V5">
-        <img class="card-img" alt="BV1Nj411D7V5" src="data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27400%27%20height%3D%27600%27%20viewBox%3D%270%200%20400%20600%27%3E%3Cdefs%3E%3ClinearGradient%20id%3D%27g%27%20x1%3D%270%27%20y1%3D%270%27%20x2%3D%271%27%20y2%3D%271%27%3E%3Cstop%20offset%3D%270%27%20stop-color%3D%27%2300d4ff%27%20stop-opacity%3D%270.85%27/%3E%3Cstop%20offset%3D%271%27%20stop-color%3D%27%23ff6b6b%27%20stop-opacity%3D%270.85%27/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect%20width%3D%27400%27%20height%3D%27600%27%20fill%3D%27%2306070b%27/%3E%3Crect%20width%3D%27400%27%20height%3D%27600%27%20fill%3D%27url(%23g)%27%20opacity%3D%270.65%27/%3E%3Crect%20x%3D%2724%27%20y%3D%2724%27%20width%3D%27352%27%20height%3D%27552%27%20rx%3D%2718%27%20fill%3D%27rgba(0%2C0%2C0%2C0.35)%27%20stroke%3D%27rgba(255%2C255%2C255%2C0.12)%27/%3E%3Ctext%20x%3D%2740%27%20y%3D%27130%27%20fill%3D%27rgba(255%2C255%2C255%2C0.92)%27%20font-size%3D%2718%27%20font-family%3D%27Inter%2C%20system-ui%2C%20sans-serif%27%20letter-spacing%3D%272%27%3ED A H A I%20C I N E M A%3C/text%3E%3Ctext%20x%3D%2740%27%20y%3D%27240%27%20fill%3D%27rgba(255%2C255%2C255%2C0.95)%27%20font-size%3D%2730%27%20font-family%3D%27Inter%2C%20system-ui%2C%20sans-serif%27%20font-weight%3D%27800%27%3EBV1Nj411D7V5%3C/text%3E%3Ctext%20x%3D%2740%27%20y%3D%27530%27%20fill%3D%27rgba(255%2C255%2C255%2C0.7)%27%20font-size%3D%2714%27%20font-family%3D%27Inter%2C%20system-ui%2C%20sans-serif%27%3E%E7%82%B9%E5%87%BB%E8%A7%82%E7%9C%8B%20%7C%20BV%20%E7%A8%BF%E4%BB%B6%3C/text%3E%3C/svg%3E" />
-        <div class="card-overlay">
-          <h3 class="card-title">BV1Nj411D7V5</h3>
-          <div class="card-meta"><span>—</span><span>⭐ —</span><span>—</span></div>
-          <div class="card-actions">
-            <a class="watch-btn" href="https://www.bilibili.com/video/BV1Nj411D7V5" target="_blank" rel="noopener"><i class="fas fa-play"></i> 立即观看</a>
-            <a class="info-btn" href="#" data-id="BV1Nj411D7V5"><i class="fas fa-info-circle"></i> 详情</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="movie-card" data-id="BV1Nj411D7V6" data-bvid="BV1Nj411D7V6">
-        <img class="card-img" alt="BV1Nj411D7V6" src="data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%27400%27%20height%3D%27600%27%20viewBox%3D%270%200%20400%20600%27%3E%3Cdefs%3E%3ClinearGradient%20id%3D%27g%27%20x1%3D%270%27%20y1%3D%270%27%20x2%3D%271%27%20y2%3D%271%27%3E%3Cstop%20offset%3D%270%27%20stop-color%3D%27%23ff6b6b%27%20stop-opacity%3D%270.85%27/%3E%3Cstop%20offset%3D%271%27%20stop-color%3D%27%239d4edd%27%20stop-opacity%3D%270.85%27/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect%20width%3D%27400%27%20height%3D%27600%27%20fill%3D%27%2306070b%27/%3E%3Crect%20width%3D%27400%27%20height%3D%27600%27%20fill%3D%27url(%23g)%27%20opacity%3D%270.65%27/%3E%3Crect%20x%3D%2724%27%20y%3D%2724%27%20width%3D%27352%27%20height%3D%27552%27%20rx%3D%2718%27%20fill%3D%27rgba(0%2C0%2C0%2C0.35)%27%20stroke%3D%27rgba(255%2C255%2C255%2C0.12)%27/%3E%3Ctext%20x%3D%2740%27%20y%3D%27130%27%20fill%3D%27rgba(255%2C255%2C255%2C0.92)%27%20font-size%3D%2718%27%20font-family%3D%27Inter%2C%20system-ui%2C%20sans-serif%27%20letter-spacing%3D%272%27%3ED A H A I%20C I N E M A%3C/text%3E%3Ctext%20x%3D%2740%27%20y%3D%27240%27%20fill%3D%27rgba(255%2C255%2C255%2C0.95)%27%20font-size%3D%2730%27%20font-family%3D%27Inter%2C%20system-ui%2C%20sans-serif%27%20font-weight%3D%27800%27%3EBV1Nj411D7V6%3C/text%3E%3Ctext%20x%3D%2740%27%20y%3D%27530%27%20fill%3D%27rgba(255%2C255%2C255%2C0.7)%27%20font-size%3D%2714%27%20font-family%3D%27Inter%2C%20system-ui%2C%20sans-serif%27%3E%E7%82%B9%E5%87%BB%E8%A7%82%E7%9C%8B%20%7C%20BV%20%E7%A8%BF%E4%BB%B6%3C/text%3E%3C/svg%3E" />
-        <div class="card-overlay">
-          <h3 class="card-title">BV1Nj411D7V6</h3>
-          <div class="card-meta"><span>—</span><span>⭐ —</span><span>—</span></div>
-          <div class="card-actions">
-            <a class="watch-btn" href="https://www.bilibili.com/video/BV1Nj411D7V6" target="_blank" rel="noopener"><i class="fas fa-play"></i> 立即观看</a>
-            <a class="info-btn" href="#" data-id="BV1Nj411D7V6"><i class="fas fa-info-circle"></i> 详情</a>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 更多推荐（在线拉取，失败则不影响主站） -->
-    <h2 class="section-title" id="discoverTitle" style="display:none;"><i class="fas fa-compass"></i> 更多推荐</h2>
-    <div class="movies-grid" id="discoverMovies" style="display:none;"></div>
-    <div class="center-row" id="discoverMoreRow" style="display:none;">
-      <button class="load-more-btn" id="discoverMoreBtn"><i class="fas fa-rotate"></i> 换一批</button>
+    <!-- 最新更新 -->
+    <h2 class="section-title" id="latest"><i class="fas fa-bolt"></i> 最新更新</h2>
+    <div class="anime-grid" id="latestAnime">
+      <!-- 静态卡片将在这里由JS生成 -->
     </div>
 
     <!-- 加载动画 -->
@@ -730,18 +875,25 @@
     <div class="empty-hint" id="emptyHint" style="display:none;"></div>
   </main>
 
-  <!-- 视频播放器模态框 -->
+  <!-- 播放器模态框 -->
   <div class="modal" id="videoModal">
     <div class="modal-content">
       <div class="modal-header">
-        <h3 class="modal-title" id="modalTitle">正在播放</h3>
+        <h3 class="modal-title" id="modalTitle">正在加载...</h3>
         <button class="close-modal" id="closeModal">&times;</button>
       </div>
-      <div class="video-container" id="videoContainer"></div>
+      <div class="video-container">
+        <div class="video-loading" id="videoLoading"></div>
+        <iframe class="video-frame" id="videoFrame" allowfullscreen scrolling="no"></iframe>
+      </div>
+      <div class="episode-section" id="episodeSection" style="display:none;">
+        <div class="episode-title">选集</div>
+        <div class="episode-grid" id="episodeGrid"></div>
+      </div>
     </div>
   </div>
 
-  <!-- Toast -->
+  <!-- Toast提示 -->
   <div class="toast" id="toast">
     <div class="toast-title" id="toastTitle">提示</div>
     <div class="toast-text" id="toastText"></div>
@@ -752,654 +904,1251 @@
   <footer class="footer">
     <div class="footer-content">
       <div class="footer-section">
-        <h3>DAHAI CINEMA</h3>
-        <p>一个完全个性化的私人观影空间，为您提供沉浸式的观影体验。</p>
+        <h3>DAHAI ANIME</h3>
+        <p style="color: rgba(224, 224, 255, 0.7); font-size: 0.9rem; line-height: 1.5;">
+          专注于提供纯净的动漫观看体验，收录全网热门动漫资源，每日更新。
+        </p>
         <div class="social-links">
           <a href="#" class="social-link" aria-label="github"><i class="fab fa-github"></i></a>
-          <a href="#" class="social-link" aria-label="weibo"><i class="fab fa-weibo"></i></a>
           <a href="#" class="social-link" aria-label="twitter"><i class="fab fa-twitter"></i></a>
           <a href="#" class="social-link" aria-label="discord"><i class="fab fa-discord"></i></a>
+          <a href="#" class="social-link" aria-label="youtube"><i class="fab fa-youtube"></i></a>
         </div>
       </div>
       <div class="footer-section">
-        <h3>快速链接</h3>
+        <h3>动漫分类</h3>
         <ul class="footer-links">
-          <li><a href="#"><i class="fas fa-chevron-right"></i> 电影库</a></li>
-          <li><a href="#"><i class="fas fa-chevron-right"></i> 剧集列表</a></li>
-          <li><a href="#"><i class="fas fa-chevron-right"></i> 动漫专区</a></li>
-          <li><a href="#"><i class="fas fa-chevron-right"></i> 我的收藏</a></li>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> 热血战斗</a></li>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> 奇幻冒险</a></li>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> 恋爱校园</a></li>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> 科幻未来</a></li>
         </ul>
       </div>
       <div class="footer-section">
-        <h3>技术支持</h3>
+        <h3>网站声明</h3>
         <ul class="footer-links">
-          <li><a href="#"><i class="fas fa-code"></i> GitHub Pages</a></li>
-          <li><a href="#"><i class="fas fa-database"></i> B站公开播放器</a></li>
-          <li><a href="#"><i class="fas fa-shield-alt"></i> 安全加密</a></li>
-          <li><a href="#"><i class="fas fa-bolt"></i> CDN加速</a></li>
+          <li><a href="#"><i class="fas fa-info-circle"></i> 关于我们</a></li>
+          <li><a href="#"><i class="fas fa-shield-alt"></i> 免责声明</a></li>
+          <li><a href="#"><i class="fas fa-question-circle"></i> 常见问题</a></li>
+          <li><a href="#"><i class="fas fa-envelope"></i> 联系我们</a></li>
         </ul>
       </div>
     </div>
     <div class="copyright">
-      &copy; 2023 DAHAI私人影院. 本网站仅供个人学习交流使用。
-      <br />视频资源来源于互联网公开内容，版权归原作者所有。
+      &copy; 2024 DAHAI动漫影院. 本网站仅供动漫爱好者交流学习使用。
+      <br />所有动漫内容均来源于公开网络，版权归原作者所有。
     </div>
   </footer>
 
-  <!-- ✅ 关键修复：所有 JS 都放在页面底部，并且任何错误都不会阻塞“影片显示” -->
+  <!-- JavaScript代码 -->
   <script>
     // =========================
-    // 0) 配置区
+    // 动漫数据存储
     // =========================
-    const CONFIG = {
-      // GitHub Pages 下，直接请求 api.bilibili.com 往往会被 CORS 拦截。
-      // 需要你部署一个代理（Cloudflare Worker），然后填入：
-      // apiProxy: "https://xxxx.workers.dev/?url="
-      apiProxy: "",
+    const AnimeDatabase = {
+      // 完整的动漫库（包含大量动漫数据）
+      allAnime: [
+        {
+          id: "naruto",
+          title: "火影忍者",
+          title_jp: "NARUTO -ナルト-",
+          title_en: "Naruto",
+          description: "故事从主人公漩涡鸣人的孤儿生活开始，他的父母为了保护村子而牺牲，将强大的尾兽——九尾封印于鸣人体内。鸣人在冷眼与孤寂中长大，但在唯一认同他的老师海野伊鲁卡以及第三代火影的鼓励下，鸣人下定决心要成为火影，让所有人都认同他的存在。",
+          cover: "https://cdn.myanimelist.net/images/anime/13/17405.jpg",
+          episodes: 720,
+          status: "已完结",
+          year: "2002",
+          rating: "8.3",
+          genres: ["热血", "战斗", "冒险", "忍者", "少年"],
+          episodesList: Array.from({length: 50}, (_, i) => ({id: i+1, title: `第${i+1}集`}))
+        },
+        {
+          id: "onepiece",
+          title: "海贼王",
+          title_jp: "ONE PIECE",
+          title_en: "One Piece",
+          description: "拥有财富、名声、权力，这世界上的一切的男人「海贼王」哥尔·D·罗杰，在临刑前说出了一句话：「想要我的宝藏吗？想要的话可以全部给你，去找吧！我把所有的财宝都放在那里！」后来世界上的人们将这个宝藏称作「大秘宝」，为了争夺大秘宝，无数海贼扬起旗帜，互相争斗，世界迎来了「大海贼时代」。",
+          cover: "https://cdn.myanimelist.net/images/anime/6/73245.jpg",
+          episodes: 1100,
+          status: "连载中",
+          year: "1999",
+          rating: "8.9",
+          genres: ["热血", "冒险", "友情", "梦想", "少年"],
+          episodesList: Array.from({length: 50}, (_, i) => ({id: i+1, title: `第${i+1}集`}))
+        },
+        {
+          id: "bleach",
+          title: "死神",
+          title_jp: "BLEACH",
+          title_en: "Bleach",
+          description: "故事的主角黑崎一护，是个看似暴力、单薄，实质上善良、勇敢、爱护家庭的少年，并且拥有能看见灵的体质。家里有一个开诊所的老爸和两个性格正常的妹妹夏梨和游子，一护每天七点必须按时回家，否则老爸便会使用「身体语言教训」的家规教训一护。",
+          cover: "https://cdn.myanimelist.net/images/anime/3/40451.jpg",
+          episodes: 366,
+          status: "已完结",
+          year: "2004",
+          rating: "8.0",
+          genres: ["热血", "战斗", " supernatural", "少年"],
+          episodesList: Array.from({length: 50}, (_, i) => ({id: i+1, title: `第${i+1}集`}))
+        },
+        {
+          id: "attackontitan",
+          title: "进击的巨人",
+          title_jp: "進撃の巨人",
+          title_en: "Attack on Titan",
+          description: "107年前，世界上突然出现了人类的天敌「巨人」。面临着生存危机而残存下来的人类逃到了一个地方，盖起了三重巨大的城墙。人们在这隔绝的环境里享受了一百多年的和平，直到艾伦·耶格尔十岁那年，60米高的「超大型巨人」突然出现，以压倒性的力量破坏城门，其后瞬间消失，凶残的巨人们成群的冲进墙内捕食人类。",
+          cover: "https://cdn.myanimelist.net/images/anime/10/47347.jpg",
+          episodes: 88,
+          status: "已完结",
+          year: "2013",
+          rating: "8.9",
+          genres: ["热血", "悬疑", "战斗", "黑暗", "科幻"],
+          episodesList: Array.from({length: 25}, (_, i) => ({id: i+1, title: `第${i+1}集`}))
+        },
+        {
+          id: "demonslayer",
+          title: "鬼灭之刃",
+          title_jp: "鬼滅の刃",
+          title_en: "Demon Slayer",
+          description: "时值日本大正时期。传说太阳下山后，有恶鬼出没吃人。亦有猎鬼人斩杀恶鬼、保护人们。卖炭少年炭治郎，他那平凡而幸福的日常生活，在家人遭到恶鬼袭击的那一天发生了剧变。母亲与四个弟妹惨遭杀害，而与他一起生还的妹妹祢豆子亦异变成凶暴的鬼。",
+          cover: "https://cdn.myanimelist.net/images/anime/1286/99889.jpg",
+          episodes: 55,
+          status: "连载中",
+          year: "2019",
+          rating: "8.7",
+          genres: ["热血", "战斗", "奇幻", "和风", "少年"],
+          episodesList: Array.from({length: 26}, (_, i) => ({id: i+1, title: `第${i+1}集`}))
+        },
+        {
+          id: "myheroacademia",
+          title: "我的英雄学院",
+          title_jp: "僕のヒーローアカデミア",
+          title_en: "My Hero Academia",
+          description: "大部分的人类，在这个时代里都拥有名为「个性」的力量，但有力量之人却不一定都属於正义的一方。只要邪恶出现的地方，必定会有英雄挺身而出拯救众人。一名天生没有力量的少年——绿谷出久从小就憧憬一位顶尖英雄，而他的梦想就是成为伟大的英雄。",
+          cover: "https://cdn.myanimelist.net/images/anime/10/78745.jpg",
+          episodes: 138,
+          status: "连载中",
+          year: "2016",
+          rating: "8.2",
+          genres: ["热血", "校园", "超能力", "战斗", "少年"],
+          episodesList: Array.from({length: 25}, (_, i) => ({id: i+1, title: `第${i+1}集`}))
+        },
+        {
+          id: "spyxfamily",
+          title: "间谍过家家",
+          title_jp: "SPY×FAMILY",
+          title_en: "Spy x Family",
+          description: "为了执行西国最强间谍「黄昏」的任务，他不得不组建一个家庭。然而，他所找到的「女儿」是个能读心的超能力者，「妻子」则是名杀手！互相隐瞒真实身份的临时家庭，挺身对抗考试与世界危机的痛快家庭喜剧！",
+          cover: "https://cdn.myanimelist.net/images/anime/1441/122795.jpg",
+          episodes: 25,
+          status: "连载中",
+          year: "2022",
+          rating: "8.8",
+          genres: ["喜剧", "日常", "家庭", "动作", "间谍"],
+          episodesList: Array.from({length: 25}, (_, i) => ({id: i+1, title: `第${i+1}集`}))
+        },
+        {
+          id: "jujutsukaisen",
+          title: "咒术回战",
+          title_jp: "呪術廻戦",
+          title_en: "Jujutsu Kaisen",
+          description: "少年虎杖悠仁是一位体育万能的高中生，某天他为了从「咒物」危机中解救学长姐，而吞下了诅咒的手指，让「宿傩」这种诅咒跟自己合而为一。之后他加入了专门培养咒术师的学校「咒术高等专门学校」，并遇到了伏黑惠与钉崎野蔷薇这两位同学。",
+          cover: "https://cdn.myanimelist.net/images/anime/1171/109222.jpg",
+          episodes: 47,
+          status: "连载中",
+          year: "2020",
+          rating: "8.6",
+          genres: ["热血", "战斗", " supernatural", "黑暗", "少年"],
+          episodesList: Array.from({length: 24}, (_, i) => ({id: i+1, title: `第${i+1}集`}))
+        },
+        {
+          id: "onepunchman",
+          title: "一拳超人",
+          title_jp: "ワンパンマン",
+          title_en: "One Punch Man",
+          description: "主人公埼玉原本是一名整日奔波于求职的普通人。3年前的一天偶然遇到了要对淘气少年下杀手的异变螃蟹人后，回忆起年少年时「想要成为英雄」的梦想，最终拼尽全力救下了淘气少年。重拾对于成为英雄的兴趣之后，通过拼命锻炼，埼玉终于脱胎换骨获得了最强的力量，但同时失去了头发成了光头。",
+          cover: "https://cdn.myanimelist.net/images/anime/12/76049.jpg",
+          episodes: 24,
+          status: "连载中",
+          year: "2015",
+          rating: "8.7",
+          genres: ["热血", "战斗", "喜剧", "科幻", " parody"],
+          episodesList: Array.from({length: 12}, (_, i) => ({id: i+1, title: `第${i+1}集`}))
+        },
+        {
+          id: "kimetsunoyaiba",
+          title: "鬼灭之刃 游郭篇",
+          title_jp: "鬼滅の刃 遊郭編",
+          title_en: "Demon Slayer: Entertainment District Arc",
+          description: "炭治郎等人结束了无限列车的任务，与音柱·宇髄天元一同前往游郭展开新的任务。在吉原游郭中，他们遭遇了上弦之陆·堕姬和妓夫太郎，展开了一场激烈的战斗。",
+          cover: "https://cdn.myanimelist.net/images/anime/1908/120036.jpg",
+          episodes: 11,
+          status: "已完结",
+          year: "2021",
+          rating: "8.9",
+          genres: ["热血", "战斗", "奇幻", "和风", "少年"],
+          episodesList: Array.from({length: 11}, (_, i) => ({id: i+1, title: `第${i+1}集`}))
+        },
+        {
+          id: "deathnote",
+          title: "死亡笔记",
+          title_jp: "DEATH NOTE",
+          title_en: "Death Note",
+          description: "天才高中生夜神月某天捡到死神遗落在人间的「死亡笔记」，只要名字被写在上面的人就会死亡。月开始利用笔记制裁罪犯，并自称「基拉」希望创造一个没有犯罪的世界。但他的行为引起了世界级侦探L的注意，两人展开了一场智力的较量。",
+          cover: "https://cdn.myanimelist.net/images/anime/9/9453.jpg",
+          episodes: 37,
+          status: "已完结",
+          year: "2006",
+          rating: "8.6",
+          genres: ["悬疑", "心理", " supernatural", "智斗", "黑暗"],
+          episodesList: Array.from({length: 37}, (_, i) => ({id: i+1, title: `第${i+1}集`}))
+        },
+        {
+          id: "fullmetalalchemist",
+          title: "钢之炼金术师",
+          title_jp: "鋼の錬金術師",
+          title_en: "Fullmetal Alchemist: Brotherhood",
+          description: "因思念已故母亲，触犯炼金术中被视为最大禁忌「人体炼成」，而失去一切的兄弟──装上机械铠、有「钢之炼金术师」称号的哥哥爱德华·爱力克，以及灵魂被固定于铠甲的弟弟阿尔冯斯·爱力克──两人为取回失去的东西，踏上了寻找贤者之石的旅程。",
+          cover: "https://cdn.myanimelist.net/images/anime/1208/94745.jpg",
+          episodes: 64,
+          status: "已完结",
+          year: "2009",
+          rating: "9.1",
+          genres: ["热血", "冒险", "奇幻", "军事", "少年"],
+          episodesList: Array.from({length: 64}, (_, i) => ({id: i+1, title: `第${i+1}集`}))
+        },
+        {
+          id: "swordartonline",
+          title: "刀剑神域",
+          title_jp: "ソードアート・オンライン",
+          title_en: "Sword Art Online",
+          description: "2022年，大厂牌电子机械制造商「ARGUS」开发出「NERvGear」——能连结虚拟世界的机器。完全且普及的虚拟实境终于能够实现。主角桐谷和人是使用NERvGear游玩VRMMORPG「Sword Art Online」的玩家。",
+          cover: "https://cdn.myanimelist.net/images/anime/11/39717.jpg",
+          episodes: 96,
+          status: "连载中",
+          year: "2012",
+          rating: "7.5",
+          genres: ["冒险", "奇幻", "浪漫", "游戏", "科幻"],
+          episodesList: Array.from({length: 25}, (_, i) => ({id: i+1, title: `第${i+1}集`}))
+        },
+        {
+          id: "tokyoghoul",
+          title: "东京食尸鬼",
+          title_jp: "東京喰種",
+          title_en: "Tokyo Ghoul",
+          description: "在东京街头，一切成谜的吃人怪人「喰种」正悄悄在人类世界扩张势力。平凡大学生金木研因遭到喰种猎食而性命垂危，医生为他进行了器官移植手术，然而器官提供者其实是喰种。在病床上醒来的金木很快就感觉到身体不对劲，原本记忆中美味的食物全都走味到难以下咽。",
+          cover: "https://cdn.myanimelist.net/images/anime/5/64449.jpg",
+          episodes: 48,
+          status: "已完结",
+          year: "2014",
+          rating: "7.8",
+          genres: ["动作", "黑暗", " supernatural", " drama", " psychological"],
+          episodesList: Array.from({length: 12}, (_, i) => ({id: i+1, title: `第${i+1}集`}))
+        },
+        {
+          id: "hunterxhunter",
+          title: "全职猎人",
+          title_jp: "HUNTER×HUNTER",
+          title_en: "Hunter x Hunter",
+          description: "主人公小杰·富力士从小在鲸鱼岛长大，与米特阿姨和阿婆相依为伴。性格开朗的他，有着能与动物沟通的灵性。因为无父无母，小杰将米特阿姨当作自己的生母爱着。直到9岁那一年，小杰在森林里被一个青年男子搭救。",
+          cover: "https://cdn.myanimelist.net/images/anime/11/33657.jpg",
+          episodes: 148,
+          status: "连载中",
+          year: "2011",
+          rating: "9.0",
+          genres: ["冒险", "奇幻", "战斗", "少年"],
+          episodesList: Array.from({length: 50}, (_, i) => ({id: i+1, title: `第${i+1}集`}))
+        },
+        {
+          id: "codegeass",
+          title: "反叛的鲁路修",
+          title_jp: "コードギアス 反逆のルルーシュ",
+          title_en: "Code Geass: Lelouch of the Rebellion",
+          description: "皇历2010年，超级大国「神圣不列颠尼亚帝国」为了夺取日本的地下资源而侵略日本，在日本沦陷后，神圣不列颠尼亚帝国将「日本」改称为「11区」。七年后的2017年，在生死边缘获得「Geass」的力量，立志要粉碎神圣不列颠尼亚帝国的黑色皇子鲁路修，以及获得第七代人型机甲兰斯洛特，立志从帝国内部进行改革的白色骑士枢木朱雀，影响了整个世界。",
+          cover: "https://cdn.myanimelist.net/images/anime/5/50331.jpg",
+          episodes: 50,
+          status: "已完结",
+          year: "2006",
+          rating: "8.7",
+          genres: ["机甲", "科幻", "军事", " drama", " psychological"],
+          episodesList: Array.from({length: 25}, (_, i) => ({id: i+1, title: `第${i+1}集`}))
+        },
+        {
+          id: "yourname",
+          title: "你的名字",
+          title_jp: "君の名は。",
+          title_en: "Your Name.",
+          description: "故事发生的地点是在每千年回归一次的彗星造访过一个月之前，日本某个深山的乡下小镇。女高中生三叶每天都过着忧郁的生活，而她烦恼的不光有担任镇长的父亲所举行的选举运动，还有家传神社的古老习俗。在这个小小的城镇，周围都只是些爱瞎操心的老人。为此三叶对于大都市充满了憧憬。",
+          cover: "https://cdn.myanimelist.net/images/anime/5/87048.jpg",
+          episodes: 1,
+          status: "已完结",
+          year: "2016",
+          rating: "9.0",
+          genres: ["浪漫", "奇幻", " drama", " supernatural"],
+          episodesList: [{id: 1, title: "正片"}]
+        },
+        {
+          id: "spiritedaway",
+          title: "千与千寻",
+          title_jp: "千と千尋の神隠し",
+          title_en: "Spirited Away",
+          description: "10岁的少女千寻与父母一起从都市搬家到了乡下。没想到在搬家的途中，一家人发生了意外。他们进入了汤屋老板魔女控制的奇特世界——在那里不劳动的人将会被变成动物。千寻的爸爸妈妈因贪吃变成了猪，千寻为了救爸爸妈妈经历了很多磨难。",
+          cover: "https://cdn.myanimelist.net/images/anime/6/79597.jpg",
+          episodes: 1,
+          status: "已完结",
+          year: "2001",
+          rating: "8.8",
+          genres: ["冒险", "奇幻", "家庭", " supernatural"],
+          episodesList: [{id: 1, title: "正片"}]
+        },
+        {
+          id: "dragonball",
+          title: "龙珠",
+          title_jp: "ドラゴンボール",
+          title_en: "Dragon Ball",
+          description: "很久很久以前，曾流传着这样一个传说：世界各地散落着七颗龙珠，只要集齐这些珠子，就可召唤出神龙，而神龙可以帮助你实现任何一个愿望。住在深山中的小悟空本领高强，偶然的机会他随时尚少女布尔玛走出大山，四处寻找传说中的龙珠。期间碰上好色的鬼仙人与乌龙、一碰女人就面红耳赤的乐平、自大的小和尚克林，经历了各种各样的艰险和奇遇。",
+          cover: "https://cdn.myanimelist.net/images/anime/1887/92364.jpg",
+          episodes: 153,
+          status: "已完结",
+          year: "1986",
+          rating: "8.2",
+          genres: ["冒险", "喜剧", "奇幻", " martial arts", "少年"],
+          episodesList: Array.from({length: 50}, (_, i) => ({id: i+1, title: `第${i+1}集`}))
+        },
+        {
+          id: "dragonballz",
+          title: "龙珠Z",
+          title_jp: "ドラゴンボールZ",
+          title_en: "Dragon Ball Z",
+          description: "结束了与短笛大魔王的对决，地球迎来了长达六年的和平时期。已成长为英俊少年的孙悟空和朋友们无忧无虑生活在包子山。然而危机并没有远去，新的敌人向地球逼近。那美克星的巨变，引来了宇宙中最可怕的恶魔——弗利萨。为了拯救故乡，悟空和他的朋友们踏上了新的征程。",
+          cover: "https://cdn.myanimelist.net/images/anime/1607/117288.jpg",
+          episodes: 291,
+          status: "已完结",
+          year: "1989",
+          rating: "8.3",
+          genres: ["动作", "冒险", "喜剧", "奇幻", "科幻"],
+          episodesList: Array.from({length: 50}, (_, i) => ({id: i+1, title: `第${i+1}集`}))
+        },
+        {
+          id: "onepiecefilmred",
+          title: "海贼王：红",
+          title_jp: "ONE PIECE FILM RED",
+          title_en: "One Piece Film: Red",
+          description: "故事发生在一个小岛上，世界上最受爱戴的歌姬乌塔，将首次公开在众人面前表演。乌塔的歌声被誉为来自别的次元。为了欣赏她的歌声，路飞率领的草帽一伙，以及各路海盗、海军、世界各地的歌迷都汇聚在音乐会会场。",
+          cover: "https://cdn.myanimelist.net/images/anime/1116/126973.jpg",
+          episodes: 1,
+          status: "已完结",
+          year: "2022",
+          rating: "7.8",
+          genres: ["冒险", "喜剧", "戏剧", "奇幻", "音乐"],
+          episodesList: [{id: 1, title: "正片"}]
+        },
+        {
+          id: "chainsawman",
+          title: "电锯人",
+          title_jp: "チェンソーマン",
+          title_en: "Chainsaw Man",
+          description: "故事发生在恶魔横行的世界，少年电次因父母欠债离世，为了还债不得不为黑帮工作，与链锯恶魔波奇塔共同生活和与恶魔战斗。而后黑帮被丧尸恶魔操控，电次被其引导诱杀。电次临死前，波奇塔自愿成为电次的心脏，而后复活并获得了恶魔之力，因此被公安人员盯上，从而成为公安的恶魔猎人。",
+          cover: "https://cdn.myanimelist.net/images/anime/1806/126216.jpg",
+          episodes: 12,
+          status: "连载中",
+          year: "2022",
+          rating: "8.6",
+          genres: ["动作", "黑暗", "奇幻", "恐怖", " supernatural"],
+          episodesList: Array.from({length: 12}, (_, i) => ({id: i+1, title: `第${i+1}集`}))
+        },
+        {
+          id: "bocchitherock",
+          title: "孤独摇滚！",
+          title_jp: "ぼっち・ざ・ろっく！",
+          title_en: "Bocchi the Rock!",
+          description: "绰号「小孤独」的后藤独，是一名喜爱吉他的孤独少女。经常在家里独自弹奏吉他，但由于一些事情，加入了伊地知虹夏领衔的「团结乐队」。不敢在他人面前演奏的后藤，能否成为一个出色的乐队成员呢？",
+          cover: "https://cdn.myanimelist.net/images/anime/1448/127956.jpg",
+          episodes: 12,
+          status: "已完结",
+          year: "2022",
+          rating: "8.8",
+          genres: ["喜剧", "音乐", "日常", "校园"],
+          episodesList: Array.from({length: 12}, (_, i) => ({id: i+1, title: `第${i+1}集`}))
+        },
+        {
+          id: "cyberpunkedgerunners",
+          title: "赛博朋克：边缘行者",
+          title_jp: "サイバーパンク エッジランナーズ",
+          title_en: "Cyberpunk: Edgerunners",
+          description: "这是一个讲述街头少年大卫·马丁内斯在一个科技泛滥、身体改造盛行的未来城市「夜之城」中挣扎求生的故事。为了生存，他成为了一名「边缘行者」——一个受雇于公司执行高风险任务的非法佣兵。",
+          cover: "https://cdn.myanimelist.net/images/anime/1810/126434.jpg",
+          episodes: 10,
+          status: "已完结",
+          year: "2022",
+          rating: "8.6",
+          genres: ["动作", "科幻", " drama", " psychological"],
+          episodesList: Array.from({length: 10}, (_, i) => ({id: i+1, title: `第${i+1}集`}))
+        },
+        {
+          id: "lycorisrecoil",
+          title: "莉可丽丝",
+          title_jp: "リコリス・リコイル",
+          title_en: "Lycoris Recoil",
+          description: "在东京的和平表象下，一个名为「DA」的秘密组织训练少女特工「莉可丽丝」来维持治安。其中一名莉可丽丝锦木千束与另一名特工井之上泷奈被分配到一起，在咖啡馆「LycoReco」工作，表面上提供咖啡和甜点，实际上执行各种任务。",
+          cover: "https://cdn.myanimelist.net/images/anime/1126/124554.jpg",
+          episodes: 13,
+          status: "已完结",
+          year: "2022",
+          rating: "8.4",
+          genres: ["动作", "喜剧", "日常"],
+          episodesList: Array.from({length: 13}, (_, i) => ({id: i+1, title: `第${i+1}集`}))
+        },
+        {
+          id: "mobpsycho100",
+          title: "灵能百分百",
+          title_jp: "モブサイコ100",
+          title_en: "Mob Psycho 100",
+          description: "平凡的中学二年级少年影山茂夫，因其微弱的存在感而遭人戏称为「龙套」，但不起眼的他其实是强大的天生超能力者。历经每一次的成长，龙套开始认为自己的超能力是危险的存在，为了不让超能力失控，龙套无意识的压抑著情感。",
+          cover: "https://cdn.myanimelist.net/images/anime/8/80356.jpg",
+          episodes: 37,
+          status: "已完结",
+          year: "2016",
+          rating: "8.5",
+          genres: ["动作", "喜剧", "超能力", " supernatural"],
+          episodesList: Array.from({length: 12}, (_, i) => ({id: i+1, title: `第${i+1}集`}))
+        },
+        {
+          id: "vinlandsaga",
+          title: "海盗战记",
+          title_jp: "ヴィンランド・サガ",
+          title_en: "Vinland Saga",
+          description: "故事背景设定在11世纪的欧洲，主角托尔芬出身冰岛，父亲托尔兹曾是强大的海盗战士，后金盆洗手，在冰岛过着和平的生活。然而，父亲被海盗首领阿谢拉德杀害，年幼的托尔芬立誓要为父报仇，跟随阿谢拉德的团队四处征战。",
+          cover: "https://cdn.myanimelist.net/images/anime/1500/103005.jpg",
+          episodes: 48,
+          status: "连载中",
+          year: "2019",
+          rating: "8.8",
+          genres: ["动作", "冒险", "历史", " drama"],
+          episodesList: Array.from({length: 24}, (_, i) => ({id: i+1, title: `第${i+1}集`}))
+        },
+        {
+          id: "rezero",
+          title: "Re:从零开始的异世界生活",
+          title_jp: "Re:ゼロから始める異世界生活",
+          title_en: "Re:ZERO -Starting Life in Another World-",
+          description: "走出便利店要回家的高中生菜月昴突然被召唤到异世界。在异世界，他遇到了银发美少女爱蜜莉雅和猫精灵帕克。为了报答帮助他的恩情，昴决定帮助爱蜜莉雅找回失窃的徽章。然而，他们不久后遭袭击而殒命——本该是这样，但回过神来，昴却发现自己置身于第一次被召唤到这个异世界时的所在位置。",
+          cover: "https://cdn.myanimelist.net/images/anime/11/79410.jpg",
+          episodes: 50,
+          status: "连载中",
+          year: "2016",
+          rating: "8.3",
+          genres: ["黑暗", "奇幻", " psychological", " suspense"],
+          episodesList: Array.from({length: 25}, (_, i) => ({id: i+1, title: `第${i+1}集`}))
+        },
+        {
+          id: "konosuba",
+          title: "为美好的世界献上祝福！",
+          title_jp: "この素晴らしい世界に祝福を！",
+          title_en: "KONOSUBA -God's blessing on this wonderful world!",
+          description: "热爱游戏的家里蹲少年佐藤和真的人生，因交通事故而轻易闭幕……本该是这样，但当他醒来之时，眼前有一位自称女神的美少女。转生到异世界的和真就此为了满足食衣住而努力工作！原本只想安稳度日的和真，却因为带去的女神接二连三引发问题，甚至被魔王军盯上了！？",
+          cover: "https://cdn.myanimelist.net/images/anime/8/77831.jpg",
+          episodes: 20,
+          status: "连载中",
+          year: "2016",
+          rating: "8.1",
+          genres: ["冒险", "喜剧", "奇幻", " parody"],
+          episodesList: Array.from({length: 10}, (_, i) => ({id: i+1, title: `第${i+1}集`}))
+        },
+        {
+          id: "overlord",
+          title: "OVERLORD",
+          title_jp: "オーバーロード",
+          title_en: "Overlord",
+          description: "一款掀起大热潮的VRMMORPG「YGGDRASIL」原本理应停止一切服务，但即使过了结束时间，玩家也不会退出游戏，NPC也有了各自的思想。现实世界中喜爱电玩的主人公铃木悟在等待系统强制登出时，与「安兹·乌尔·恭」公会的成员意外穿越到了异世界。",
+          cover: "https://cdn.myanimelist.net/images/anime/7/88019.jpg",
+          episodes: 52,
+          status: "连载中",
+          year: "2015",
+          rating: "7.8",
+          genres: ["动作", "冒险", "奇幻", "游戏", " isekai"],
+          episodesList: Array.from({length: 13}, (_, i) => ({id: i+1, title: `第${i+1}集`}))
+        }
+      ],
 
-      // 页面加载时是否尝试用 B站 view API 同步真实标题/封面（失败不影响页面）
-      syncMetaOnLoad: true,
+      // 用户数据
+      favorites: [],
+      history: [],
+      settings: {
+        defaultSource: 1,
+        autoPlay: true,
+        quality: "720p"
+      },
 
-      // “更多推荐”每次拉取数量
-      discoverPageSize: 24,
+      // 播放源配置（使用公共播放源）
+      playSources: [
+        {
+          id: 1,
+          name: "主播放源",
+          baseUrl: "https://anime.thehylia.com/soundtracks/album/",
+          format: (animeId, episode) => {
+            // 模拟播放地址，实际应使用真实播放源
+            const encodedId = encodeURIComponent(animeId);
+            return `https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1`;
+          }
+        },
+        {
+          id: 2,
+          name: "备用源1",
+          baseUrl: "https://animethemes.moe/video/",
+          format: (animeId, episode) => {
+            return `https://player.vimeo.com/video/76979871?autoplay=1`;
+          }
+        },
+        {
+          id: 3,
+          name: "备用源2",
+          baseUrl: "https://streamani.net/streaming.php",
+          format: (animeId, episode) => {
+            // 使用iframe嵌入示例播放器
+            return `https://www.dailymotion.com/embed/video/x8om5di?autoplay=1`;
+          }
+        }
+      ],
 
-      // 搜索每页数量（在线搜索）
-      searchPageSize: 24,
+      // 获取所有动漫
+      getAllAnime() {
+        return this.allAnime;
+      },
 
-      // 缓存分钟数
-      metaCacheMinutes: 60 * 24
+      // 获取热门动漫（前12个）
+      getHotAnime() {
+        return [...this.allAnime]
+          .sort((a, b) => parseFloat(b.rating) - parseFloat(a.rating))
+          .slice(0, 12);
+      },
+
+      // 获取最新动漫（按年份排序）
+      getLatestAnime() {
+        return [...this.allAnime]
+          .sort((a, b) => parseInt(b.year) - parseInt(a.year))
+          .slice(0, 12);
+      },
+
+      // 搜索动漫
+      searchAnime(keyword) {
+        if (!keyword) return [];
+        keyword = keyword.toLowerCase().trim();
+        
+        return this.allAnime.filter(anime => 
+          anime.title.toLowerCase().includes(keyword) ||
+          anime.title_jp.toLowerCase().includes(keyword) ||
+          anime.title_en.toLowerCase().includes(keyword) ||
+          anime.genres.some(genre => genre.toLowerCase().includes(keyword)) ||
+          anime.description.toLowerCase().includes(keyword)
+        );
+      },
+
+      // 按分类筛选
+      filterByGenre(genre) {
+        if (genre === 'all') return this.allAnime;
+        return this.allAnime.filter(anime => 
+          anime.genres.some(g => g === genre)
+        );
+      },
+
+      // 按状态筛选
+      filterByStatus(status) {
+        if (status === 'all') return this.allAnime;
+        if (status === 'hot') return this.getHotAnime();
+        if (status === 'latest') return this.getLatestAnime();
+        if (status === 'finished') return this.allAnime.filter(anime => anime.status === "已完结");
+        if (status === 'updating') return this.allAnime.filter(anime => anime.status === "连载中");
+        return this.allAnime;
+      },
+
+      // 获取动漫详情
+      getAnimeById(id) {
+        return this.allAnime.find(anime => anime.id === id);
+      },
+
+      // 获取播放地址
+      getPlayUrl(animeId, episode = 1, sourceId = null) {
+        const source = sourceId ? 
+          this.playSources.find(s => s.id === sourceId) : 
+          this.playSources.find(s => s.id === this.settings.defaultSource);
+        
+        if (!source) return this.playSources[0].format(animeId, episode);
+        
+        return source.format(animeId, episode);
+      },
+
+      // 添加收藏
+      addFavorite(animeId) {
+        if (!this.favorites.includes(animeId)) {
+          this.favorites.push(animeId);
+          this.saveToLocalStorage();
+          return true;
+        }
+        return false;
+      },
+
+      // 移除收藏
+      removeFavorite(animeId) {
+        const index = this.favorites.indexOf(animeId);
+        if (index > -1) {
+          this.favorites.splice(index, 1);
+          this.saveToLocalStorage();
+          return true;
+        }
+        return false;
+      },
+
+      // 切换收藏状态
+      toggleFavorite(animeId) {
+        if (this.favorites.includes(animeId)) {
+          this.removeFavorite(animeId);
+          return false; // 已取消收藏
+        } else {
+          this.addFavorite(animeId);
+          return true; // 已添加收藏
+        }
+      },
+
+      // 添加播放历史
+      addHistory(animeId, episode, title) {
+        const existingIndex = this.history.findIndex(item => item.animeId === animeId && item.episode === episode);
+        
+        if (existingIndex > -1) {
+          // 如果已存在，更新时间和移动到最前面
+          this.history[existingIndex].timestamp = Date.now();
+          const [item] = this.history.splice(existingIndex, 1);
+          this.history.unshift(item);
+        } else {
+          // 添加新的历史记录
+          this.history.unshift({
+            animeId,
+            episode,
+            title,
+            timestamp: Date.now()
+          });
+          
+          // 限制历史记录数量
+          if (this.history.length > 100) {
+            this.history = this.history.slice(0, 100);
+          }
+        }
+        
+        this.saveToLocalStorage();
+      },
+
+      // 保存到本地存储
+      saveToLocalStorage() {
+        try {
+          localStorage.setItem('animeFavorites', JSON.stringify(this.favorites));
+          localStorage.setItem('animeHistory', JSON.stringify(this.history));
+          localStorage.setItem('animeSettings', JSON.stringify(this.settings));
+        } catch (e) {
+          console.error('保存到本地存储失败:', e);
+        }
+      },
+
+      // 从本地存储加载
+      loadFromLocalStorage() {
+        try {
+          const fav = localStorage.getItem('animeFavorites');
+          const his = localStorage.getItem('animeHistory');
+          const set = localStorage.getItem('animeSettings');
+          
+          if (fav) this.favorites = JSON.parse(fav);
+          if (his) this.history = JSON.parse(his);
+          if (set) this.settings = JSON.parse(set);
+        } catch (e) {
+          console.error('从本地存储加载失败:', e);
+        }
+      }
     };
 
     // =========================
-    // 1) Store（统一数据源，避免“标题/封面/播放不一致”）
+    // 页面初始化
     // =========================
-    const Store = {
-      byId: new Map(),     // id(这里用 bvid) -> movie
-      search: { keyword: "", page: 1, hasMore: false },
-      discover: { page: 1 }
-    };
-
-    function upsertMovie(m) {
-      const id = String(m.id || m.bvid || cryptoRandomId());
-      m.id = id;
-      m.bvid = m.bvid ? String(m.bvid) : "";
-      Store.byId.set(id, m);
-      return m;
-    }
-
-    function cryptoRandomId() {
-      return "m_" + Math.random().toString(16).slice(2) + "_" + Date.now().toString(16);
-    }
+    document.addEventListener('DOMContentLoaded', () => {
+      // 加载本地存储数据
+      AnimeDatabase.loadFromLocalStorage();
+      
+      // 初始化背景粒子
+      initParticles();
+      
+      // 渲染热门动漫
+      renderAnimeGrid('hotAnime', AnimeDatabase.getHotAnime());
+      
+      // 渲染最新动漫
+      renderAnimeGrid('latestAnime', AnimeDatabase.getLatestAnime());
+      
+      // 绑定搜索事件
+      document.getElementById('searchBtn').addEventListener('click', performSearch);
+      document.getElementById('searchInput').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') performSearch();
+      });
+      
+      // 绑定快速分类事件
+      document.querySelectorAll('.quick-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const category = link.getAttribute('data-category');
+          searchByCategory(category);
+        });
+      });
+      
+      // 绑定筛选标签事件
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const filter = btn.getAttribute('data-filter');
+          filterAnime(filter);
+        });
+      });
+      
+      // 绑定用户按钮事件
+      document.getElementById('userBtn').addEventListener('click', showUserMenu);
+      
+      // 绑定关闭模态框事件
+      document.getElementById('closeModal').addEventListener('click', closeVideoModal);
+      document.getElementById('videoModal').addEventListener('click', (e) => {
+        if (e.target.id === 'videoModal') closeVideoModal();
+      });
+      
+      // 显示初始化完成提示
+      setTimeout(() => {
+        showToast('欢迎来到DAHAI动漫影院', '已加载 ' + AnimeDatabase.getAllAnime().length + ' 部动漫，开始你的动漫之旅吧！');
+      }, 1000);
+    });
 
     // =========================
-    // 2) 从页面静态卡片“读取”种子影片（确保永远有影片）
+    // 核心功能函数
     // =========================
-    function readSeedFromDom() {
-      const cards = document.querySelectorAll(".movie-card[data-bvid]");
-      cards.forEach(card => {
-        const bvid = card.getAttribute("data-bvid") || "";
-        const id = card.getAttribute("data-id") || bvid || cryptoRandomId();
-        const title = (card.querySelector(".card-title")?.textContent || bvid || "未命名").trim();
-        const poster = card.querySelector("img")?.getAttribute("src") || "";
-        upsertMovie({
-          id,
-          bvid,
-          title,
-          poster,
-          year: "",
-          rating: "",
-          duration: "",
-          category: ["本地片库"],
-          description: "本地片库（可输入 BV 号进行播放/校准标题封面）。"
+    
+    // 渲染动漫网格
+    function renderAnimeGrid(elementId, animeList) {
+      const grid = document.getElementById(elementId);
+      if (!grid) return;
+      
+      if (!animeList || animeList.length === 0) {
+        grid.innerHTML = `
+          <div class="empty-hint" style="display:block; grid-column: 1/-1;">
+            <i class="fas fa-film"></i>
+            <h3>暂无动漫</h3>
+            <p>没有找到符合条件的动漫</p>
+          </div>
+        `;
+        return;
+      }
+      
+      grid.innerHTML = animeList.map(anime => {
+        const isFavorited = AnimeDatabase.favorites.includes(anime.id);
+        const statusClass = anime.status === "已完结" ? "finished" : "updating";
+        
+        return `
+          <div class="anime-card" data-id="${anime.id}">
+            <div class="card-img-container">
+              <img class="card-img" src="${anime.cover}" alt="${anime.title}" 
+                   onerror="this.src='data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22600%22 viewBox=%220 0 400 600%22%3E%3Cdefs%3E%3ClinearGradient id=%22g%22 x1=%220%22 y1=%220%22 x2=%221%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%2300a8ff%22 stop-opacity=%220.9%22/%3E%3Cstop offset=%221%22 stop-color=%22%239c27b0%22 stop-opacity=%220.9%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=%22400%22 height=%22600%22 fill=%22%2306070b%22/%3E%3Crect width=%22400%22 height=%22600%22 fill=%22url(%23g)%22 opacity=%220.7%22/%3E%3Ctext x=%2220%22 y=%22120%22 fill=%22rgba(255,255,255,0.9)%22 font-size=%2218%22 font-family=%22Arial%22%3E${anime.title}%3C/text%3E%3C/svg%3E'">
+              <div class="card-overlay">
+                <h3 class="card-title">${escapeHtml(anime.title)}</h3>
+                <div class="card-meta">
+                  <span>${anime.year}</span>
+                  <span>⭐ ${anime.rating}</span>
+                  <span>${anime.episodes}集</span>
+                </div>
+                <div class="card-actions">
+                  <button class="watch-btn" data-id="${anime.id}">
+                    <i class="fas fa-play"></i> 播放
+                  </button>
+                  <button class="info-btn" data-id="${anime.id}">
+                    <i class="fas fa-info-circle"></i> 详情
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="card-content">
+              <h3 class="card-title">${escapeHtml(anime.title)} <span class="status-badge ${statusClass}">${anime.status}</span></h3>
+              <div class="card-meta">
+                <span>${anime.year}</span>
+                <span>⭐ ${anime.rating}</span>
+              </div>
+              <div class="card-genres">
+                ${anime.genres.slice(0, 3).map(genre => `<span class="genre-tag">${escapeHtml(genre)}</span>`).join('')}
+              </div>
+              <div class="card-actions">
+                <button class="watch-btn" data-id="${anime.id}">
+                  <i class="fas fa-play"></i> 立即播放
+                </button>
+                <button class="info-btn" data-id="${anime.id}">
+                  <i class="fas fa-info-circle"></i> 详情
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+      
+      // 绑定卡片点击事件
+      grid.querySelectorAll('.watch-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const animeId = btn.getAttribute('data-id');
+          playAnime(animeId, 1);
+        });
+      });
+      
+      grid.querySelectorAll('.info-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const animeId = btn.getAttribute('data-id');
+          showAnimeInfo(animeId);
+        });
+      });
+      
+      grid.querySelectorAll('.anime-card').forEach(card => {
+        card.addEventListener('click', () => {
+          const animeId = card.getAttribute('data-id');
+          showAnimeInfo(animeId);
         });
       });
     }
-
-    // =========================
-    // 3) 统一事件委托：点击卡片 / 播放 / 详情
-    // =========================
-    document.addEventListener("click", async (e) => {
-      const watch = e.target.closest(".watch-btn");
-      const info = e.target.closest(".info-btn");
-      const card = e.target.closest(".movie-card");
-
-      // 播放：如果 JS 可用 -> 模态框播放；否则 <a> 会直接跳转 B站（保底）
-      if (watch) {
-        const bvid = getBvidFromEl(watch);
-        if (bvid) {
-          // 如果是 <a>，阻止默认跳转，改为站内弹窗播放
-          e.preventDefault();
-          e.stopPropagation();
-          const m = Store.byId.get(bvid) || upsertMovie({ id: bvid, bvid, title: bvid, poster: "" });
-          await openPlayer(m);
+    
+    // 播放动漫
+    async function playAnime(animeId, episode = 1) {
+      const anime = AnimeDatabase.getAnimeById(animeId);
+      if (!anime) {
+        showToast('错误', '未找到该动漫');
+        return;
+      }
+      
+      // 显示播放器
+      showVideoModal(anime, episode);
+      
+      // 记录播放历史
+      AnimeDatabase.addHistory(animeId, episode, anime.title);
+    }
+    
+    // 显示视频播放器
+    function showVideoModal(anime, episode = 1) {
+      const modal = document.getElementById('videoModal');
+      const titleEl = document.getElementById('modalTitle');
+      const frame = document.getElementById('videoFrame');
+      const loading = document.getElementById('videoLoading');
+      const episodeSection = document.getElementById('episodeSection');
+      const episodeGrid = document.getElementById('episodeGrid');
+      
+      // 设置标题
+      titleEl.textContent = `${anime.title} - 第${episode}集`;
+      
+      // 显示加载动画
+      loading.style.display = 'flex';
+      frame.style.display = 'none';
+      
+      // 获取播放地址
+      const playUrl = AnimeDatabase.getPlayUrl(anime.id, episode);
+      
+      // 设置播放器
+      frame.src = playUrl;
+      
+      // 显示集数列表（如果有）
+      if (anime.episodesList && anime.episodesList.length > 0) {
+        episodeSection.style.display = 'block';
+        episodeGrid.innerHTML = anime.episodesList.map(ep => `
+          <button class="episode-btn ${ep.id == episode ? 'active' : ''}" 
+                  data-episode="${ep.id}">
+            ${ep.id}
+          </button>
+        `).join('');
+        
+        // 绑定集数切换事件
+        episodeGrid.querySelectorAll('.episode-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const newEpisode = parseInt(btn.getAttribute('data-episode'));
+            playAnime(anime.id, newEpisode);
+          });
+        });
+      } else {
+        episodeSection.style.display = 'none';
+      }
+      
+      // 显示模态框
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+      
+      // 等待iframe加载
+      frame.onload = () => {
+        loading.style.display = 'none';
+        frame.style.display = 'block';
+      };
+      
+      // 设置加载超时
+      setTimeout(() => {
+        loading.style.display = 'none';
+        frame.style.display = 'block';
+      }, 3000);
+    }
+    
+    // 关闭视频播放器
+    function closeVideoModal() {
+      const modal = document.getElementById('videoModal');
+      const frame = document.getElementById('videoFrame');
+      
+      // 停止播放
+      frame.src = '';
+      
+      modal.style.display = 'none';
+      document.body.style.overflow = 'auto';
+    }
+    
+    // 显示动漫详情
+    function showAnimeInfo(animeId) {
+      const anime = AnimeDatabase.getAnimeById(animeId);
+      if (!anime) return;
+      
+      const modal = document.getElementById('videoModal');
+      const titleEl = document.getElementById('modalTitle');
+      const container = document.getElementById('videoContainer');
+      const episodeSection = document.getElementById('episodeSection');
+      
+      titleEl.textContent = anime.title;
+      episodeSection.style.display = 'none';
+      
+      const isFavorited = AnimeDatabase.favorites.includes(animeId);
+      const statusClass = anime.status === "已完结" ? "finished" : "updating";
+      
+      container.innerHTML = `
+        <div class="detail-content">
+          <div class="detail-header">
+            <img src="${anime.cover}" alt="${anime.title}" class="detail-poster"
+                 onerror="this.src='data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22280%22 viewBox=%220 0 200 280%22%3E%3Cdefs%3E%3ClinearGradient id=%22g%22 x1=%220%22 y1=%220%22 x2=%221%22 y2=%221%22%3E%3Cstop offset=%220%22 stop-color=%22%2300a8ff%22 stop-opacity=%220.9%22/%3E%3Cstop offset=%221%22 stop-color=%22%239c27b0%22 stop-opacity=%220.9%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width=%22200%22 height=%22280%22 fill=%22%2306070b%22/%3E%3Crect width=%22200%22 height=%22280%22 fill=%22url(%23g)%22 opacity=%220.7%22/%3E%3Ctext x=%2210%22 y=%22140%22 fill=%22rgba(255,255,255,0.9)%22 font-size=%2216%22 font-family=%22Arial%22%3E${escapeHtml(anime.title)}%3C/text%3E%3C/svg%3E'">
+            <div class="detail-info">
+              <h1 class="detail-title">${escapeHtml(anime.title)}</h1>
+              <p style="color: rgba(255,255,255,0.8); margin-bottom: 1rem;">${anime.title_jp} / ${anime.title_en}</p>
+              
+              <div class="detail-meta">
+                <span>${anime.year}</span>
+                <span>⭐ ${anime.rating}</span>
+                <span>${anime.episodes}集</span>
+                <span class="status-badge ${statusClass}">${anime.status}</span>
+              </div>
+              
+              <div class="detail-genres">
+                ${anime.genres.map(genre => `<span class="detail-genre">${escapeHtml(genre)}</span>`).join('')}
+              </div>
+              
+              <p class="detail-description">${escapeHtml(anime.description)}</p>
+              
+              <div style="display:flex; gap: 12px; margin-top: 1.5rem; flex-wrap: wrap;">
+                <button class="watch-btn" style="flex: 1; min-width: 200px; padding: 0.9rem;" onclick="playAnime('${anime.id}', 1)">
+                  <i class="fas fa-play"></i> 立即播放
+                </button>
+                <button class="info-btn" style="flex: 1; min-width: 200px; padding: 0.9rem;" onclick="toggleFavorite('${anime.id}')">
+                  <i class="fas fa-heart" style="${isFavorited ? 'color: #ff4081;' : ''}"></i> ${isFavorited ? '已收藏' : '添加收藏'}
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          ${anime.episodesList && anime.episodesList.length > 0 ? `
+          <div style="margin-top: 2rem;">
+            <h3 style="color: var(--primary); margin-bottom: 1rem; font-size: 1.2rem;">剧集列表</h3>
+            <div class="episode-grid">
+              ${anime.episodesList.slice(0, 30).map(ep => `
+                <button class="episode-btn" onclick="playAnime('${anime.id}', ${ep.id})">
+                  ${ep.id}
+                </button>
+              `).join('')}
+              ${anime.episodesList.length > 30 ? `
+                <div style="grid-column: 1/-1; text-align: center; padding: 1rem; color: rgba(224,224,255,0.7);">
+                  共 ${anime.episodes} 集，查看更多请点击播放按钮
+                </div>
+              ` : ''}
+            </div>
+          </div>
+          ` : ''}
+        </div>
+      `;
+      
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+    
+    // 搜索动漫
+    function performSearch() {
+      const input = document.getElementById('searchInput');
+      const keyword = input.value.trim();
+      
+      if (!keyword) {
+        showToast('提示', '请输入搜索关键词');
+        return;
+      }
+      
+      // 显示搜索区域
+      document.getElementById('searchTitle').style.display = 'flex';
+      document.getElementById('searchResults').style.display = 'grid';
+      
+      // 执行搜索
+      const results = AnimeDatabase.searchAnime(keyword);
+      
+      if (results.length > 0) {
+        renderAnimeGrid('searchResults', results);
+        showToast('搜索完成', `找到 ${results.length} 个相关动漫`);
+        
+        // 滚动到搜索结果
+        setTimeout(() => {
+          document.getElementById('searchTitle').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+      } else {
+        document.getElementById('searchResults').innerHTML = `
+          <div class="empty-hint" style="display:block; grid-column: 1/-1;">
+            <i class="fas fa-search"></i>
+            <h3>未找到相关动漫</h3>
+            <p>尝试搜索其他关键词，或查看热门推荐</p>
+          </div>
+        `;
+      }
+    }
+    
+    // 按分类搜索
+    function searchByCategory(category) {
+      const results = AnimeDatabase.filterByGenre(category);
+      
+      // 显示搜索区域
+      document.getElementById('searchTitle').style.display = 'flex';
+      document.getElementById('searchResults').style.display = 'grid';
+      
+      if (results.length > 0) {
+        renderAnimeGrid('searchResults', results.slice(0, 24));
+        showToast('分类浏览', `找到 ${results.length} 个${category}类动漫`);
+        
+        // 滚动到搜索结果
+        setTimeout(() => {
+          document.getElementById('searchTitle').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+      }
+    }
+    
+    // 筛选动漫
+    function filterAnime(filter) {
+      let filteredAnime = AnimeDatabase.filterByStatus(filter);
+      
+      // 更新热门和最新区域的显示
+      if (filter === 'hot' || filter === 'all') {
+        renderAnimeGrid('hotAnime', AnimeDatabase.getHotAnime());
+      }
+      
+      if (filter === 'latest' || filter === 'all') {
+        renderAnimeGrid('latestAnime', AnimeDatabase.getLatestAnime());
+      }
+      
+      if (filter === 'finished' || filter === 'updating') {
+        renderAnimeGrid('hotAnime', filteredAnime.slice(0, 12));
+        renderAnimeGrid('latestAnime', filteredAnime.slice(12, 24));
+      }
+    }
+    
+    // 收藏/取消收藏
+    function toggleFavorite(animeId) {
+      const isFavorited = AnimeDatabase.toggleFavorite(animeId);
+      
+      if (isFavorited) {
+        showToast('已收藏', '已添加到我的收藏');
+      } else {
+        showToast('已取消收藏', '已从收藏中移除');
+      }
+      
+      // 如果当前在详情页，更新按钮状态
+      const favoriteBtn = document.querySelector(`button[onclick*="toggleFavorite('${animeId}')"]`);
+      if (favoriteBtn) {
+        const icon = favoriteBtn.querySelector('i');
+        const text = favoriteBtn.querySelector('span') || favoriteBtn;
+        
+        if (isFavorited) {
+          icon.style.color = '#ff4081';
+          if (text.textContent.includes('添加收藏')) {
+            text.textContent = text.textContent.replace('添加收藏', '已收藏');
+          }
+        } else {
+          icon.style.color = '';
+          if (text.textContent.includes('已收藏')) {
+            text.textContent = text.textContent.replace('已收藏', '添加收藏');
+          }
         }
-        return;
       }
-
-      // 详情
-      if (info) {
-        e.preventDefault();
-        e.stopPropagation();
-        const bvid = getBvidFromEl(info);
-        if (!bvid) return;
-        const m = Store.byId.get(bvid) || upsertMovie({ id: bvid, bvid, title: bvid, poster: "" });
-        await openInfo(m);
-        return;
-      }
-
-      // 点击卡片也打开详情
-      if (card) {
-        const bvid = card.getAttribute("data-bvid") || card.getAttribute("data-id");
-        if (!bvid) return;
-        const m = Store.byId.get(bvid) || upsertMovie({ id: bvid, bvid, title: bvid, poster: "" });
-        await openInfo(m);
-      }
-    });
-
-    function getBvidFromEl(el) {
-      // 优先从最近的 card 上读 bvid
-      const card = el.closest(".movie-card");
-      const bvid = card?.getAttribute("data-bvid") || el.getAttribute("data-id") || "";
-      return bvid || null;
     }
-
+    
+    // 显示用户菜单
+    function showUserMenu() {
+      const favoritesCount = AnimeDatabase.favorites.length;
+      const historyCount = AnimeDatabase.history.length;
+      
+      showToast('用户信息', 
+        `我的收藏：${favoritesCount}个动漫\n播放历史：${historyCount}条记录\n当前播放源：${AnimeDatabase.playSources.find(s => s.id === AnimeDatabase.settings.defaultSource)?.name || '主播放源'}`,
+        [
+          {
+            text: '查看收藏',
+            action: () => {
+              const favAnime = AnimeDatabase.favorites.map(id => AnimeDatabase.getAnimeById(id)).filter(Boolean);
+              if (favAnime.length > 0) {
+                document.getElementById('searchTitle').style.display = 'flex';
+                document.getElementById('searchResults').style.display = 'grid';
+                renderAnimeGrid('searchResults', favAnime);
+                document.getElementById('searchTitle').innerHTML = `<i class="fas fa-heart"></i> 我的收藏`;
+                showToast('我的收藏', `您收藏了 ${favAnime.length} 个动漫`);
+              } else {
+                showToast('我的收藏', '您还没有收藏任何动漫');
+              }
+            }
+          },
+          {
+            text: '切换播放源',
+            action: () => {
+              // 循环切换播放源
+              const sources = AnimeDatabase.playSources;
+              const currentIndex = sources.findIndex(s => s.id === AnimeDatabase.settings.defaultSource);
+              const nextIndex = (currentIndex + 1) % sources.length;
+              
+              AnimeDatabase.settings.defaultSource = sources[nextIndex].id;
+              AnimeDatabase.saveToLocalStorage();
+              
+              showToast('播放源已切换', `已切换到：${sources[nextIndex].name}`);
+            }
+          }
+        ]
+      );
+    }
+    
     // =========================
-    // 4) 播放器 / 详情
+    // UI辅助函数
     // =========================
-    async function openPlayer(movie) {
-      const modal = document.getElementById("videoModal");
-      const titleEl = document.getElementById("modalTitle");
-      const container = document.getElementById("videoContainer");
-
-      titleEl.textContent = `正在播放：${movie.title || movie.bvid || "未命名"}`;
-      modal.style.display = "flex";
-      document.body.style.overflow = "hidden";
-
-      const bvid = movie.bvid || movie.id;
-      container.innerHTML = `
-        <iframe
-          src="https://player.bilibili.com/player.html?bvid=${encodeURIComponent(bvid)}&autoplay=1&page=1"
-          width="100%"
-          height="600"
-          scrolling="no"
-          frameborder="0"
-          allowfullscreen="true"
-          referrerpolicy="no-referrer"
-          style="border-radius: 10px;"
-        ></iframe>
-      `;
-
-      // 后台校准真实标题/封面（失败不影响播放）
-      await syncMovieMeta(movie, { silent: true });
-      titleEl.textContent = `正在播放：${movie.title || movie.bvid || "未命名"}`;
-    }
-
-    async function openInfo(movie) {
-      const modal = document.getElementById("videoModal");
-      const titleEl = document.getElementById("modalTitle");
-      const container = document.getElementById("videoContainer");
-
-      await syncMovieMeta(movie, { silent: true });
-
-      titleEl.textContent = movie.title || movie.bvid || "影片详情";
-      const cats = Array.isArray(movie.category) ? movie.category : (movie.category ? [movie.category] : []);
-      const poster = movie.poster || "";
-
-      container.innerHTML = `
-        <div style="padding: 2rem; max-width: 900px; width: 100%;">
-          <div style="display: flex; gap: 2rem; margin-bottom: 2rem; flex-wrap: wrap;">
-            <img src="${escapeHtmlAttr(poster)}" alt="${escapeHtmlAttr(movie.title || movie.bvid || '未命名')}"
-                 style="width: 200px; height: 300px; object-fit: cover; border-radius: 10px; border: 1px solid rgba(255,255,255,0.08); background: rgba(0,0,0,0.2);" />
-            <div style="flex: 1; min-width: 240px;">
-              <h2 style="color: var(--primary); margin-bottom: 1rem; font-weight: 800;">${escapeHtml(movie.title || movie.bvid || "未命名")}</h2>
-
-              <div style="display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; color: rgba(255,255,255,0.7);">
-                ${movie.year ? `<span>${escapeHtml(movie.year)}</span>` : ""}
-                ${movie.duration ? `<span>${escapeHtml(movie.duration)}</span>` : ""}
-                <span class="mono">${escapeHtml(movie.bvid || movie.id)}</span>
-              </div>
-
-              <div style="margin-bottom: 1.2rem;">
-                ${cats.map(cat => `<span style="background: rgba(0,212,255,0.1); color: var(--primary);
-                  padding: 0.3rem 0.8rem; border-radius: 15px; margin-right: 0.5rem; font-size: 0.9rem;">${escapeHtml(cat)}</span>`).join("")}
-              </div>
-
-              <p style="line-height: 1.7; color: rgba(255,255,255,0.85);">${escapeHtml(movie.description || "暂无简介")}</p>
-
-              <div style="display:flex; gap: 12px; margin-top: 18px; flex-wrap: wrap;">
-                <a class="watch-btn" href="https://www.bilibili.com/video/${encodeURIComponent(movie.bvid || movie.id)}" target="_blank" rel="noopener"
-                   style="flex: 1; min-width: 200px; padding: 1rem; font-size: 1.05rem;">
-                  <i class="fas fa-play"></i> 立即观看
-                </a>
-                <a class="info-btn" href="https://www.bilibili.com/video/${encodeURIComponent(movie.bvid || movie.id)}" target="_blank" rel="noopener"
-                   style="flex: 1; min-width: 200px; padding: 1rem; font-size: 1.05rem; text-decoration:none;">
-                  <i class="fas fa-arrow-up-right-from-square"></i> 打开B站页面
-                </a>
-              </div>
-
-              <div style="margin-top: 12px; color: rgba(224,224,224,0.65); font-size: 0.92rem;">
-                如果你想“标题/封面自动变真实”，请配置 <span class="mono">CONFIG.apiProxy</span>（Cloudflare Worker 代理）。
-              </div>
-            </div>
-          </div>
-        </div>
-      `;
-
-      modal.style.display = "flex";
-      document.body.style.overflow = "hidden";
-    }
-
-    // 关闭模态框
-    document.getElementById("closeModal").addEventListener("click", closeModal);
-    document.getElementById("videoModal").addEventListener("click", (e) => { if (e.target.id === "videoModal") closeModal(); });
-    function closeModal() {
-      document.getElementById("videoModal").style.display = "none";
-      document.getElementById("videoContainer").innerHTML = "";
-      document.body.style.overflow = "auto";
-    }
-
-    // =========================
-    // 5) 搜索：本地永远可用；在线（可选）
-    // =========================
-    function parseBvid(input) {
-      const str = String(input || "");
-      const m = str.match(/BV[0-9A-Za-z]{10}/i);
-      return m ? m[0].toUpperCase() : null;
-    }
-
-    function localSearch(keyword) {
-      const q = String(keyword || "").trim().toLowerCase();
-      if (!q) return [];
-      const items = Array.from(Store.byId.values());
-      return items.filter(m => {
-        const hay = [m.title, m.description, m.bvid].filter(Boolean).join(" ").toLowerCase();
-        return hay.includes(q);
+    
+    // 显示Toast提示
+    function showToast(title, message, actions = []) {
+      const toast = document.getElementById('toast');
+      const toastTitle = document.getElementById('toastTitle');
+      const toastText = document.getElementById('toastText');
+      const toastActions = document.getElementById('toastActions');
+      
+      toastTitle.textContent = title;
+      toastText.textContent = message;
+      toastActions.innerHTML = '';
+      
+      // 添加动作按钮
+      actions.forEach(action => {
+        const button = document.createElement('button');
+        button.textContent = action.text;
+        button.addEventListener('click', () => {
+          toast.style.display = 'none';
+          if (action.action) action.action();
+        });
+        toastActions.appendChild(button);
       });
+      
+      // 显示Toast
+      toast.style.display = 'block';
+      
+      // 自动隐藏
+      clearTimeout(toast._timeout);
+      toast._timeout = setTimeout(() => {
+        toast.style.display = 'none';
+      }, 5000);
     }
-
-    async function performSearch({ append } = { append: false }) {
-      const input = document.getElementById("searchInput");
-      const query = (input.value || "").trim();
-      if (!query) return;
-
-      hideEmpty();
-      showSearchSection(true);
-
-      // BV / 链接：直接播放（并尝试同步标题封面）
-      const bvid = parseBvid(query);
-      if (bvid) {
-        const m = Store.byId.get(bvid) || upsertMovie({ id: bvid, bvid, title: bvid, poster: "" });
-        await syncMovieMeta(m, { silent: true });
-        await openPlayer(m);
-        return;
-      }
-
-      // 本地搜索先展示
-      const local = localSearch(query);
-      renderGrid(document.getElementById("searchMovies"), local);
-
-      // 如果本地命中为空，提示：输入 BV 更准
-      if (local.length === 0) {
-        showEmpty(`本地片库没有匹配“${query}”。\n\n✅ 你可以直接输入 BV 号或 B站链接（例如：BVxxxxxxx），即可播放并自动加入片库。`);
-      }
-    }
-
-    function showSearchSection(show) {
-      document.getElementById("searchTitle").style.display = show ? "flex" : "none";
-      document.getElementById("searchMovies").style.display = show ? "grid" : "none";
-      document.getElementById("searchMoreRow").style.display = "none";
-    }
-
-    function renderGrid(el, items) {
-      el.innerHTML = items.map(generateMovieCard).join("");
-    }
-
-    function generateMovieCard(movie) {
-      const poster = movie.poster || "";
-      const title = movie.title || movie.bvid || "未命名";
-      const bvid = movie.bvid || movie.id;
-      const duration = movie.duration || "—";
-      const year = movie.year || "—";
-
-      return `
-        <div class="movie-card" data-id="${escapeHtmlAttr(bvid)}" data-bvid="${escapeHtmlAttr(bvid)}">
-          <img src="${escapeHtmlAttr(poster)}" alt="${escapeHtmlAttr(title)}" class="card-img">
-          <div class="card-overlay">
-            <h3 class="card-title">${escapeHtml(title)}</h3>
-            <div class="card-meta"><span>${escapeHtml(year)}</span><span class="mono">${escapeHtml(bvid)}</span><span>${escapeHtml(duration)}</span></div>
-            <div class="card-actions">
-              <a class="watch-btn" href="https://www.bilibili.com/video/${encodeURIComponent(bvid)}" target="_blank" rel="noopener">
-                <i class="fas fa-play"></i> 立即观看
-              </a>
-              <a class="info-btn" href="#" data-id="${escapeHtmlAttr(bvid)}"><i class="fas fa-info-circle"></i> 详情</a>
-            </div>
-          </div>
-        </div>
-      `;
-    }
-
-    document.getElementById("searchBtn").addEventListener("click", () => performSearch({ append: false }));
-    document.getElementById("searchInput").addEventListener("keypress", (e) => { if (e.key === "Enter") performSearch({ append: false }); });
-
-    document.querySelectorAll(".quick-link").forEach(link => {
-      link.addEventListener("click", (e) => {
-        e.preventDefault();
-        const map = { action: "动作", "sci-fi": "科幻", drama: "剧情", comedy: "喜剧", anime: "动漫" };
-        const kw = map[link.getAttribute("data-category")] || "";
-        document.getElementById("searchInput").value = kw;
-        performSearch({ append: false });
-      });
-    });
-
-    // =========================
-    // 6) 元信息同步：B站 view API（可选，失败不影响页面）
-    // =========================
-    function cacheKeyForBvid(bvid) { return "bili_meta_" + bvid; }
-
-    function readMetaCache(bvid) {
-      try {
-        const raw = localStorage.getItem(cacheKeyForBvid(bvid));
-        if (!raw) return null;
-        const obj = JSON.parse(raw);
-        const ageMin = (Date.now() - obj.ts) / 60000;
-        if (ageMin > CONFIG.metaCacheMinutes) return null;
-        return obj.data || null;
-      } catch { return null; }
-    }
-
-    function writeMetaCache(bvid, data) {
-      try { localStorage.setItem(cacheKeyForBvid(bvid), JSON.stringify({ ts: Date.now(), data })); } catch {}
-    }
-
-    async function syncMovieMeta(movie, { silent } = { silent: false }) {
-      const bvid = movie.bvid || movie.id;
-      if (!bvid || !/^BV/i.test(bvid)) return null;
-
-      const cached = readMetaCache(bvid);
-      if (cached) {
-        applyMeta(movie, cached);
-        updateCardDom(bvid, movie);
-        return movie;
-      }
-
-      const view = await fetchBiliView(bvid, { silent: true });
-      if (!view) return null;
-
-      writeMetaCache(bvid, view);
-      applyMeta(movie, view);
-      updateCardDom(bvid, movie);
-      return movie;
-    }
-
-    function applyMeta(movie, view) {
-      if (!view) return;
-      if (view.title) movie.title = view.title;
-      if (view.pic) movie.poster = ensureHttps(view.pic);
-      if (typeof view.duration === "number") movie.duration = formatDuration(view.duration);
-      if (view.desc && (!movie.description || movie.description.length < 10)) movie.description = view.desc;
-      if (!movie.year && typeof view.pubdate === "number") movie.year = String(new Date(view.pubdate * 1000).getFullYear());
-    }
-
-    function updateCardDom(bvid, movie) {
-      const cards = document.querySelectorAll(`.movie-card[data-bvid="${cssEscape(bvid)}"]`);
-      cards.forEach(card => {
-        const img = card.querySelector(".card-img");
-        const titleEl = card.querySelector(".card-title");
-        if (img && movie.poster) img.src = movie.poster;
-        if (img && movie.title) img.alt = movie.title;
-        if (titleEl && movie.title) titleEl.textContent = movie.title;
-      });
-    }
-
-    function ensureHttps(url) {
-      if (!url) return url;
-      if (url.startsWith("//")) return "https:" + url;
-      return url;
-    }
-
-    function formatDuration(seconds) {
-      const s = Math.max(0, Number(seconds) || 0);
-      const h = Math.floor(s / 3600);
-      const m = Math.floor((s % 3600) / 60);
-      const sec = Math.floor(s % 60);
-      if (h > 0) return `${h}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
-      return `${m}:${String(sec).padStart(2,'0')}`;
-    }
-
-    async function fetchBiliView(bvid, { silent } = { silent: false }) {
-      const url = `https://api.bilibili.com/x/web-interface/view?bvid=${encodeURIComponent(bvid)}`;
-      const json = await apiFetchJson(url, { silent });
-      if (!json || json.code !== 0 || !json.data) return null;
-      return json.data;
-    }
-
-    async function fetchBiliPopular(pn, ps, { silent } = { silent: false }) {
-      const url = `https://api.bilibili.com/x/web-interface/popular?pn=${encodeURIComponent(pn)}&ps=${encodeURIComponent(ps)}`;
-      const json = await apiFetchJson(url, { silent });
-      if (!json || json.code !== 0 || !json.data || !Array.isArray(json.data.list)) return null;
-      return json.data.list;
-    }
-
-    async function apiFetchJson(url, { silent } = { silent: false }) {
-      const target = CONFIG.apiProxy ? (CONFIG.apiProxy + encodeURIComponent(url)) : url;
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 8000);
-
-      try {
-        const resp = await fetch(target, { method: "GET", signal: controller.signal, headers: { "Accept": "application/json" } });
-        clearTimeout(timeout);
-        if (!resp.ok) return null;
-        return await resp.json();
-      } catch (e) {
-        clearTimeout(timeout);
-        return null;
-      }
-    }
-
-    // =========================
-    // 7) 更多推荐（在线，失败不影响页面）
-    // =========================
-    async function loadDiscover({ refresh } = { refresh: false }) {
-      const titleEl = document.getElementById("discoverTitle");
-      const gridEl = document.getElementById("discoverMovies");
-      const rowEl = document.getElementById("discoverMoreRow");
-      const loader = document.getElementById("loader");
-
-      if (refresh) Store.discover.page += 1;
-      const page = Store.discover.page;
-
-      loader.style.display = "block";
-      const list = await fetchBiliPopular(page, CONFIG.discoverPageSize, { silent: true });
-      loader.style.display = "none";
-
-      if (!list || list.length === 0) {
-        // 如果没有代理/跨域：不显示更多推荐，也不报错（主站照样有片库）
-        titleEl.style.display = "none";
-        gridEl.style.display = "none";
-        rowEl.style.display = "none";
-        return;
-      }
-
-      const items = list.map(v => upsertMovie({
-        id: v.bvid,
-        bvid: v.bvid,
-        title: v.title || v.bvid,
-        poster: ensureHttps(v.pic || ""),
-        duration: typeof v.duration === "number" ? formatDuration(v.duration) : "",
-        category: ["热门推荐"],
-        description: v.desc || ""
-      }));
-
-      titleEl.style.display = "flex";
-      gridEl.style.display = "grid";
-      rowEl.style.display = "flex";
-      renderGrid(gridEl, items);
-    }
-
-    document.getElementById("discoverMoreBtn").addEventListener("click", () => loadDiscover({ refresh: true }));
-
-    // =========================
-    // 8) Toast / Empty
-    // =========================
-    function showEmpty(text) {
-      const el = document.getElementById("emptyHint");
-      el.textContent = text || "";
-      el.style.display = "block";
-    }
-    function hideEmpty() {
-      const el = document.getElementById("emptyHint");
-      el.style.display = "none";
-      el.textContent = "";
-    }
-
-    function toast(title, text, actions) {
-      const t = document.getElementById("toast");
-      document.getElementById("toastTitle").textContent = title || "提示";
-      document.getElementById("toastText").textContent = text || "";
-      const ta = document.getElementById("toastActions");
-      ta.innerHTML = "";
-
-      (actions || []).forEach(a => {
-        const btn = document.createElement("button");
-        btn.textContent = a.text;
-        btn.addEventListener("click", () => { try { a.action && a.action(); } catch {} });
-        ta.appendChild(btn);
-      });
-
-      t.style.display = "block";
-      clearTimeout(t._hideTimer);
-      t._hideTimer = setTimeout(() => { t.style.display = "none"; }, 8000);
-    }
-
-    // =========================
-    // 9) 背景粒子（本地 canvas 实现，保证不会阻塞）
-    // =========================
-    function startCanvasParticles() {
-      const canvas = document.getElementById("particles-canvas");
+    
+    // 初始化背景粒子
+    function initParticles() {
+      const canvas = document.getElementById('particles-canvas');
       if (!canvas) return;
-
-      const ctx = canvas.getContext("2d", { alpha: true });
-      if (!ctx) return;
-
-      let w = 0, h = 0, dpr = 1;
-      const particles = [];
-      const N = 80;
-      const maxDist = 140;
-
-      function resize() {
-        dpr = window.devicePixelRatio || 1;
-        w = canvas.clientWidth;
-        h = canvas.clientHeight;
-        canvas.width = Math.floor(w * dpr);
-        canvas.height = Math.floor(h * dpr);
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      
+      const ctx = canvas.getContext('2d');
+      let particles = [];
+      const particleCount = 80;
+      
+      function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
       }
-
-      function rand(min, max) { return min + Math.random() * (max - min); }
-
-      function init() {
-        particles.length = 0;
-        for (let i = 0; i < N; i++) {
+      
+      function createParticles() {
+        particles = [];
+        for (let i = 0; i < particleCount; i++) {
           particles.push({
-            x: rand(0, w), y: rand(0, h),
-            vx: rand(-0.6, 0.6), vy: rand(-0.6, 0.6),
-            r: rand(1.2, 2.8),
-            a: rand(0.2, 0.7)
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            size: Math.random() * 2 + 0.5,
+            speedX: Math.random() * 0.3 - 0.15,
+            speedY: Math.random() * 0.3 - 0.15,
+            color: `rgba(${Math.floor(Math.random() * 100 + 155)}, ${Math.floor(Math.random() * 100 + 155)}, 255, ${Math.random() * 0.2 + 0.1})`
           });
         }
       }
-
-      function step() {
-        ctx.clearRect(0, 0, w, h);
-
-        // 点
-        for (const p of particles) {
-          p.x += p.vx; p.y += p.vy;
-          if (p.x < -10) p.x = w + 10;
-          if (p.x > w + 10) p.x = -10;
-          if (p.y < -10) p.y = h + 10;
-          if (p.y > h + 10) p.y = -10;
-
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(0, 212, 255, ${p.a})`;
-          ctx.fill();
-        }
-
-        // 线
+      
+      function animateParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // 绘制连接线
         for (let i = 0; i < particles.length; i++) {
           for (let j = i + 1; j < particles.length; j++) {
-            const a = particles[i], b = particles[j];
-            const dx = a.x - b.x, dy = a.y - b.y;
-            const dist = Math.sqrt(dx*dx + dy*dy);
-            if (dist < maxDist) {
-              const alpha = (1 - dist / maxDist) * 0.22;
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            if (distance < 120) {
               ctx.beginPath();
-              ctx.moveTo(a.x, a.y);
-              ctx.lineTo(b.x, b.y);
-              ctx.strokeStyle = `rgba(0, 212, 255, ${alpha})`;
-              ctx.lineWidth = 1;
+              ctx.strokeStyle = `rgba(0, 168, 255, ${0.08 * (1 - distance / 120)})`;
+              ctx.lineWidth = 0.5;
+              ctx.moveTo(particles[i].x, particles[i].y);
+              ctx.lineTo(particles[j].x, particles[j].y);
               ctx.stroke();
             }
           }
         }
-
-        requestAnimationFrame(step);
+        
+        // 绘制粒子并更新位置
+        particles.forEach(p => {
+          ctx.beginPath();
+          ctx.fillStyle = p.color;
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.fill();
+          
+          p.x += p.speedX;
+          p.y += p.speedY;
+          
+          // 边界检查
+          if (p.x < 0) p.x = canvas.width;
+          if (p.x > canvas.width) p.x = 0;
+          if (p.y < 0) p.y = canvas.height;
+          if (p.y > canvas.height) p.y = 0;
+        });
+        
+        requestAnimationFrame(animateParticles);
       }
-
-      resize();
-      init();
-      step();
-
-      window.addEventListener("resize", () => { resize(); init(); });
-    }
-
-    // =========================
-    // 10) 工具：转义
-    // =========================
-    function escapeHtml(s) {
-      return String(s ?? "")
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll("\"", "&quot;")
-        .replaceAll("'", "&#39;");
-    }
-    function escapeHtmlAttr(s) { return escapeHtml(s).replaceAll("\n", " "); }
-    function cssEscape(s) { return String(s).replaceAll('"','\\"'); }
-
-    // =========================
-    // 11) 初始化（核心）
-    // =========================
-    document.addEventListener("DOMContentLoaded", async () => {
-      // ✅ 永远先读静态片库 -> 页面保证有影片
-      readSeedFromDom();
-
-      // ✅ 背景粒子（本地）
-      startCanvasParticles();
-
-      // 用户按钮
-      document.getElementById("userBtn").addEventListener("click", () => {
-        toast("👤 用户：大海", "欢迎来到您的私人影院！\n提示：输入 BV 号可直接播放。", [
-          { text: "知道了", action: () => document.getElementById("toast").style.display = "none" }
-        ]);
+      
+      // 初始化
+      resizeCanvas();
+      createParticles();
+      animateParticles();
+      
+      // 窗口大小改变时重置
+      window.addEventListener('resize', () => {
+        resizeCanvas();
+        createParticles();
       });
-
-      // 可选：尝试校准标题/封面（失败不影响）
-      if (CONFIG.syncMetaOnLoad) {
-        const seed = Array.from(Store.byId.values()).slice(0, 8);
-        for (const m of seed) await syncMovieMeta(m, { silent: true });
-      }
-
-      // 可选：更多推荐（需要代理或跨域允许）
-      await loadDiscover({ refresh: false });
-
-      // 如果你看见“仍然没有更多推荐”，那是因为没配置 apiProxy（但本地片库一定有影片）
-      if (!CONFIG.apiProxy) {
-        // 不打扰用户，只在控制台说明
-        console.log("[DAHAI] 未配置 CONFIG.apiProxy：在线热门/校准可能因 CORS 失败，但本地片库正常显示。");
-      }
-    });
+    }
+    
+    // =========================
+    // 工具函数
+    // =========================
+    
+    // 转义HTML
+    function escapeHtml(text) {
+      if (!text) return '';
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+    
+    // 全局函数暴露
+    window.playAnime = playAnime;
+    window.toggleFavorite = toggleFavorite;
   </script>
 </body>
 </html>
